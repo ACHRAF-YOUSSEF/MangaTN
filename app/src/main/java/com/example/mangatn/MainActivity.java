@@ -1,18 +1,14 @@
 package com.example.mangatn;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.GridView;
-
-import com.example.mangatn.adapters.GridAdapter;
 import com.example.mangatn.adapters.VPAdapter;
 import com.example.mangatn.fragments.Fragment1;
 import com.example.mangatn.fragments.Fragment2;
