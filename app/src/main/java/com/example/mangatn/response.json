@@ -1,0 +1,14 @@
+{
+  "title": "Chainsaw Man",
+  "chapters": [
+    {
+      "title": "Chapter-126",
+      "imgPaths": [
+        "https://kissmanga.org/chapter/manga-{$mangaId}/${title}/251349bfb9188395ea8fd13592da79ed.jpg"
+      ]
+    }
+  ],
+  "mangaId": "dn980422",
+  "coverImgPath": "https://kissmanga.org/mangaimage/manga-${mangaId}.jpg",
+  "count": 127
+}

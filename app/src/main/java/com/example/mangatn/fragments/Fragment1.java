@@ -3,6 +3,7 @@ package com.example.mangatn.fragments;
 import static com.example.mangatn.MainActivity.WEBSITE_URL;
 import static com.example.mangatn.MainActivity.mangalList;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public class Fragment1 extends Fragment {
     private GridAdapter gridAdapter;
     private SearchView searchView;
     private pl.droidsonroids.gif.GifTextView gifTextView;
+    private ProgressDialog dialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,6 +43,9 @@ public class Fragment1 extends Fragment {
         gifTextView = view1.findViewById(R.id.loading);
         gridView = view1.findViewById(R.id.gridView);
         searchView = view1.findViewById(R.id.search_view);
+
+        dialog = new ProgressDialog(container.getContext());
+        dialog.setTitle("Fetching manga search results");
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -86,7 +91,8 @@ public class Fragment1 extends Fragment {
             super.onPreExecute();
 
             gridView.setVisibility(View.GONE);
-            gifTextView.setVisibility(View.VISIBLE);
+//            gifTextView.setVisibility(View.VISIBLE);
+            dialog.show();
         }
 
         @Override
@@ -182,7 +188,8 @@ public class Fragment1 extends Fragment {
             super.onPostExecute(mangaModels);
 
             gridView.setVisibility(View.VISIBLE);
-            gifTextView.setVisibility(View.GONE);
+//            gifTextView.setVisibility(View.GONE);
+            dialog.dismiss();
 
             if (mangaModels != null && mangaModels.size() > 0) {
                 mangalList.clear();
