@@ -29,7 +29,7 @@ public class ChaptersAdapter extends ArrayAdapter<ChapterModel> {
 
         ChapterModel chapterModel = getItem(position);
 
-        tvChapter.setText(chapterModel.getChapter());
+        tvChapter.setText(chapterModel.getTitle());
 
         return convertView;
     }

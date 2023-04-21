@@ -1,4 +1,4 @@
-package com.example.mangatn;
+package com.example.mangatn.activities;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.mangatn.R;
 import com.example.mangatn.adapters.VPAdapter;
 import com.example.mangatn.fragments.Fragment1;
 import com.example.mangatn.fragments.Fragment2;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getSupportActionBar().hide();
 
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);

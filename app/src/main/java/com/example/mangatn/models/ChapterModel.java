@@ -1,66 +1,40 @@
 package com.example.mangatn.models;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class ChapterModel implements Serializable {
-    private int id;
-    private static int count;
-    private String chapter;
-    private String nb;
-    private MangaModel mangaModel;
+    private String title;
+    private List<String> imgPaths;
 
-    public ChapterModel(String chapter, String nb, MangaModel mangaModel) {
-        id = ++count;
-
-        this.mangaModel =  mangaModel;
-        this.chapter = chapter;
-        this.nb = nb;
+    public ChapterModel(String title, List<String> imgPaths) {
+        this.title = title;
+        this.imgPaths = imgPaths;
     }
 
-    public ChapterModel(String chapter, String nb) {
-        id = ++count;
+    public ChapterModel() {}
 
-        this.chapter = chapter;
-        this.nb = nb;
+    public String getTitle() {
+        return title;
     }
 
-    public int getId() {
-        return id;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public List<String> getImgPaths() {
+        return imgPaths;
     }
 
-    public static int getCount() {
-        return count;
+    public void setImgPaths(List<String> imgPaths) {
+        this.imgPaths = imgPaths;
     }
 
-    public static void setCount(int count) {
-        ChapterModel.count = count;
-    }
-
-    public void setChapter(String chapter) {
-        this.chapter = chapter;
-    }
-
-    public void setNb(String nb) {
-        this.nb = nb;
-    }
-
-    public String getChapter() {
-        return this.chapter;
-    }
-
-    public String getNb() {
-        return this.nb;
-    }
-
-    public MangaModel getMangaModel() {
-        return mangaModel;
-    }
-
-    public void setMangaModel(MangaModel mangaModel) {
-        this.mangaModel = mangaModel;
+    @Override
+    public String toString() {
+        return "ChapterModel{" +
+                "title='" + title + '\'' +
+                ", imgPaths=" + imgPaths +
+                '}';
     }
 }
