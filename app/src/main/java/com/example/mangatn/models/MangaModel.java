@@ -1,33 +1,24 @@
 package com.example.mangatn.models;
 
-public class MangaModel {
-    private int id;
-    private static int count;
+import java.io.Serializable;
+import java.util.List;
+
+public class MangaModel implements Serializable {
     private String title;
-    private String chapters;
-    private String imgPath;
+    private List<ChapterModel> chapters;
     private String mangaId;
+    private String coverImgPath;
+    private int count;
 
-    public MangaModel(String title, String chapters, String imgPath, String mangaId) {
-        id = ++count;
-
+    public MangaModel(String title, List<ChapterModel> chapters, String mangaId, String coverImgPath, int count) {
         this.title = title;
         this.chapters = chapters;
-        this.imgPath = imgPath;
         this.mangaId = mangaId;
+        this.coverImgPath = coverImgPath;
+        this.count = count;
     }
 
-    public static void setCount(int count) {
-        MangaModel.count = count;
-    }
-
-    public void setMangaId(String mangaId) {
-        this.mangaId = mangaId;
-    }
-
-    public String getMangaId() {
-        return mangaId;
-    }
+    public MangaModel() {}
 
     public String getTitle() {
         return title;
@@ -37,27 +28,46 @@ public class MangaModel {
         this.title = title;
     }
 
-    public String getChapters() {
+    public List<ChapterModel> getChapters() {
         return chapters;
     }
 
-    public void setChapters(String chapters) {
+    public void setChapters(List<ChapterModel> chapters) {
         this.chapters = chapters;
     }
 
-    public String getImgPath() {
-        return imgPath;
+    public String getMangaId() {
+        return mangaId;
     }
 
-    public void setImgPath(String imgPath) {
-        this.imgPath = imgPath;
+    public void setMangaId(String mangaId) {
+        this.mangaId = mangaId;
     }
 
-    public int getId() {
-        return id;
+    public String getCoverImgPath() {
+        return coverImgPath;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCoverImgPath(String coverImgPath) {
+        this.coverImgPath = coverImgPath;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    @Override
+    public String toString() {
+        return "MangaModel{" +
+                "title='" + title + '\'' +
+                ", chapters=" + chapters +
+                ", mangaId='" + mangaId + '\'' +
+                ", coverImgPath='" + coverImgPath + '\'' +
+                ", count=" + count +
+                '}';
     }
 }

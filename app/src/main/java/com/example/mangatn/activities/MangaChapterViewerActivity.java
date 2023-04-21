@@ -1,8 +1,4 @@
-package com.example.mangatn;
-
-import static com.example.mangatn.MainActivity.WEBSITE_URL;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.mangatn.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,22 +9,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
+import com.example.mangatn.R;
 import com.example.mangatn.models.ChapterModel;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.squareup.picasso.Picasso;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.List;
 
 public class MangaChapterViewerActivity extends AppCompatActivity implements View.OnClickListener {
-    private String url = WEBSITE_URL + "/chapter/";
-    private ArrayList<String> mangaChapterImagesUrls, arrayList, arrayList1;
+    private List<String> mangaChapterImagesUrls;
     private PhotoView imageView;
     private SeekBar seekBar;
     private TextView chapterStart, chapterEnd;
@@ -44,20 +37,22 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_chapter_viewer);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(R.layout.custom_action_bar);
+
         //
-        ImageButton back = findViewById(R.id.btnBack);
-        bookmark = findViewById(R.id.saveChapter);
-        TextView title = findViewById(R.id.title);
-        LTR = findViewById(R.id.LeftToRightBtn);
+        ImageButton back = getSupportActionBar().getCustomView().findViewById(R.id.btnBack);
+        bookmark = getSupportActionBar().getCustomView().findViewById(R.id.saveChapter);
+        TextView title = getSupportActionBar().getCustomView().findViewById(R.id.title);
+        LTR = getSupportActionBar().getCustomView().findViewById(R.id.LeftToRightBtn);
         imageView = findViewById(R.id.imageView);
 
         //
         init();
 
         Intent intent = getIntent();
-        ChapterModel chapterModel = (ChapterModel) intent.getSerializableExtra("mangaChapter");
-        String mangaId = intent.getStringExtra("mangaId");
-        String titleText = intent.getStringExtra("title");
+        ChapterModel chapterModel = (ChapterModel) intent.getSerializableExtra("data");
         added = intent.getBooleanExtra("added", false);
 
         if (!added) {
@@ -67,43 +62,15 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
         }
 
         //
-        title.setText(titleText .concat(":\n").concat(chapterModel.getChapter()));
+        title.setText(chapterModel.getTitle());
 
-        url += mangaId + "/"+ chapterModel.getNb();
+        mangaChapterImagesUrls = chapterModel.getImgPaths();
 
-        mangaChapterImagesUrls = new ArrayList<>();
-
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-
-        executorService.execute(() -> {
-            arrayList = getMangaChapterImages(url);
-            arrayList1 = new ArrayList<>();
-
-            for (int j = 0; j < arrayList.size() ;j++) {
-                StringBuilder sb = new StringBuilder(arrayList.get(j));
-
-                sb = new StringBuilder(sb.substring(sb.indexOf("\"") + 1));
-
-                arrayList1.add(sb.substring(0, sb.indexOf("\"")));
-            }
-
-            runOnUiThread(() -> {
-                if (!arrayList1.isEmpty()) {
-                    mangaChapterImagesUrls = arrayList1;
-
-                    chapterStart.setText("1");
-                    chapterEnd.setText(String.valueOf(mangaChapterImagesUrls.size()));
-                    seekBar.setMax(mangaChapterImagesUrls.size() - 1);
-
-                    Glide.with(MangaChapterViewerActivity.this).load(mangaChapterImagesUrls.get(index)).into(imageView);
-                } else {
-                    Toast.makeText(MangaChapterViewerActivity.this, "error!", Toast.LENGTH_SHORT).show();
-                }
-            });
-        });
-
-        // kill the process after it finishes!
-        executorService.shutdown();
+        if (mangaChapterImagesUrls.isEmpty()) {
+            Toast.makeText(MangaChapterViewerActivity.this, "error!", Toast.LENGTH_SHORT).show();
+        } else {
+            Picasso.get().load(mangaChapterImagesUrls.get(index)).into(imageView);
+        }
 
         //
         LTR.setOnClickListener(this);
@@ -127,7 +94,8 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
                     findViewById(R.id.progressLeftToRight).setVisibility(View.VISIBLE);
                 }
 
-                findViewById(R.id.optionBar).setVisibility(View.VISIBLE);
+                getSupportActionBar().getCustomView().setVisibility(View.VISIBLE);
+                getSupportActionBar().show();
             } else {
                 if (!LeftToRight) {
                     findViewById(R.id.progressRightToLeft).setVisibility(View.GONE);
@@ -135,53 +103,14 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
                     findViewById(R.id.progressLeftToRight).setVisibility(View.GONE);
                 }
 
-                findViewById(R.id.optionBar).setVisibility(View.GONE);
+                getSupportActionBar().getCustomView().setVisibility(View.GONE);
+                getSupportActionBar().hide();
             }
 
             active = !active;
         });
 
         updateSeekBar();
-    }
-
-    private ArrayList<String> getMangaChapterImages(String url) {
-        Document document;
-
-        String elements;
-
-        try {
-            document = Jsoup
-                    .connect(url)
-                    .userAgent("Mozilla")
-                    .get();
-
-            elements = Objects
-                    .requireNonNull(document.getElementById("centerDivVideo"))
-                    .html();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        ArrayList<String> arrayList = new ArrayList<>();
-
-        for (int i =0; i< elements.length() - 1; i++) {
-            if (elements.charAt(i) == '<' && elements.charAt(i + 1) == 'i') {
-                for (int j = i; j < elements.length(); j++) {
-                    if (elements.charAt(j) == '>') {
-                        StringBuilder sb = new StringBuilder();
-
-                        for (int k = i; k < j + 1; k ++) {
-                            sb.append(elements.charAt(k));
-                        }
-
-                        arrayList.add(sb.toString());
-                        break;
-                    }
-                }
-            }
-        }
-
-        return arrayList;
     }
 
     private void rightSwipe() {
@@ -195,7 +124,7 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
             chapterStart.setText(String.valueOf(index + 1));
             seekBar.setProgress(index);
 
-            Glide.with(this).load(mangaChapterImagesUrls.get(index)).into(imageView);
+            Picasso.get().load(mangaChapterImagesUrls.get(index)).into(imageView);
         }
     }
 
@@ -210,7 +139,7 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
             chapterStart.setText(String.valueOf(index + 1));
             seekBar.setProgress(index);
 
-            Glide.with(this).load(mangaChapterImagesUrls.get(index)).into(imageView);
+            Picasso.get().load(mangaChapterImagesUrls.get(index)).into(imageView);
         }
     }
 
@@ -281,7 +210,7 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
                     chapterStart.setText(String.valueOf(index + 1));
 
                     if (!mangaChapterImagesUrls.isEmpty()) {
-                        Glide.with(MangaChapterViewerActivity.this).load(mangaChapterImagesUrls.get(index)).into(imageView);
+                        Picasso.get().load(mangaChapterImagesUrls.get(index)).into(imageView);
                     }
 
                     seekBar.setProgress(index);

@@ -1,6 +1,7 @@
 package com.example.mangatn.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.mangatn.R;
+import com.example.mangatn.interfaces.SelectListener;
 import com.example.mangatn.models.MangaModel;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -18,10 +21,12 @@ public class GridAdapter extends BaseAdapter {
     private final Context context;
     private LayoutInflater inflater;
     private final List<MangaModel> mangaModelList;
+    private final SelectListener listener;
 
-    public GridAdapter(Context context, List<MangaModel> mangaModelList) {
+    public GridAdapter(Context context, List<MangaModel> mangaModelList, SelectListener listener) {
         this.context = context;
         this.mangaModelList = mangaModelList;
+        this.listener = listener;
     }
 
     @Override
@@ -54,10 +59,16 @@ public class GridAdapter extends BaseAdapter {
         TextView textView1 = convertView.findViewById(R.id.textView1);
         TextView textView2 = convertView.findViewById(R.id.textView2);
 
-        textView1.setText(mangaModelList.get(position).getChapters());
-        textView2.setText(mangaModelList.get(position).getTitle());
+        MangaModel mangaModel = mangaModelList.get(position);
 
-        Glide.with(convertView).load(mangaModelList.get(position).getImgPath()).into(imageView);
+        textView1.setText(String.valueOf(mangaModel.getCount()));
+        textView2.setText(mangaModel.getTitle());
+
+        Picasso.get().load(mangaModel.getCoverImgPath()).into(imageView);
+
+        convertView.setOnClickListener(v -> {
+            listener.OnMangaClicked(mangaModel, context);
+        });
 
         return convertView;
     }
