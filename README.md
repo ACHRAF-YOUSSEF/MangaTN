@@ -2,6 +2,15 @@
 ---
 The code source for the API is still not ready!
 ----
+requires:
+- picasso (in build.gradle) : `implementation 'com.squareup.picasso:picasso:2.8'`
+- retrofit (in build.gradle) : `implementation 'com.squareup.retrofit2:retrofit:2.9.0'`
+- Gson (in build.gradle) : `implementation 'com.squareup.retrofit2:converter-gson:2.9.0'`
+- jitpack (in settings.gradle) : `repositories {
+        ...
+        maven { url "https://jitpack.io" }
+    }`
+----
 <h1>Home</h1>
 <img src="https://user-images.githubusercontent.com/100535820/235483183-a0d3a914-3ea4-42b7-9b9c-79ab25054d1c.jpg"/>
 <img src="https://user-images.githubusercontent.com/100535820/235483174-b6f86dc4-4c04-4af1-8334-489e5385605b.jpg"/>
