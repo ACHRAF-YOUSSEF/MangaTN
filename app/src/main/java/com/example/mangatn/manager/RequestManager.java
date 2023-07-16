@@ -9,6 +9,7 @@ import com.example.mangatn.interfaces.OnFetchDataListener;
 import com.example.mangatn.interfaces.OnFetchSingleDataListener;
 import com.example.mangatn.interfaces.OnFetchUpdateListener;
 import com.example.mangatn.models.ApiResponse;
+import com.example.mangatn.models.Bookmark;
 import com.example.mangatn.models.MangaListApiResponse;
 import com.example.mangatn.models.MangaModel;
 
@@ -17,7 +18,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -189,6 +192,18 @@ public class RequestManager {
         @POST("{mangaId}/update")
         Call<ApiResponse> callUpdateManga(
                 @Path("mangaId") String mangaId
+        );
+
+        @GET("{mangaId}/bookmarked")
+        Call<Boolean> callCheckForBookmark(
+                @Header("Authorization") String token,
+                @Path("mangaId") String mangaId
+        );
+
+        @POST("bookmark")
+        Call<Boolean> callBookmark(
+                @Header("Authorization") String token,
+                @Body Bookmark bookmark
         );
     }
 }
