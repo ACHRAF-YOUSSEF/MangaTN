@@ -4,12 +4,13 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.mangatn.interfaces.OnFetchChaptersDataListener;
+import com.example.mangatn.interfaces.OnCheckForUpdateListener;
 import com.example.mangatn.interfaces.OnFetchDataListener;
 import com.example.mangatn.interfaces.OnFetchSingleDataListener;
-import com.example.mangatn.models.MangaApiResponse;
-import com.example.mangatn.models.SingleMangaApiResponse;
-import com.example.mangatn.models.SingleMangaChaptersApiResponse;
+import com.example.mangatn.interfaces.OnFetchUpdateListener;
+import com.example.mangatn.models.ApiResponse;
+import com.example.mangatn.models.MangaListApiResponse;
+import com.example.mangatn.models.MangaModel;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -17,13 +18,15 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public class RequestManager {
     private final Context context;
 
     private final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.31.43:8080/api/v1/manga/")
+            .baseUrl("http://192.168.31.40:8080/api/v1/manga/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
@@ -31,14 +34,14 @@ public class RequestManager {
         this.context = context;
     }
 
-    public void getMangaList(OnFetchDataListener<MangaApiResponse> listener, String query) {
+    public void getMangaList(OnFetchDataListener listener, String query, int pageNumber, int pageSize) {
         CallMangaApi callMangaApi = retrofit.create(CallMangaApi.class);
-        Call<MangaApiResponse> call = (query == null)? callMangaApi.callMangaList() : callMangaApi.callManga(query);
+        Call<MangaListApiResponse> call = callMangaApi.callManga(query, pageNumber, pageSize);
 
         try {
-            call.enqueue(new Callback<MangaApiResponse>() {
+            call.enqueue(new Callback<MangaListApiResponse>() {
                 @Override
-                public void onResponse(Call<MangaApiResponse> call, Response<MangaApiResponse> response) {
+                public void onResponse(Call<MangaListApiResponse> call, Response<MangaListApiResponse> response) {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -49,12 +52,12 @@ public class RequestManager {
                     } else {
                         assert response.body() != null;
 
-                        listener.onFetchData(response.body().getData().getMangaList(), response.message(), context);
+                        listener.onFetchData(response.body().getMangas(), response.message(), context);
                     }
                 }
 
                 @Override
-                public void onFailure(Call<MangaApiResponse> call, Throwable t) {
+                public void onFailure(Call<MangaListApiResponse> call, Throwable t) {
                     listener.onError("Request Failed!", context);
                 }
             });
@@ -65,12 +68,12 @@ public class RequestManager {
 
     public void getManga(OnFetchSingleDataListener listener, String mangaId) {
         CallMangaApi callMangaApi = retrofit.create(CallMangaApi.class);
-        Call<SingleMangaApiResponse> call = callMangaApi.callFetchManga(mangaId);
+        Call<MangaModel> call = callMangaApi.callFetchManga(mangaId);
 
         try {
-            call.enqueue(new Callback<SingleMangaApiResponse>() {
+            call.enqueue(new Callback<MangaModel>() {
                 @Override
-                public void onResponse(Call<SingleMangaApiResponse> call, Response<SingleMangaApiResponse> response) {
+                public void onResponse(Call<MangaModel> call, Response<MangaModel> response) {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -83,12 +86,12 @@ public class RequestManager {
 
                         Log.i("body", "onResponse: " + response.body());
 
-                        listener.onFetchData(response.body().getData().getManga(), response.message(), context);
+                        listener.onFetchData(response.body(), response.message(), context);
                     }
                 }
 
                 @Override
-                public void onFailure(Call<SingleMangaApiResponse> call, Throwable t) {
+                public void onFailure(Call<MangaModel> call, Throwable t) {
                     listener.onError("Request Failed!", context);
                 }
             });
@@ -97,53 +100,95 @@ public class RequestManager {
         }
     }
 
-    public void getMangaChapters(OnFetchChaptersDataListener<SingleMangaChaptersApiResponse> listener, String mangaId) {
+    public void checkForUpdate(OnCheckForUpdateListener listener, String mangaId) {
         CallMangaApi callMangaApi = retrofit.create(CallMangaApi.class);
-        Call<SingleMangaChaptersApiResponse> call = callMangaApi.callFetchMangaChapters(mangaId);
+        Call<Boolean> call = callMangaApi.callMangaCheckForUpdate(mangaId);
 
-        call.enqueue(new Callback<SingleMangaChaptersApiResponse>() {
-            @Override
-            public void onResponse(Call<SingleMangaChaptersApiResponse> call, Response<SingleMangaChaptersApiResponse> response) {
-                if (!response.isSuccessful()) {
-                    int statusCode = response.code();
-                    String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+        try {
+            call.enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    if (!response.isSuccessful()) {
+                        int statusCode = response.code();
+                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
 
-                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
-                    listener.onError("Request Failed!", context);
-                } else {
-                    assert response.body() != null;
+                        listener.onError("Request Failed!", context);
+                    } else {
+                        assert response.body() != null;
 
-                    Log.i("body", "onResponse: " + response.body());
+                        Log.i("body", "onResponse: " + response.body());
 
-                    listener.onFetchData(response.body().getData().getChapters(), response.message(), context);
+                        listener.onFetchData(response.body(), response.message(), context);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<SingleMangaChaptersApiResponse> call, Throwable t) {
-                listener.onError("Request Failed!", context);
-            }
-        });
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+                    listener.onError("Request Failed!", context);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateManga(OnFetchUpdateListener<ApiResponse> listener, String mangaId) {
+        CallMangaApi callMangaApi = retrofit.create(CallMangaApi.class);
+        Call<ApiResponse> call = callMangaApi.callUpdateManga(mangaId);
+
+        try {
+            call.enqueue(new Callback<ApiResponse>() {
+                @Override
+                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                    if (!response.isSuccessful()) {
+                        int statusCode = response.code();
+                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                        listener.onError("Request Failed!", context);
+                    } else {
+                        assert response.body() != null;
+
+                        Log.i("body", "onResponse: " + response.body());
+
+                        listener.onFetchData(response.body(), response.message(), context);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponse> call, Throwable t) {
+                    listener.onError("Request Failed!", context);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public interface CallMangaApi {
-        @GET("get/All/20")
-        Call<MangaApiResponse> callMangaList();
-
-        @GET("get/{title}/20")
-        Call<MangaApiResponse> callManga(
-            @Path("title") String title
+        @GET("all")
+        Call<MangaListApiResponse> callManga(
+            @Query("query") String query,
+            @Query("pageNumber") int pageNumber,
+            @Query("pageSize") int pageSize
         );
 
-        @GET("get/{mangaId}/all")
-        Call<SingleMangaApiResponse> callFetchManga(
+        @GET("{mangaId}")
+        Call<MangaModel> callFetchManga(
             @Path("mangaId") String mangaId
         );
 
-        @GET("get/{mangaId}/chapters")
-        Call<SingleMangaChaptersApiResponse> callFetchMangaChapters(
-          @Path("mangaId") String mangaId
+        @GET("{mangaId}/check")
+        Call<Boolean> callMangaCheckForUpdate(
+                @Path("mangaId") String mangaId
+        );
+
+        @POST("{mangaId}/update")
+        Call<ApiResponse> callUpdateManga(
+                @Path("mangaId") String mangaId
         );
     }
 }

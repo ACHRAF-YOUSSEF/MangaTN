@@ -9,16 +9,26 @@ public class MangaModel implements Serializable {
     private String mangaId;
     private String coverImgPath;
     private int count;
+    private Boolean upToDate;
 
-    public MangaModel(String title, List<ChapterModel> chapters, String mangaId, String coverImgPath, int count) {
+    public MangaModel(String title, List<ChapterModel> chapters, String mangaId, String coverImgPath, int count, Boolean upToDate) {
         this.title = title;
         this.chapters = chapters;
         this.mangaId = mangaId;
         this.coverImgPath = coverImgPath;
         this.count = count;
+        this.upToDate = upToDate;
     }
 
     public MangaModel() {}
+
+    public Boolean getUpToDate() {
+        return upToDate;
+    }
+
+    public void setUpToDate(Boolean upToDate) {
+        this.upToDate = upToDate;
+    }
 
     public String getTitle() {
         return title;

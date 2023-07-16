@@ -1,16 +1,13 @@
 package com.example.mangatn.fragments;
 
-import static com.example.mangatn.activities.MainActivity.WEBSITE_URL;
-import static com.example.mangatn.activities.MainActivity.mangalList;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,16 +22,9 @@ import com.example.mangatn.adapters.GridAdapter;
 import com.example.mangatn.interfaces.OnFetchDataListener;
 import com.example.mangatn.interfaces.SelectListener;
 import com.example.mangatn.manager.RequestManager;
-import com.example.mangatn.models.MangaApiResponse;
 import com.example.mangatn.models.MangaModel;
 
-import org.jsoup.Jsoup;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Fragment1 extends Fragment implements SelectListener {
     public GridView gridView;
@@ -42,6 +32,7 @@ public class Fragment1 extends Fragment implements SelectListener {
     private SearchView searchView;
     private ProgressDialog dialog;
     private RequestManager requestManager;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,18 +42,20 @@ public class Fragment1 extends Fragment implements SelectListener {
         searchView = view1.findViewById(R.id.search_view);
 
         dialog = new ProgressDialog(container.getContext());
-        dialog.setTitle("Fetching manga");
-        dialog.show();
+
+        swipeRefreshLayout = view1.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setRefreshing(true);
+            requestManager.getMangaList(listener, searchView.getQuery().toString(), 0, 100);
+        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 requestManager = new RequestManager(container.getContext());
 
-                requestManager.getMangaList(listener, query);
-
-                dialog.setTitle("Fetching manga search results");
-                dialog.show();
+                swipeRefreshLayout.setRefreshing(true);
+                requestManager.getMangaList(listener, query, 0, 100);
 
                 return true;
             }
@@ -75,7 +68,8 @@ public class Fragment1 extends Fragment implements SelectListener {
 
         requestManager = new RequestManager(container.getContext());
 
-        requestManager.getMangaList(listener, null);
+        swipeRefreshLayout.setRefreshing(true);
+        requestManager.getMangaList(listener, "", 0, 100);
 
         return view1;
     }
@@ -88,21 +82,24 @@ public class Fragment1 extends Fragment implements SelectListener {
         );
     }
 
-    private final OnFetchDataListener<MangaApiResponse> listener = new OnFetchDataListener<MangaApiResponse>() {
+    private final OnFetchDataListener listener = new OnFetchDataListener() {
         @Override
         public void onFetchData(List<MangaModel> list, String message, Context context) {
             if (list.isEmpty()) {
                 Toast.makeText(context, "No data found!!!", Toast.LENGTH_SHORT).show();
+                swipeRefreshLayout.setRefreshing(false);
             } else {
                 showManga(list, context);
 
+                swipeRefreshLayout.setRefreshing(false);
                 dialog.dismiss();
             }
         }
 
         @Override
         public void onError(String message, Context context) {
-            Toast.makeText(context, "An Error Occurred!!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "An Error Occurred!!!: " + message, Toast.LENGTH_SHORT).show();
+            swipeRefreshLayout.setRefreshing(false);
         }
     };
 

@@ -7,34 +7,52 @@
     tools:context=".activities.ItemViewerActivity"
     android:background="@color/grey">
 
-    <RelativeLayout
-        android:id="@+id/details"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="240dp"
+        android:layout_margin="10dp"
+        android:layout_alignParentTop="true">
 
-        <ImageView
-            android:id="@+id/coverImage"
-            android:layout_width="170dp"
-            android:layout_height="260dp"
-            android:src="@drawable/ic_launcher_background"/>
+        <RelativeLayout
+            android:id="@+id/details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/title_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/coverImage"
-            android:layout_marginTop="100dp"
-            android:layout_marginStart="10dp"
-            android:text="bla bla"
-            android:textSize="20sp"/>
+            <ImageView
+                android:id="@+id/coverImage"
+                android:layout_width="170dp"
+                android:layout_height="260dp"
+                android:contentDescription="manga cover image"
+                android:src="@drawable/ic_launcher_background" />
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/title_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="60dp"
+                android:layout_toEndOf="@id/coverImage"
+                android:text="manga title"
+                android:textSize="20sp" />
+
+            <ImageButton
+                android:id="@+id/bookmark"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/baseline_bookmark_border_24"
+                android:contentDescription="bookmark"/>
+
+        </RelativeLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ListView
         android:id="@+id/chaptersListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/details"/>
+        android:layout_below="@id/refresh"/>
 
 </RelativeLayout>

@@ -22,19 +22,17 @@
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="9dp"
-        android:layout_marginBottom="21dp"
+        android:layout_height="match_parent"
         android:layout_toStartOf="@+id/btnLayout"
         android:layout_toEndOf="@+id/btnBack"
-        android:text="title" />
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"
+        android:text="title"/>
 
     <LinearLayout
         android:id="@+id/btnLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true">
 
@@ -47,7 +45,7 @@
 
         <ToggleButton
             android:id="@+id/LeftToRightBtn"
-            android:layout_width="match_parent"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:textOn="LTR"
             android:textOff="RTL"
