@@ -12,7 +12,6 @@ import android.widget.ToggleButton;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.example.mangatn.R;
 import com.example.mangatn.models.ChapterModel;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -74,6 +73,7 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
 
         //
         LTR.setOnClickListener(this);
+
         bookmark.setOnClickListener(v -> {
             added = !added;
 
@@ -85,6 +85,7 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
 
             Toast.makeText(this, "not implemented yet!!", Toast.LENGTH_SHORT).show();
         });
+
         back.setOnClickListener(v -> finish());
         imageView.setOnClickListener(v -> {
             if (!active) {

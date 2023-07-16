@@ -8,48 +8,56 @@
     tools:context=".activities.MainActivity"
     android:background="@color/grey">
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/search_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/search_view_bg"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:layout_constraintBottom_toTopOf="@id/relativeLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:queryHint="Search Here..."
-        app:iconifiedByDefault="false"/>
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/search_view_bg"
+            app:iconifiedByDefault="false"
+            app:queryHint="Search Here..." />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#7F7F7F"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_view">
+        app:layout_constraintTop_toBottomOf="@id/swipeRefreshLayout">
 
         <pl.droidsonroids.gif.GifTextView
             android:id="@+id/loading"
-            android:visibility="gone"
             android:layout_width="200sp"
             android:layout_height="200sp"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="120dp"
             android:layout_marginStart="100dp"
-            android:background="@drawable/loading_3"/>
+            android:layout_marginTop="120dp"
+            android:background="@drawable/loading_3"
+            android:visibility="gone" />
 
         <GridView
             android:id="@+id/gridView"
-            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#7F7F7F"
+            android:horizontalSpacing="2dp"
             android:numColumns="2"
-            android:stretchMode="columnWidth"
             android:orientation="vertical"
+            android:stretchMode="columnWidth"
             android:verticalSpacing="2dp"
-            android:horizontalSpacing="2dp"/>
+            android:visibility="visible" />
 
     </RelativeLayout>
 

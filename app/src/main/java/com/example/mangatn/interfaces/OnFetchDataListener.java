@@ -6,7 +6,7 @@ import com.example.mangatn.models.MangaModel;
 
 import java.util.List;
 
-public interface OnFetchDataListener<MangaApiResponse> {
+public interface OnFetchDataListener {
     void onFetchData(List<MangaModel> list, String  message, Context context);
     void onError(String message, Context context);
 }

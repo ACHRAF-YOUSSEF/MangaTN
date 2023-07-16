@@ -2,11 +2,13 @@ package com.example.mangatn.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -14,12 +16,12 @@ import android.widget.Toast;
 
 import com.example.mangatn.R;
 import com.example.mangatn.adapters.ChaptersAdapter;
-import com.example.mangatn.interfaces.OnFetchChaptersDataListener;
 import com.example.mangatn.interfaces.OnFetchSingleDataListener;
+import com.example.mangatn.interfaces.OnFetchUpdateListener;
 import com.example.mangatn.manager.RequestManager;
+import com.example.mangatn.models.ApiResponse;
 import com.example.mangatn.models.ChapterModel;
 import com.example.mangatn.models.MangaModel;
-import com.example.mangatn.models.SingleMangaChaptersApiResponse;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -28,9 +30,13 @@ public class ItemViewerActivity extends AppCompatActivity {
     private ChaptersAdapter chaptersAdapter;
     private MangaModel mangaModel;
     private List<ChapterModel> chaptersList;
-    private final boolean added = false;
+    private boolean added = false;
+    private boolean bookmarked = false;
     private RequestManager requestManager;
     private ProgressDialog dialog;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private String mangaId;
+    private ImageButton bookmark;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,7 +45,7 @@ public class ItemViewerActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-        String mangaId = getIntent().getStringExtra("mangaId");
+        mangaId = getIntent().getStringExtra("mangaId");
 
         dialog = new ProgressDialog(this);
         dialog.setTitle("Fetching manga chapters");
@@ -47,24 +53,41 @@ public class ItemViewerActivity extends AppCompatActivity {
 
         requestManager = new RequestManager(this);
         requestManager.getManga(listener, mangaId);
+
+        swipeRefreshLayout = findViewById(R.id.refresh);
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setRefreshing(true);
+            requestManager.updateManga(listener1, mangaId);
+        });
+
+        bookmark = findViewById(R.id.bookmark);
+
+        //  api call to check if this manga is bookmarked or not
+        // bookmarked = ...
+
+        switchBookmark();
+
+        bookmark.setOnClickListener(v -> {
+            bookmarked = !bookmarked;
+
+            switchBookmark();
+
+            Toast.makeText(this, "not implemented yet!!", Toast.LENGTH_SHORT).show();
+        });
     }
 
-    private final OnFetchChaptersDataListener<SingleMangaChaptersApiResponse> listener1 = new OnFetchChaptersDataListener<SingleMangaChaptersApiResponse>() {
-        @Override
-        public void onFetchData(List<ChapterModel> list, String message, Context context) {
-            if (list.isEmpty()) {
-                Toast.makeText(context, "No data found!!!", Toast.LENGTH_SHORT).show();
-            } else {
-                chaptersList = list;
-                dialog.dismiss();
-            }
-        }
+    private void switchBookmark() {
+        if (bookmarked) {
+            bookmark.setImageResource(R.drawable.baseline_bookmark_24);
 
-        @Override
-        public void onError(String message, Context context) {
-            Toast.makeText(context, "An Error Occurred!!!", Toast.LENGTH_SHORT).show();
+            // api call to update save the manga as bookmarked
+        } else {
+            bookmark.setImageResource(R.drawable.baseline_bookmark_border_24);
+
+            // api call to update save the manga as not bookmarked
         }
-    };
+    }
 
     private final OnFetchSingleDataListener listener = new OnFetchSingleDataListener() {
         @Override
@@ -75,18 +98,37 @@ public class ItemViewerActivity extends AppCompatActivity {
                 mangaModel = manga;
                 chaptersList = mangaModel.getChapters();
 
-                if (chaptersList.isEmpty()) {
-                    requestManager.getMangaChapters(listener1, manga.getMangaId());
-                } else {
-                    dialog.dismiss();
-                    showChapters(chaptersList);
-                }
+                dialog.dismiss();
+                swipeRefreshLayout.setRefreshing(false);
+
+                showChapters(chaptersList);
             }
         }
 
         @Override
         public void onError(String message, Context context) {
             Toast.makeText(context, "An Error Occurred!!!", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private final OnFetchUpdateListener<ApiResponse> listener1 = new OnFetchUpdateListener<ApiResponse>() {
+        @Override
+        public void onFetchData(ApiResponse apiResponse, String message, Context context) {
+            if (apiResponse.getMessage().equals("Manga already up to date!")) {
+                Toast.makeText(context, apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+            } else {
+                requestManager.getManga(listener, mangaId);
+
+                Toast.makeText(context, apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            swipeRefreshLayout.setRefreshing(false);
+        }
+
+        @Override
+        public void onError(String message, Context context) {
+            Toast.makeText(context, "An Error Occurred!!!" + message, Toast.LENGTH_SHORT).show();
+            swipeRefreshLayout.setRefreshing(false);
         }
     };
 
