@@ -15,11 +15,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mangatn.R;
+import com.example.mangatn.Utils;
 import com.example.mangatn.adapters.ChaptersAdapter;
+import com.example.mangatn.interfaces.OnBookmarkListener;
+import com.example.mangatn.interfaces.OnCheckForBookmarkListener;
 import com.example.mangatn.interfaces.OnFetchSingleDataListener;
 import com.example.mangatn.interfaces.OnFetchUpdateListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.ApiResponse;
+import com.example.mangatn.models.Bookmark;
 import com.example.mangatn.models.ChapterModel;
 import com.example.mangatn.models.MangaModel;
 import com.squareup.picasso.Picasso;
@@ -64,30 +68,52 @@ public class ItemViewerActivity extends AppCompatActivity {
         bookmark = findViewById(R.id.bookmark);
 
         //  api call to check if this manga is bookmarked or not
-        // bookmarked = ...
-
-        switchBookmark();
+        requestManager.checkForBookmark(listener2, mangaId);
 
         bookmark.setOnClickListener(v -> {
-            bookmarked = !bookmarked;
-
-            switchBookmark();
-
-            Toast.makeText(this, "not implemented yet!!", Toast.LENGTH_SHORT).show();
+            if (!Utils.getUserToken().isEmpty()) {
+                bookmarked = !bookmarked;
+                requestManager.bookmark(listener3, new Bookmark(mangaId, bookmarked));
+            } else {
+                Intent intent = new Intent(this, SignInActivity.class);
+                startActivity(intent);
+            }
         });
     }
 
     private void switchBookmark() {
         if (bookmarked) {
             bookmark.setImageResource(R.drawable.baseline_bookmark_24);
-
-            // api call to update save the manga as bookmarked
         } else {
             bookmark.setImageResource(R.drawable.baseline_bookmark_border_24);
-
-            // api call to update save the manga as not bookmarked
         }
     }
+
+    private final OnBookmarkListener listener3 = new OnBookmarkListener() {
+        @Override
+        public void onFetchData(ApiResponse response, String message, Context context) {
+            switchBookmark();
+        }
+
+        @Override
+        public void onError(String message, Context context) {
+            Toast.makeText(context, "An Error Occurred!!!: " + message, Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private final OnCheckForBookmarkListener listener2 = new OnCheckForBookmarkListener() {
+        @Override
+        public void onFetchData(Boolean response, String message, Context context) {
+            bookmarked = response;
+
+            switchBookmark();
+        }
+
+        @Override
+        public void onError(String message, Context context) {
+            Toast.makeText(context, "An Error Occurred!!!: " + message, Toast.LENGTH_SHORT).show();
+        }
+    };
 
     private final OnFetchSingleDataListener listener = new OnFetchSingleDataListener() {
         @Override
