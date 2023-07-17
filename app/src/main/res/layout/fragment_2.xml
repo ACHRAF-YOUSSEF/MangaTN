@@ -5,19 +5,75 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.Fragment2">
+    tools:context=".fragments.Fragment2"
+    android:background="#7F7F7F">
 
-    <TextView
-        android:layout_width="411dp"
-        android:layout_height="222dp"
-        android:text="Not Implemented Yet!"
-        android:textAlignment="center"
-        android:textSize="60sp"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_margin="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintBaseline_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.424"/>
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/noData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No data found!!!"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:textAlignment="center"
+                android:textSize="60sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.424"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/textViewSignIn_favorites"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Please Sign in to view your favorite mangas"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.424"
+                android:visibility="visible"/>
+
+            <GridView
+                android:id="@+id/gridView_favorites"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#7F7F7F"
+                android:horizontalSpacing="2dp"
+                android:numColumns="2"
+                android:orientation="vertical"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="2dp"
+                android:visibility="gone"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

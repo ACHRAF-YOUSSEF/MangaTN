@@ -1,18 +1,31 @@
 package com.example.mangatn.manager;
 
+import static com.example.mangatn.Utils.*;
+
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.mangatn.interfaces.OnBookmarkListener;
+import com.example.mangatn.interfaces.OnCheckForBookmarkListener;
 import com.example.mangatn.interfaces.OnCheckForUpdateListener;
+import com.example.mangatn.interfaces.OnFetchBookmarkedMangasListener;
 import com.example.mangatn.interfaces.OnFetchDataListener;
 import com.example.mangatn.interfaces.OnFetchSingleDataListener;
 import com.example.mangatn.interfaces.OnFetchUpdateListener;
+import com.example.mangatn.interfaces.OnSignInListener;
+import com.example.mangatn.interfaces.OnSignupListener;
 import com.example.mangatn.models.ApiResponse;
 import com.example.mangatn.models.Bookmark;
+import com.example.mangatn.models.JwtResponse;
+import com.example.mangatn.models.LoginModel;
 import com.example.mangatn.models.MangaListApiResponse;
 import com.example.mangatn.models.MangaModel;
+import com.example.mangatn.models.SignupModel;
 
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,10 +40,21 @@ import retrofit2.http.Query;
 
 public class RequestManager {
     private final Context context;
-
+    private final OkHttpClient httpClient = new OkHttpClient
+            .Builder()
+            .connectTimeout(30 * 60, TimeUnit.SECONDS)
+            .readTimeout(30 * 60, TimeUnit.SECONDS)
+            .writeTimeout(30 * 60, TimeUnit.SECONDS)
+            .build();
     private final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.31.40:8080/api/v1/manga/")
+            .baseUrl(API_URL + MANGA_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(httpClient)
+            .build();
+    private final Retrofit retrofit_users = new Retrofit.Builder()
+            .baseUrl(API_URL + USERS_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(httpClient)
             .build();
 
     public RequestManager(Context context) {
@@ -137,6 +161,40 @@ public class RequestManager {
         }
     }
 
+    public void checkForBookmark(OnCheckForBookmarkListener listener, String mangaId) {
+        CallMangaApi callMangaApi = retrofit.create(CallMangaApi.class);
+        Call<Boolean> call = callMangaApi.checkForBookmark(getUserToken(), mangaId);
+
+        try {
+            call.enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    if (!response.isSuccessful()) {
+                        int statusCode = response.code();
+                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                        listener.onError("Request Failed!", context);
+                    } else {
+                        assert response.body() != null;
+
+                        Log.i("body", "onResponse: " + response.body());
+
+                        listener.onFetchData(response.body(), response.message(), context);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+                    listener.onError("Request Failed!", context);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void updateManga(OnFetchUpdateListener<ApiResponse> listener, String mangaId) {
         CallMangaApi callMangaApi = retrofit.create(CallMangaApi.class);
         Call<ApiResponse> call = callMangaApi.callUpdateManga(mangaId);
@@ -171,6 +229,150 @@ public class RequestManager {
         }
     }
 
+    public void signup(OnSignupListener listener, SignupModel signupRequest) {
+        CallUsersApi callUsersApi = retrofit_users.create(CallUsersApi.class);
+        Call<ApiResponse> call = callUsersApi.callSignup(signupRequest);
+
+        call.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if (!response.isSuccessful()) {
+                    int statusCode = response.code();
+                    String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                    listener.onSignupError("Signup Failed!", context);
+                } else {
+                    ApiResponse apiResponse = response.body();
+                    if (apiResponse != null && apiResponse.getMessage().equals(USER_SUCCESSFULLY_CREATED)) {
+                        listener.onSignupSuccess("Signup Successful!", context);
+                    } else {
+                        listener.onSignupError("Signup Failed!", context);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                listener.onSignupError("Signup Failed!", context);
+            }
+        });
+    }
+
+    public void signIn(OnSignInListener listener, LoginModel loginRequest) {
+        CallUsersApi callUsersApi = retrofit_users.create(CallUsersApi.class);
+        Call<JwtResponse> call = callUsersApi.callSignIn(loginRequest);
+
+        call.enqueue(new Callback<JwtResponse>() {
+            @Override
+            public void onResponse(Call<JwtResponse> call, Response<JwtResponse> response) {
+                if (!response.isSuccessful()) {
+                    int statusCode = response.code();
+                    String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                    listener.onSignInError("Sign-In Failed!", context);
+                } else {
+                    JwtResponse apiResponse = response.body();
+                    if (apiResponse != null) {
+                        // save login token
+                        Log.i("token:", "onResponse: " + apiResponse.getToken());
+                        setUserToken(apiResponse.getToken());
+
+                        listener.onSignInSuccess("Sign-In Successful!", context);
+                    } else {
+                        listener.onSignInError("Sign-In Failed!", context);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JwtResponse> call, Throwable t) {
+                listener.onSignInError("Sign-In Failed!", context);
+            }
+        });
+    }
+
+    public void fetchBookmarked(OnFetchBookmarkedMangasListener listener, int pageNumber, int pageSize) {
+        CallMangaApi callMangaApi = retrofit.create(CallMangaApi.class);
+        Call<MangaListApiResponse> call = callMangaApi.fetchBookmarked(getUserToken(), pageNumber, pageSize);
+
+        try {
+            call.enqueue(new Callback<MangaListApiResponse>() {
+                @Override
+                public void onResponse(Call<MangaListApiResponse> call, Response<MangaListApiResponse> response) {
+                    if (!response.isSuccessful()) {
+                        int statusCode = response.code();
+                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                        listener.onFetchError("Request Failed!", context);
+                    } else {
+                        assert response.body() != null;
+
+                        listener.onFetchSuccess(response.body().getMangas(), response.message(), context);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<MangaListApiResponse> call, Throwable t) {
+                    listener.onFetchError("Request Failed!", context);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void bookmark(OnBookmarkListener listener, Bookmark bookmark) {
+        CallMangaApi callMangaApi = retrofit.create(CallMangaApi.class);
+        Call<ApiResponse> call = callMangaApi.callBookmark(getUserToken(), bookmark);
+
+        try {
+            call.enqueue(new Callback<ApiResponse>() {
+                @Override
+                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                    if (!response.isSuccessful()) {
+                        int statusCode = response.code();
+                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                        listener.onError("Request Failed!", context);
+                    } else {
+                        assert response.body() != null;
+
+                        Log.i("body", "onResponse: " + response.body());
+
+                        listener.onFetchData(response.body(), response.message(), context);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponse> call, Throwable t) {
+                    listener.onError("Request Failed!", context);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public interface CallUsersApi {
+        @POST("signup")
+        Call<ApiResponse> callSignup(
+                @Body SignupModel signupRequest
+        );
+
+        @POST("signin")
+        Call<JwtResponse> callSignIn(
+                @Body LoginModel loginRequest
+        );
+    }
+
     public interface CallMangaApi {
         @GET("all")
         Call<MangaListApiResponse> callManga(
@@ -195,15 +397,22 @@ public class RequestManager {
         );
 
         @GET("{mangaId}/bookmarked")
-        Call<Boolean> callCheckForBookmark(
+        Call<Boolean> checkForBookmark(
                 @Header("Authorization") String token,
                 @Path("mangaId") String mangaId
         );
 
         @POST("bookmark")
-        Call<Boolean> callBookmark(
+        Call<ApiResponse> callBookmark(
                 @Header("Authorization") String token,
                 @Body Bookmark bookmark
+        );
+
+        @GET("bookmarked")
+        Call<MangaListApiResponse> fetchBookmarked(
+                @Header("Authorization") String token,
+                @Query("pageNumber") int pageNumber,
+                @Query("pageSize") int pageSize
         );
     }
 }

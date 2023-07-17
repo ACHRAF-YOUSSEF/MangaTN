@@ -45,7 +45,14 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager.setAdapter(vpAdapter);
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(
+                        this,
+                            android.Manifest.permission.ACCESS_NETWORK_STATE
+                ) != PackageManager.PERMISSION_GRANTED
+        ) {
             ActivityCompat.requestPermissions(this, new String[] {
                     android.Manifest.permission.INTERNET,
                     Manifest.permission.ACCESS_NETWORK_STATE
