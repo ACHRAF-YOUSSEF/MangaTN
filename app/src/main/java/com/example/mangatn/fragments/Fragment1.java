@@ -22,6 +22,7 @@ import com.example.mangatn.adapters.GridAdapter;
 import com.example.mangatn.interfaces.OnFetchDataListener;
 import com.example.mangatn.interfaces.SelectListener;
 import com.example.mangatn.manager.RequestManager;
+import com.example.mangatn.models.ChapterModel;
 import com.example.mangatn.models.MangaModel;
 
 import java.util.List;
@@ -76,10 +77,15 @@ public class Fragment1 extends Fragment implements SelectListener {
 
     @Override
     public void OnMangaClicked(MangaModel manga, Context context) {
-        startActivity(
-                new Intent(context, ItemViewerActivity.class)
-                        .putExtra("mangaId", manga.getMangaId())
-        );
+        Intent intent = new Intent(context, ItemViewerActivity.class);
+
+        intent.putExtra("mangaId", manga.getMangaId());
+        intent.putExtra("title", manga.getTitle());
+        intent.putExtra("coverImgPath", manga.getCoverImgPath());
+        intent.putExtra("count", manga.getCount());
+        intent.putExtra("upToDate", manga.getUpToDate());
+
+        startActivity(intent);
     }
 
     private final OnFetchDataListener listener = new OnFetchDataListener() {

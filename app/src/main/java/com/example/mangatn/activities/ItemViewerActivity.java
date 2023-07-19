@@ -19,12 +19,14 @@ import com.example.mangatn.Utils;
 import com.example.mangatn.adapters.ChaptersAdapter;
 import com.example.mangatn.interfaces.OnBookmarkListener;
 import com.example.mangatn.interfaces.OnCheckForBookmarkListener;
+import com.example.mangatn.interfaces.OnFetchMangaChaptersListListener;
 import com.example.mangatn.interfaces.OnFetchSingleDataListener;
 import com.example.mangatn.interfaces.OnFetchUpdateListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.ApiResponse;
 import com.example.mangatn.models.Bookmark;
 import com.example.mangatn.models.ChapterModel;
+import com.example.mangatn.models.ChaptersListApiResponse;
 import com.example.mangatn.models.MangaModel;
 import com.squareup.picasso.Picasso;
 
@@ -49,14 +51,21 @@ public class ItemViewerActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
+        mangaModel = new MangaModel();
+
         mangaId = getIntent().getStringExtra("mangaId");
+
+        mangaModel.setMangaId(mangaId);
+        mangaModel.setTitle(getIntent().getStringExtra("title"));
+        mangaModel.setCoverImgPath(getIntent().getStringExtra("coverImgPath"));
+        mangaModel.setCount(getIntent().getIntExtra("count", 0));
+        mangaModel.setUpToDate(getIntent().getBooleanExtra("upToDate", Boolean.FALSE));
 
         dialog = new ProgressDialog(this);
         dialog.setTitle("Fetching manga chapters");
         dialog.show();
 
         requestManager = new RequestManager(this);
-        requestManager.getManga(listener, mangaId);
 
         swipeRefreshLayout = findViewById(R.id.refresh);
 
@@ -115,14 +124,13 @@ public class ItemViewerActivity extends AppCompatActivity {
         }
     };
 
-    private final OnFetchSingleDataListener listener = new OnFetchSingleDataListener() {
+    private final OnFetchMangaChaptersListListener listener = new OnFetchMangaChaptersListListener() {
         @Override
-        public void onFetchData(MangaModel manga, String message, Context context) {
-            if (manga == null) {
+        public void onFetchData(ChaptersListApiResponse response, String message, Context context) {
+            if (response == null) {
                 Toast.makeText(context, "No data found!!!", Toast.LENGTH_SHORT).show();
             } else {
-                mangaModel = manga;
-                chaptersList = mangaModel.getChapters();
+                chaptersList = response.getChapters();
 
                 dialog.dismiss();
                 swipeRefreshLayout.setRefreshing(false);
@@ -143,7 +151,7 @@ public class ItemViewerActivity extends AppCompatActivity {
             if (apiResponse.getMessage().equals("Manga already up to date!")) {
                 Toast.makeText(context, apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
             } else {
-                requestManager.getManga(listener, mangaId);
+                requestManager.getMangaChapters(listener, mangaId);
 
                 Toast.makeText(context, apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
             }
