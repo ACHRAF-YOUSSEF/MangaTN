@@ -11,12 +11,14 @@ import com.example.mangatn.interfaces.OnCheckForBookmarkListener;
 import com.example.mangatn.interfaces.OnCheckForUpdateListener;
 import com.example.mangatn.interfaces.OnFetchBookmarkedMangasListener;
 import com.example.mangatn.interfaces.OnFetchDataListener;
+import com.example.mangatn.interfaces.OnFetchMangaChaptersListListener;
 import com.example.mangatn.interfaces.OnFetchSingleDataListener;
 import com.example.mangatn.interfaces.OnFetchUpdateListener;
 import com.example.mangatn.interfaces.OnSignInListener;
 import com.example.mangatn.interfaces.OnSignupListener;
 import com.example.mangatn.models.ApiResponse;
 import com.example.mangatn.models.Bookmark;
+import com.example.mangatn.models.ChaptersListApiResponse;
 import com.example.mangatn.models.JwtResponse;
 import com.example.mangatn.models.LoginModel;
 import com.example.mangatn.models.MangaListApiResponse;
@@ -46,7 +48,12 @@ public class RequestManager {
             .readTimeout(30 * 60, TimeUnit.SECONDS)
             .writeTimeout(30 * 60, TimeUnit.SECONDS)
             .build();
-    private final Retrofit retrofit = new Retrofit.Builder()
+    private final Retrofit retrofit_chapter = new Retrofit.Builder()
+            .baseUrl(API_URL + CHAPTER_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(httpClient)
+            .build();
+    private final Retrofit retrofit_manga = new Retrofit.Builder()
             .baseUrl(API_URL + MANGA_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(httpClient)
@@ -62,7 +69,7 @@ public class RequestManager {
     }
 
     public void getMangaList(OnFetchDataListener listener, String query, int pageNumber, int pageSize) {
-        CallMangaApi callMangaApi = retrofit.create(CallMangaApi.class);
+        CallMangaApi callMangaApi = retrofit_manga.create(CallMangaApi.class);
         Call<MangaListApiResponse> call = callMangaApi.callManga(query, pageNumber, pageSize);
 
         try {
@@ -94,7 +101,7 @@ public class RequestManager {
     }
 
     public void getManga(OnFetchSingleDataListener listener, String mangaId) {
-        CallMangaApi callMangaApi = retrofit.create(CallMangaApi.class);
+        CallMangaApi callMangaApi = retrofit_manga.create(CallMangaApi.class);
         Call<MangaModel> call = callMangaApi.callFetchManga(mangaId);
 
         try {
@@ -127,8 +134,39 @@ public class RequestManager {
         }
     }
 
+    public void getMangaChapters(OnFetchMangaChaptersListListener listener, String mangaId, int pageNumber, int pageSize) {
+        CallChapterApi callChapterApi = retrofit_chapter.create(CallChapterApi.class);
+        Call<ChaptersListApiResponse> call = callChapterApi.callGetChapters(mangaId, pageNumber, pageSize);
+
+        call.enqueue(new Callback<ChaptersListApiResponse>() {
+            @Override
+            public void onResponse(Call<ChaptersListApiResponse> call, Response<ChaptersListApiResponse> response) {
+                if (!response.isSuccessful()) {
+                    int statusCode = response.code();
+                    String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                    listener.onError(errorMessage, context);
+                } else {
+                    ChaptersListApiResponse apiResponse = response.body();
+                    if (apiResponse != null) {
+                        listener.onFetchData(apiResponse, "success", context);
+                    } else {
+                        listener.onError("fetch Failed!", context);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ChaptersListApiResponse> call, Throwable t) {
+                listener.onError("fetch Failed!" + t.getMessage(), context);
+            }
+        });
+    }
+
     public void checkForUpdate(OnCheckForUpdateListener listener, String mangaId) {
-        CallMangaApi callMangaApi = retrofit.create(CallMangaApi.class);
+        CallMangaApi callMangaApi = retrofit_manga.create(CallMangaApi.class);
         Call<Boolean> call = callMangaApi.callMangaCheckForUpdate(mangaId);
 
         try {
@@ -162,7 +200,7 @@ public class RequestManager {
     }
 
     public void checkForBookmark(OnCheckForBookmarkListener listener, String mangaId) {
-        CallMangaApi callMangaApi = retrofit.create(CallMangaApi.class);
+        CallMangaApi callMangaApi = retrofit_manga.create(CallMangaApi.class);
         Call<Boolean> call = callMangaApi.checkForBookmark(getUserToken(), mangaId);
 
         try {
@@ -196,7 +234,7 @@ public class RequestManager {
     }
 
     public void updateManga(OnFetchUpdateListener<ApiResponse> listener, String mangaId) {
-        CallMangaApi callMangaApi = retrofit.create(CallMangaApi.class);
+        CallMangaApi callMangaApi = retrofit_manga.create(CallMangaApi.class);
         Call<ApiResponse> call = callMangaApi.callUpdateManga(mangaId);
 
         try {
@@ -296,7 +334,7 @@ public class RequestManager {
     }
 
     public void fetchBookmarked(OnFetchBookmarkedMangasListener listener, int pageNumber, int pageSize) {
-        CallMangaApi callMangaApi = retrofit.create(CallMangaApi.class);
+        CallMangaApi callMangaApi = retrofit_manga.create(CallMangaApi.class);
         Call<MangaListApiResponse> call = callMangaApi.fetchBookmarked(getUserToken(), pageNumber, pageSize);
 
         try {
@@ -328,7 +366,7 @@ public class RequestManager {
     }
 
     public void bookmark(OnBookmarkListener listener, Bookmark bookmark) {
-        CallMangaApi callMangaApi = retrofit.create(CallMangaApi.class);
+        CallMangaApi callMangaApi = retrofit_manga.create(CallMangaApi.class);
         Call<ApiResponse> call = callMangaApi.callBookmark(getUserToken(), bookmark);
 
         try {
@@ -370,6 +408,15 @@ public class RequestManager {
         @POST("signin")
         Call<JwtResponse> callSignIn(
                 @Body LoginModel loginRequest
+        );
+    }
+
+    public interface CallChapterApi {
+        @GET("{mangaId}/chapters")
+        Call<ChaptersListApiResponse> callGetChapters(
+                @Path("mangaId") String mangaId,
+                @Query("pageNumber") int pageNumber,
+                @Query("pageSize") int pageSiz
         );
     }
 

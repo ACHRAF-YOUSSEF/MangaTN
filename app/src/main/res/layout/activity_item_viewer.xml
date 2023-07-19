@@ -1,58 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.ItemViewerActivity"
     android:background="@color/grey">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="240dp"
-        android:layout_margin="10dp"
-        android:layout_alignParentTop="true">
-
-        <RelativeLayout
-            android:id="@+id/details"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/coverImage"
-                android:layout_width="170dp"
-                android:layout_height="260dp"
-                android:contentDescription="manga cover image"
-                android:src="@drawable/ic_launcher_background" />
-
-            <TextView
-                android:id="@+id/title_detail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="60dp"
-                android:layout_toEndOf="@id/coverImage"
-                android:text="manga title"
-                android:textSize="20sp" />
-
-            <ImageButton
-                android:id="@+id/bookmark"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:background="@android:color/transparent"
-                android:src="@drawable/baseline_bookmark_border_24"
-                android:contentDescription="bookmark"/>
-
-        </RelativeLayout>
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <ListView
-        android:id="@+id/chaptersListView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/refresh"/>
+        android:orientation="vertical">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_item_view"
+            android:layout_width="wrap_content"
+            android:layout_height="240dp"
+            android:layout_margin="10dp"
+            android:layout_alignParentTop="true">
+
+            <RelativeLayout
+                android:id="@+id/details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/coverImage"
+                    android:layout_width="170dp"
+                    android:layout_height="260dp"
+                    android:contentDescription="manga cover image"
+                    android:src="@drawable/ic_launcher_background" />
+
+                <TextView
+                    android:id="@+id/title_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="60dp"
+                    android:layout_toEndOf="@id/coverImage"
+                    android:text="manga title"
+                    android:textSize="20sp" />
+
+                <ImageButton
+                    android:id="@+id/bookmark"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/baseline_bookmark_border_24"
+                    android:contentDescription="bookmark"/>
+
+            </RelativeLayout>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/view_tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            app:tabGravity="fill"
+            app:tabMode="fixed" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
 </RelativeLayout>

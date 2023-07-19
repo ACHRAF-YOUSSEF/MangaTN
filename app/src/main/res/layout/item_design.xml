@@ -11,18 +11,16 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/imageCard"
-            android:layout_width="170dp"
-            android:layout_height="260dp"
+            android:layout_width="160dp"
+            android:layout_height="240dp"
             app:cardCornerRadius="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"
             android:backgroundTint="#C5C5C5">
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="170dp"
-                android:layout_height="260dp"
-                android:scaleType="fitCenter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_launcher_background">
             </ImageView>
 

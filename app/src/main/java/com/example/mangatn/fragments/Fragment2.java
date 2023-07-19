@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Fragment2 extends Fragment implements SelectListener, OnFetchBookmarkedMangasListener {
+    private View divider;
     public GridView gridView;
     private TextView textView, textView2;
     private GridAdapter gridAdapter;
@@ -50,6 +51,7 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
         textView = view1.findViewById(R.id.textViewSignIn_favorites);
         textView2 = view1.findViewById(R.id.noData);
         swipeRefreshLayout = view1.findViewById(R.id.refresh);
+        divider = view1.findViewById(R.id.divider);
 
         requestManager = new RequestManager(container.getContext());
 
@@ -78,6 +80,8 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
         } else {
             textView.setVisibility(View.VISIBLE);
             gridView.setVisibility(View.GONE);
+            divider.setVisibility(View.GONE);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -88,10 +92,15 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
 
     @Override
     public void OnMangaClicked(MangaModel manga, Context context) {
-        startActivity(
-                new Intent(context, ItemViewerActivity.class)
-                        .putExtra("mangaId", manga.getMangaId())
-        );
+        Intent intent = new Intent(context, ItemViewerActivity.class);
+
+        intent.putExtra("mangaId", manga.getMangaId());
+        intent.putExtra("title", manga.getTitle());
+        intent.putExtra("coverImgPath", manga.getCoverImgPath());
+        intent.putExtra("count", manga.getCount());
+        intent.putExtra("upToDate", manga.getUpToDate());
+
+        startActivity(intent);
     }
 
     @Override
@@ -101,7 +110,9 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
 
             textView.setVisibility(View.GONE);
             gridView.setVisibility(View.GONE);
+            divider.setVisibility(View.VISIBLE);
             textView2.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setVisibility(View.VISIBLE);
 
             swipeRefreshLayout.setRefreshing(false);
         } else {
@@ -109,7 +120,9 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
 
             textView.setVisibility(View.GONE);
             textView2.setVisibility(View.GONE);
+            divider.setVisibility(View.VISIBLE);
             gridView.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setVisibility(View.VISIBLE);
 
             swipeRefreshLayout.setRefreshing(false);
         }
