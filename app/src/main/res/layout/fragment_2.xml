@@ -11,69 +11,83 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="?attr/actionBarSize"
         android:layout_alignParentTop="true"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/underline"
+        android:visibility="gone">
+
+        <include
+            layout="@layout/fragment2_toolbar"
+            android:id="@+id/toolbar" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fragment2_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBaseline_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/refresh">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <TextView
+            android:id="@+id/noData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No data found!!!"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:textAlignment="center"
+            android:textSize="60sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.424"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/textViewSignIn_favorites"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Please Sign in to view your favorite mangas"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.424"
+            android:visibility="visible"/>
+
+        <GridView
+            android:id="@+id/gridView_favorites"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:horizontalSpacing="2dp"
+            android:numColumns="2"
+            android:orientation="vertical"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="16dp"
+            android:visibility="gone"
+            android:gravity="center"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"/>
 
-            <TextView
-                android:id="@+id/noData"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="No data found!!!"
-                android:textColor="@color/white"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:textAlignment="center"
-                android:textSize="60sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.424"
-                android:visibility="gone"/>
-
-            <TextView
-                android:id="@+id/textViewSignIn_favorites"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Please Sign in to view your favorite mangas"
-                android:textColor="@color/white"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:textAlignment="center"
-                android:textSize="30sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.424"
-                android:visibility="visible"/>
-
-            <GridView
-                android:id="@+id/gridView_favorites"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#7F7F7F"
-                android:horizontalSpacing="2dp"
-                android:numColumns="2"
-                android:orientation="vertical"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="2dp"
-                android:visibility="gone"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

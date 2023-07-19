@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -66,6 +67,7 @@ public class ItemViewerActivity extends AppCompatActivity {
         dialog.show();
 
         requestManager = new RequestManager(this);
+        requestManager.getMangaChapters(listener, mangaId);
 
         swipeRefreshLayout = findViewById(R.id.refresh);
 
@@ -77,7 +79,9 @@ public class ItemViewerActivity extends AppCompatActivity {
         bookmark = findViewById(R.id.bookmark);
 
         //  api call to check if this manga is bookmarked or not
-        requestManager.checkForBookmark(listener2, mangaId);
+        if (!Utils.getUserToken().isEmpty()) {
+            requestManager.checkForBookmark(listener2, mangaId);
+        }
 
         bookmark.setOnClickListener(v -> {
             if (!Utils.getUserToken().isEmpty()) {
@@ -141,7 +145,7 @@ public class ItemViewerActivity extends AppCompatActivity {
 
         @Override
         public void onError(String message, Context context) {
-            Toast.makeText(context, "An Error Occurred!!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "An Error Occurred!!!" + message, Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -167,6 +171,8 @@ public class ItemViewerActivity extends AppCompatActivity {
     };
 
     private void showChapters(List<ChapterModel> chapters) {
+        Log.i("chapters", "showChapters: " + chapters.size());
+
         ListView chaptersListView = findViewById(R.id.chaptersListView);
         ImageView coverImage = findViewById(R.id.coverImage);
         TextView titleDetail = findViewById(R.id.title_detail);

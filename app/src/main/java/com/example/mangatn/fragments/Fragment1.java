@@ -94,11 +94,13 @@ public class Fragment1 extends Fragment implements SelectListener {
             if (list.isEmpty()) {
                 Toast.makeText(context, "No data found!!!", Toast.LENGTH_SHORT).show();
                 swipeRefreshLayout.setRefreshing(false);
+                searchView.clearFocus();
             } else {
                 showManga(list, context);
 
                 swipeRefreshLayout.setRefreshing(false);
                 dialog.dismiss();
+                searchView.clearFocus();
             }
         }
 
