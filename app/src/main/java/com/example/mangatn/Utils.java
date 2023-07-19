@@ -6,6 +6,7 @@ public class Utils {
     public static final String CHAPTER_URL = "/v1/chapter/";
     public static final String USERS_URL = "/users/";
     public static final String USER_SUCCESSFULLY_CREATED = "Compte a été créé avec succès.";
+    public static final String USER_SUCCESSFULLY_UPDATED = "Compte a été mis à jour avec succès.";
 
     private static String userToken = "";
 
