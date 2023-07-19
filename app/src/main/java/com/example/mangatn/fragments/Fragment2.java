@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Fragment2 extends Fragment implements SelectListener, OnFetchBookmarkedMangasListener {
+    private View divider;
     public GridView gridView;
     private TextView textView, textView2;
     private GridAdapter gridAdapter;
@@ -50,6 +51,7 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
         textView = view1.findViewById(R.id.textViewSignIn_favorites);
         textView2 = view1.findViewById(R.id.noData);
         swipeRefreshLayout = view1.findViewById(R.id.refresh);
+        divider = view1.findViewById(R.id.divider);
 
         requestManager = new RequestManager(container.getContext());
 
@@ -78,6 +80,7 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
         } else {
             textView.setVisibility(View.VISIBLE);
             gridView.setVisibility(View.GONE);
+            divider.setVisibility(View.GONE);
             swipeRefreshLayout.setRefreshing(false);
         }
     }
@@ -107,6 +110,7 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
 
             textView.setVisibility(View.GONE);
             gridView.setVisibility(View.GONE);
+            divider.setVisibility(View.VISIBLE);
             textView2.setVisibility(View.VISIBLE);
             swipeRefreshLayout.setVisibility(View.VISIBLE);
 
@@ -116,6 +120,7 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
 
             textView.setVisibility(View.GONE);
             textView2.setVisibility(View.GONE);
+            divider.setVisibility(View.VISIBLE);
             gridView.setVisibility(View.VISIBLE);
             swipeRefreshLayout.setVisibility(View.VISIBLE);
 

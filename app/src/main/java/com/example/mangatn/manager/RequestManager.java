@@ -134,9 +134,9 @@ public class RequestManager {
         }
     }
 
-    public void getMangaChapters(OnFetchMangaChaptersListListener listener, String mangaId) {
+    public void getMangaChapters(OnFetchMangaChaptersListListener listener, String mangaId, int pageNumber, int pageSize) {
         CallChapterApi callChapterApi = retrofit_chapter.create(CallChapterApi.class);
-        Call<ChaptersListApiResponse> call = callChapterApi.callGetChapters(mangaId);
+        Call<ChaptersListApiResponse> call = callChapterApi.callGetChapters(mangaId, pageNumber, pageSize);
 
         call.enqueue(new Callback<ChaptersListApiResponse>() {
             @Override
@@ -412,9 +412,11 @@ public class RequestManager {
     }
 
     public interface CallChapterApi {
-        @GET("{mangaId}/chapters/all")
+        @GET("{mangaId}/chapters")
         Call<ChaptersListApiResponse> callGetChapters(
-                @Path("mangaId") String mangaId
+                @Path("mangaId") String mangaId,
+                @Query("pageNumber") int pageNumber,
+                @Query("pageSize") int pageSiz
         );
     }
 
