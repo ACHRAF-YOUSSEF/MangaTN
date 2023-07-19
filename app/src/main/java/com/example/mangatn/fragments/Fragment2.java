@@ -20,6 +20,7 @@ import com.example.mangatn.R;
 import com.example.mangatn.Utils;
 import com.example.mangatn.activities.ItemViewerActivity;
 import com.example.mangatn.activities.SignInActivity;
+import com.example.mangatn.activities.UpdateProfileActivity;
 import com.example.mangatn.adapters.GridAdapter;
 import com.example.mangatn.interfaces.OnFetchBookmarkedMangasListener;
 import com.example.mangatn.interfaces.SelectListener;
@@ -30,10 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Fragment2 extends Fragment implements SelectListener, OnFetchBookmarkedMangasListener {
-    private View divider;
     public GridView gridView;
-    private TextView textView, textView2;
+    private View divider, toolbar;
     private GridAdapter gridAdapter;
+    private TextView textView, textView2;
     private RequestManager requestManager;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -52,6 +53,7 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
         textView2 = view1.findViewById(R.id.noData);
         swipeRefreshLayout = view1.findViewById(R.id.refresh);
         divider = view1.findViewById(R.id.divider);
+        toolbar = view1.findViewById(R.id.toolbar);
 
         requestManager = new RequestManager(container.getContext());
 
@@ -59,6 +61,11 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
 
         textView.setOnClickListener(v -> {
             Intent intent = new Intent(container.getContext(), SignInActivity.class);
+            startActivity(intent);
+        });
+
+        toolbar.findViewById(R.id.viewAccount).setOnClickListener(v -> {
+            Intent intent = new Intent(container.getContext(), UpdateProfileActivity.class);
             startActivity(intent);
         });
 
@@ -92,15 +99,10 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
 
     @Override
     public void OnMangaClicked(MangaModel manga, Context context) {
-        Intent intent = new Intent(context, ItemViewerActivity.class);
-
-        intent.putExtra("mangaId", manga.getMangaId());
-        intent.putExtra("title", manga.getTitle());
-        intent.putExtra("coverImgPath", manga.getCoverImgPath());
-        intent.putExtra("count", manga.getCount());
-        intent.putExtra("upToDate", manga.getUpToDate());
-
-        startActivity(intent);
+        startActivity(
+                new Intent(context, ItemViewerActivity.class)
+                        .putExtra("mangaId", manga.getMangaId())
+        );
     }
 
     @Override

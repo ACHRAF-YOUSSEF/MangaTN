@@ -98,6 +98,10 @@ public class ItemViewerActivity extends AppCompatActivity {
         public void onFetchData(MangaModel manga, String message, Context context) {
             mangaModel = manga;
 
+            if (!Utils.getUserToken().isEmpty()) {
+                requestManager.checkForBookmark(listener2, mangaId);
+            }
+
             showChapters(mangaModel.getCount());
             swipeRefreshLayout.setRefreshing(false);
         }
@@ -195,5 +199,14 @@ public class ItemViewerActivity extends AppCompatActivity {
 
         titleDetail.setText(mangaModel.getTitle());
         Picasso.get().load(mangaModel.getCoverImgPath()).into(coverImage);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!Utils.getUserToken().isEmpty()) {
+            requestManager.checkForBookmark(listener2, mangaId);
+        }
     }
 }

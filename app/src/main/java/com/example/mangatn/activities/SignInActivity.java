@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mangatn.R;
+import com.example.mangatn.Utils;
 import com.example.mangatn.interfaces.OnSignInListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.LoginModel;
@@ -61,8 +63,15 @@ public class SignInActivity extends AppCompatActivity implements OnSignInListene
     public void onSignInSuccess(String message, Context context) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-        startActivity(intent);
+        // Get the SharedPreferences instance
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        // Get the editor to make changes to SharedPreferences
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        // Save the token to SharedPreferences
+        editor.putString("token", Utils.getUserToken());
+        editor.apply();
+
+        finish();
     }
 
     @Override

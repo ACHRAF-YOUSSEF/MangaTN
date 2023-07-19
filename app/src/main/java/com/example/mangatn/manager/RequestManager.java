@@ -3,9 +3,11 @@ package com.example.mangatn.manager;
 import static com.example.mangatn.Utils.*;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.mangatn.Utils;
 import com.example.mangatn.interfaces.OnBookmarkListener;
 import com.example.mangatn.interfaces.OnCheckForBookmarkListener;
 import com.example.mangatn.interfaces.OnCheckForUpdateListener;
@@ -15,7 +17,9 @@ import com.example.mangatn.interfaces.OnFetchMangaChaptersListListener;
 import com.example.mangatn.interfaces.OnFetchSingleDataListener;
 import com.example.mangatn.interfaces.OnFetchUpdateListener;
 import com.example.mangatn.interfaces.OnSignInListener;
+import com.example.mangatn.interfaces.OnSignInWithTokenListener;
 import com.example.mangatn.interfaces.OnSignupListener;
+import com.example.mangatn.interfaces.OnUpdateUserListener;
 import com.example.mangatn.models.ApiResponse;
 import com.example.mangatn.models.Bookmark;
 import com.example.mangatn.models.ChaptersListApiResponse;
@@ -24,6 +28,8 @@ import com.example.mangatn.models.LoginModel;
 import com.example.mangatn.models.MangaListApiResponse;
 import com.example.mangatn.models.MangaModel;
 import com.example.mangatn.models.SignupModel;
+import com.example.mangatn.models.UpdateModel;
+import com.example.mangatn.models.UserModel;
 
 import java.util.concurrent.TimeUnit;
 
@@ -37,6 +43,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -267,6 +274,37 @@ public class RequestManager {
         }
     }
 
+    public void updateUser(OnUpdateUserListener listener, UpdateModel updateRequest) {
+        CallUsersApi callUsersApi = retrofit_users.create(CallUsersApi.class);
+        Call<ApiResponse> call = callUsersApi.callUpdateUser(getUserToken(), updateRequest);
+
+        call.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if (!response.isSuccessful()) {
+                    int statusCode = response.code();
+                    String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                    listener.onError("Update Failed!", context);
+                } else {
+                    ApiResponse apiResponse = response.body();
+                    if (apiResponse != null && apiResponse.getMessage().equals(USER_SUCCESSFULLY_UPDATED)) {
+                        listener.onSuccess(apiResponse,"Update Successful!", context);
+                    } else {
+                        listener.onError("Update Failed!", context);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                listener.onError(t.getMessage(), context);
+            }
+        });
+    }
+
     public void signup(OnSignupListener listener, SignupModel signupRequest) {
         CallUsersApi callUsersApi = retrofit_users.create(CallUsersApi.class);
         Call<ApiResponse> call = callUsersApi.callSignup(signupRequest);
@@ -294,6 +332,38 @@ public class RequestManager {
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 listener.onSignupError("Signup Failed!", context);
+            }
+        });
+    }
+
+    public void signInWithToken(OnSignInWithTokenListener listener) {
+        CallUsersApi callUsersApi = retrofit_users.create(CallUsersApi.class);
+        Call<UserModel> call = callUsersApi.callFetchUserDetails(Utils.getUserToken());
+
+        call.enqueue(new Callback<UserModel>() {
+            @Override
+            public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                if (!response.isSuccessful()) {
+                    int statusCode = response.code();
+                    String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                    listener.onSignInError("Sign-In Failed!", context);
+                } else {
+                    UserModel apiResponse = response.body();
+
+                    if (apiResponse != null) {
+                        listener.onSignInSuccess(apiResponse,"Sign-In Successful!", context);
+                    } else {
+                        listener.onSignInError("Sign-In Failed!", context);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserModel> call, Throwable t) {
+                listener.onSignInError("Sign-In Failed!:" + t.getMessage(), context);
             }
         });
     }
@@ -408,6 +478,17 @@ public class RequestManager {
         @POST("signin")
         Call<JwtResponse> callSignIn(
                 @Body LoginModel loginRequest
+        );
+
+        @GET("sign-in-with-token")
+        Call<UserModel> callFetchUserDetails(
+                @Header("Authorization") String token
+        );
+
+        @PUT("updateUser")
+        Call<ApiResponse> callUpdateUser(
+                @Header("Authorization") String token,
+                @Body UpdateModel updateUser
         );
     }
 

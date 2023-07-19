@@ -1,6 +1,9 @@
 package com.example.mangatn.activities;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -10,6 +13,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mangatn.R;
+import com.example.mangatn.Utils;
 import com.example.mangatn.adapters.VPAdapter;
 import com.example.mangatn.fragments.Fragment1;
 import com.example.mangatn.fragments.Fragment2;
@@ -20,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String WEBSITE_URL = "https://kissmanga.org";
     public static List<MangaModel> mangalList;
     private static final int REQUEST_PERMISSION = 1;
     private TabLayout tabLayout;
@@ -67,4 +70,33 @@ public class MainActivity extends AppCompatActivity {
         mangalList = new ArrayList<>();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Get the SharedPreferences instance
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        // Get the editor to make changes to SharedPreferences
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        // Save the token to SharedPreferences
+        editor.putString("token", Utils.getUserToken());
+        editor.apply();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Get the SharedPreferences instance
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        // Retrieve the token from SharedPreferences
+        String token = sharedPreferences.getString("token", null);
+        // Use the retrieved token as needed
+        if (token != null) {
+            // Token is available, use it
+            Utils.setUserToken(token);
+        } /*else {
+            // Token is not available
+            Intent intent = new Intent(this, SignInActivity.class);
+            startActivity(intent);
+        }*/
+    }
 }
