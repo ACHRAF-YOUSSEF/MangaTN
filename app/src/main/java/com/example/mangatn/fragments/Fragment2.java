@@ -112,9 +112,7 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
             gridView.setVisibility(View.GONE);
             divider.setVisibility(View.VISIBLE);
             textView2.setVisibility(View.VISIBLE);
-            swipeRefreshLayout.setVisibility(View.VISIBLE);
 
-            swipeRefreshLayout.setRefreshing(false);
         } else {
             showManga(bookmarkedMangas, context);
 
@@ -122,10 +120,11 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
             textView2.setVisibility(View.GONE);
             divider.setVisibility(View.VISIBLE);
             gridView.setVisibility(View.VISIBLE);
-            swipeRefreshLayout.setVisibility(View.VISIBLE);
 
-            swipeRefreshLayout.setRefreshing(false);
         }
+
+        swipeRefreshLayout.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
