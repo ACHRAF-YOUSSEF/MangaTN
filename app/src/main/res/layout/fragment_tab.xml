@@ -7,6 +7,17 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        style="@android:style/Widget.ProgressBar.Large"
+        app:layout_constraintBottom_toBottomOf="@id/chaptersListView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/chaptersListView" />
+
     <ListView
         android:id="@+id/chaptersListView"
         android:layout_width="match_parent"
