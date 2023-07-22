@@ -1,18 +1,30 @@
 package com.example.mangatn.models;
 
+import android.content.Intent;
+
 import java.io.Serializable;
 import java.util.List;
 
 public class ChapterModel implements Serializable {
     private String title;
+    private Integer reference;
     private List<String> imgPaths;
 
-    public ChapterModel(String title, List<String> imgPaths) {
+    public ChapterModel(String title, List<String> imgPaths, Integer reference) {
         this.title = title;
         this.imgPaths = imgPaths;
+        this.reference =reference;
     }
 
     public ChapterModel() {}
+
+    public Integer getReference() {
+        return reference;
+    }
+
+    public void setReference(Integer reference) {
+        this.reference = reference;
+    }
 
     public String getTitle() {
         return title;
@@ -34,6 +46,7 @@ public class ChapterModel implements Serializable {
     public String toString() {
         return "ChapterModel{" +
                 "title='" + title + '\'' +
+                ", reference=" + reference +
                 ", imgPaths=" + imgPaths +
                 '}';
     }
