@@ -26,6 +26,8 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_gravity="bottom"
             app:tabIndicatorColor="#F44336"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextColor="@color/black"
             android:background="?colorSecondary">
 
             <com.google.android.material.tabs.TabItem
