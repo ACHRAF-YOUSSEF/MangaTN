@@ -220,6 +220,8 @@ public class RequestManager {
 
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
+                        setUserToken(null);
+
                         listener.onError("Request Failed!", context);
                     } else {
                         assert response.body() != null;
@@ -287,6 +289,8 @@ public class RequestManager {
 
                     Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
+                    setUserToken(null);
+
                     listener.onError("Update Failed!", context);
                 } else {
                     ApiResponse apiResponse = response.body();
@@ -348,6 +352,8 @@ public class RequestManager {
                     String errorMessage = "Error!! HTTP Status Code: " + statusCode;
 
                     Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                    setUserToken(null);
 
                     listener.onSignInError("Sign-In Failed!", context);
                 } else {
@@ -417,6 +423,8 @@ public class RequestManager {
 
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
+                        setUserToken(null);
+
                         listener.onFetchError("Request Failed!", context);
                     } else {
                         assert response.body() != null;
@@ -448,6 +456,8 @@ public class RequestManager {
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
 
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                        setUserToken(null);
 
                         listener.onError("Request Failed!", context);
                     } else {
