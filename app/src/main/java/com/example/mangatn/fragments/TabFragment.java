@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.mangatn.R;
@@ -31,6 +32,7 @@ public class TabFragment extends Fragment implements OnFetchMangaChaptersListLis
     private ChaptersAdapter chaptersAdapter;
     private RequestManager requestManager;
     private ListView chaptersListView;
+    private ProgressBar progressBar;
     private boolean added = false;
     private TabLayout tabLayout;
     private String mangaId;
@@ -42,6 +44,8 @@ public class TabFragment extends Fragment implements OnFetchMangaChaptersListLis
     }
 
     private void updateData() {
+        progressBar.setVisibility(View.VISIBLE);
+        chaptersListView.setVisibility(View.GONE);
         int selectedIndex = tabLayout.getSelectedTabPosition();
 
         if (selectedIndex != -1) {
@@ -55,6 +59,7 @@ public class TabFragment extends Fragment implements OnFetchMangaChaptersListLis
         View view1 = inflater.inflate(R.layout.fragment_tab, container, false);
 
         chaptersListView = view1.findViewById(R.id.chaptersListView);
+        progressBar = view1.findViewById(R.id.progressBar);
 
         Bundle bundle = getArguments();
         FragmentActivity activity = getActivity();
@@ -96,6 +101,9 @@ public class TabFragment extends Fragment implements OnFetchMangaChaptersListLis
 
             startActivity(intent1);
         });
+
+        chaptersListView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override

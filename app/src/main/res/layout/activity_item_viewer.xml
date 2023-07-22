@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.ItemViewerActivity"
-    android:background="@color/grey">
+    android:background="?colorPrimary">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,13 +59,32 @@
             android:layout_height="1dp"
             android:background="@android:color/darker_gray" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/chapters"
+            android:paddingHorizontal="15dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:textSize="20sp"
+            android:background="?colorSecondary"
+            android:textColor="@color/white"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/view_tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
+            app:tabIndicatorColor="#F44336"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextColor="@color/black"
             app:tabGravity="fill"
-            app:tabMode="fixed" />
+            app:tabMode="scrollable" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_viewPager"
