@@ -38,6 +38,8 @@ public class UpdateProfileActivity extends AppCompatActivity implements OnSignIn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_profile);
 
+        getSupportActionBar().hide();
+
         emailEditText = findViewById(R.id.emailEditText);
         usernameEditText = findViewById(R.id.usernameEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
