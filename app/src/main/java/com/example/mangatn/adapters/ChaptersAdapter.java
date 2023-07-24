@@ -1,6 +1,7 @@
 package com.example.mangatn.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,9 @@ public class ChaptersAdapter extends ArrayAdapter<ChapterModel> {
         ChapterModel chapterModel = getItem(position);
 
         tvChapter.setText(chapterModel.getTitle());
+
+        // api call to check if the chapter has already been read
+        /*tvChapter.setTextColor(Color.parseColor("#9E9E9E"));*/
 
         return convertView;
     }

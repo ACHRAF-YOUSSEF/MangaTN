@@ -28,6 +28,8 @@ public class SignInActivity extends AppCompatActivity implements OnSignInListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
+        getSupportActionBar().hide();
+
         textViewSignUp = findViewById(R.id.textViewSignUp);
         buttonSignIn = findViewById(R.id.buttonSignIn);
         editTextEmail = findViewById(R.id.editTextEmail);
