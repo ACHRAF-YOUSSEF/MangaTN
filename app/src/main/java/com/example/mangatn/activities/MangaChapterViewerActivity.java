@@ -1,7 +1,11 @@
 package com.example.mangatn.activities;
 
+import static com.example.mangatn.Utils.getUserToken;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -13,6 +17,10 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mangatn.R;
+import com.example.mangatn.interfaces.OnCheckIfAChapterIsViewedListener;
+import com.example.mangatn.interfaces.OnMarkAsViewedOrNotListener;
+import com.example.mangatn.manager.RequestManager;
+import com.example.mangatn.models.ApiResponse;
 import com.example.mangatn.models.ChapterModel;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Picasso;
@@ -21,11 +29,13 @@ import java.util.List;
 
 public class MangaChapterViewerActivity extends AppCompatActivity implements View.OnClickListener {
     private List<String> mangaChapterImagesUrls;
+    private ChapterModel chapterModel;
     private PhotoView imageView;
     private SeekBar seekBar;
     private TextView chapterStart, chapterEnd;
     private ImageButton bookmark;
     private ToggleButton LTR;
+    private String mangaId;
     int index = 0;
     private boolean active = true;
     private boolean LeftToRight = false;
@@ -51,7 +61,9 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
         init();
 
         Intent intent = getIntent();
-        ChapterModel chapterModel = (ChapterModel) intent.getSerializableExtra("data");
+
+        mangaId = intent.getStringExtra("mangaId");
+        chapterModel = (ChapterModel) intent.getSerializableExtra("data");
         added = intent.getBooleanExtra("added", false);
 
         if (!added) {
@@ -127,6 +139,8 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
 
             Picasso.get().load(mangaChapterImagesUrls.get(index)).into(imageView);
         }
+
+        checkIfTheChapterIsNearlyCompleted();
     }
 
     private void leftSwipe() {
@@ -142,6 +156,8 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
 
             Picasso.get().load(mangaChapterImagesUrls.get(index)).into(imageView);
         }
+
+        checkIfTheChapterIsNearlyCompleted();
     }
 
     private void init() {
@@ -215,6 +231,8 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
                     }
 
                     seekBar.setProgress(index);
+
+                    checkIfTheChapterIsNearlyCompleted();
                 }
             }
 
@@ -228,6 +246,46 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
 
             }
         });
+    }
+
+    private void checkIfTheChapterIsNearlyCompleted() {
+        int progress = seekBar.getProgress();
+        int max = seekBar.getMax();
+
+        Log.i("progress", "checkIfTheChapterIsNearlyCompleted: " + progress + ":" + max);
+
+        if (progress >= max / 2) {
+            // api call to mark the chapter as viewed for the current user
+            if (getUserToken() != null) {
+                if (!getUserToken().isEmpty()) {
+                    RequestManager requestManager = new RequestManager(this);
+
+                    requestManager.checkIfAChapterIsViewed(new OnCheckIfAChapterIsViewedListener() {
+                        @Override
+                        public void onFetchData(Boolean response, String message, Context context) {
+                            if (!response) {
+                                requestManager.markAsViewedOrNot(new OnMarkAsViewedOrNotListener() {
+                                    @Override
+                                    public void onFetchData(ApiResponse response, String message, Context context) {
+
+                                    }
+
+                                    @Override
+                                    public void onError(String message, Context context) {
+
+                                    }
+                                }, chapterModel.getReference(), mangaId, true);
+                            }
+                        }
+
+                        @Override
+                        public void onError(String message, Context context) {
+
+                        }
+                    }, chapterModel.getReference(), mangaId);
+                }
+            }
+        }
     }
 
     @Override

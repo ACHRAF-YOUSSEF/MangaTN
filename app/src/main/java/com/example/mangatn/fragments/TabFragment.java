@@ -91,13 +91,14 @@ public class TabFragment extends Fragment implements OnFetchMangaChaptersListLis
     }
 
     private void showChapters(Context context, List<ChapterModel> chapters) {
-        chaptersAdapter = new ChaptersAdapter(context, chapters);
+        chaptersAdapter = new ChaptersAdapter(context, chapters, mangaId);
         chaptersListView.setAdapter(chaptersAdapter);
         chaptersListView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent1 = new Intent(getContext(), MangaChapterViewerActivity.class);
 
             intent1.putExtra("added", added);
             intent1.putExtra("data", chapters.get(position));
+            intent1.putExtra("mangaId", mangaId);
 
             startActivity(intent1);
         });

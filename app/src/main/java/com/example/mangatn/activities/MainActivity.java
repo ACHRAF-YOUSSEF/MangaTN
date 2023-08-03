@@ -1,5 +1,8 @@
 package com.example.mangatn.activities;
 
+import static com.example.mangatn.Utils.getUserToken;
+import static com.example.mangatn.Utils.setUserToken;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -78,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         // Get the editor to make changes to SharedPreferences
         SharedPreferences.Editor editor = sharedPreferences.edit();
         // Save the token to SharedPreferences
-        editor.putString("token", Utils.getUserToken());
+        editor.putString("token", getUserToken());
         editor.apply();
     }
 
@@ -92,7 +95,9 @@ public class MainActivity extends AppCompatActivity {
         // Use the retrieved token as needed
         if (token != null) {
             // Token is available, use it
-            Utils.setUserToken(token);
+            if (!token.isEmpty()) {
+                setUserToken(token);
+            }
         } /*else {
             // Token is not available
             Intent intent = new Intent(this, SignInActivity.class);

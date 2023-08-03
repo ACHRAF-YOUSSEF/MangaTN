@@ -1,4 +1,4 @@
-{
+[{
   "title": "Chainsaw Man",
   "chapters": [
     {
@@ -11,4 +11,30 @@
   "mangaId": "dn980422",
   "coverImgPath": "https://kissmanga.org/mangaimage/manga-${mangaId}.jpg",
   "count": 127
-}
+},{
+  "title": "One Piece",
+  "chapters": [
+    {
+      "title": "",
+      "imgPaths": [
+        "https://kissmanga.org/chapter/manga-{$mangaId}/${title}/251349bfb9188395ea8fd13592da79ed.jpg"
+      ]
+    }
+  ],
+  "mangaId": "aa951409",
+  "coverImgPath": "https://kissmanga.org/mangaimage/manga-${mangaId}.jpg",
+  "count": 0
+},{
+  "title": "Dr. Stone",
+  "chapters": [
+    {
+      "title": "",
+      "imgPaths": [
+        "https://kissmanga.org/chapter/manga-{$mangaId}/${title}/251349bfb9188395ea8fd13592da79ed.jpg"
+      ]
+    }
+  ],
+  "mangaId": "yz975382",
+  "coverImgPath": "https://kissmanga.org/mangaimage/manga-${mangaId}.jpg",
+  "count": 0
+}]

@@ -1,5 +1,7 @@
 package com.example.mangatn.fragments;
 
+import static com.example.mangatn.Utils.getUserToken;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -78,12 +80,14 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
     }
 
     public void updateData() {
-        Log.i("token:", "onCreateView: " + Utils.getUserToken());
+        Log.i("token:", "onCreateView: " + getUserToken());
 
-        if (!Utils.getUserToken().isEmpty()) {
-            // api call to get the bookmarked mangas
-            swipeRefreshLayout.setRefreshing(true);
-            requestManager.fetchBookmarked(this, 0, 100);
+        if (getUserToken() != null) {
+            if (!getUserToken().isEmpty()) {
+                // api call to get the bookmarked mangas
+                swipeRefreshLayout.setRefreshing(true);
+                requestManager.fetchBookmarked(this, 0, 100);
+            }
         } else {
             textView.setVisibility(View.VISIBLE);
             gridView.setVisibility(View.GONE);
