@@ -1,6 +1,7 @@
 package com.example.mangatn.manager;
 
 import static com.example.mangatn.Utils.*;
+import static com.example.mangatn.Utils.getUserToken;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,11 +12,13 @@ import com.example.mangatn.Utils;
 import com.example.mangatn.interfaces.OnBookmarkListener;
 import com.example.mangatn.interfaces.OnCheckForBookmarkListener;
 import com.example.mangatn.interfaces.OnCheckForUpdateListener;
+import com.example.mangatn.interfaces.OnCheckIfAChapterIsViewedListener;
 import com.example.mangatn.interfaces.OnFetchBookmarkedMangasListener;
 import com.example.mangatn.interfaces.OnFetchDataListener;
 import com.example.mangatn.interfaces.OnFetchMangaChaptersListListener;
 import com.example.mangatn.interfaces.OnFetchSingleDataListener;
 import com.example.mangatn.interfaces.OnFetchUpdateListener;
+import com.example.mangatn.interfaces.OnMarkAsViewedOrNotListener;
 import com.example.mangatn.interfaces.OnSignInListener;
 import com.example.mangatn.interfaces.OnSignInWithTokenListener;
 import com.example.mangatn.interfaces.OnSignupListener;
@@ -40,6 +43,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -479,6 +483,72 @@ public class RequestManager {
         }
     }
 
+    public void markAsViewedOrNot(OnMarkAsViewedOrNotListener listener, Integer chapterReference, String mangaId, Boolean isViewed) {
+        CallChapterApi callChapterApi = retrofit_chapter.create(CallChapterApi.class);
+        Call<ApiResponse> call = isViewed ?
+                callChapterApi.callMarkAsViewed(chapterReference, getUserToken(), mangaId)
+                : callChapterApi.callMarkAsNotViewed(chapterReference, getUserToken(), mangaId);
+
+        try {
+            call.enqueue(new Callback<ApiResponse>() {
+                @Override
+                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                    if (!response.isSuccessful()) {
+                        int statusCode = response.code();
+                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                        listener.onError("Request Failed!", context);
+                    } else {
+                        assert response.body() != null;
+
+                        listener.onFetchData(response.body(), response.message(), context);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponse> call, Throwable t) {
+                    listener.onError("Request Failed!", context);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void checkIfAChapterIsViewed(OnCheckIfAChapterIsViewedListener listener, Integer chapterReference, String mangaId) {
+        CallChapterApi callChapterApi = retrofit_chapter.create(CallChapterApi.class);
+        Call<Boolean> call = callChapterApi.callCheckIfTheChapterIsViewed(chapterReference, getUserToken(), mangaId);
+
+        try {
+            call.enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    if (!response.isSuccessful()) {
+                        int statusCode = response.code();
+                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                        listener.onError("Request Failed!", context);
+                    } else {
+                        assert response.body() != null;
+
+                        listener.onFetchData(response.body(), response.message(), context);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+                    listener.onError("Request Failed!", context);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public interface CallUsersApi {
         @POST("signup")
         Call<ApiResponse> callSignup(
@@ -508,6 +578,27 @@ public class RequestManager {
                 @Path("mangaId") String mangaId,
                 @Query("pageNumber") int pageNumber,
                 @Query("pageSize") int pageSiz
+        );
+
+        @POST("{mangaId}/{chapterReference}/markAsViewed")
+        Call<ApiResponse> callMarkAsViewed(
+                @Path("chapterReference") Integer chapterReference,
+                @Header("Authorization") String token,
+                @Path("mangaId") String mangaId
+        );
+
+        @DELETE("{mangaId}/{chapterReference}/markAsNotViewed")
+        Call<ApiResponse> callMarkAsNotViewed(
+                @Path("chapterReference") Integer chapterReference,
+                @Header("Authorization") String token,
+                @Path("mangaId") String mangaId
+        );
+
+        @GET("{mangaId}/{chapterReference}/viewed")
+        Call<Boolean> callCheckIfTheChapterIsViewed(
+                @Path("chapterReference") Integer chapterReference,
+                @Header("Authorization") String token,
+                @Path("mangaId") String mangaId
         );
     }
 

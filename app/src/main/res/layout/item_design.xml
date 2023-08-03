@@ -31,6 +31,8 @@
                 android:padding="-1dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:text="133"
                 android:background="@drawable/chapter_count"
                 android:textColor="#fff"

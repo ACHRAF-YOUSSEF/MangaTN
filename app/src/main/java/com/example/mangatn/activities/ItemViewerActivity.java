@@ -1,5 +1,7 @@
 package com.example.mangatn.activities;
 
+import static com.example.mangatn.Utils.getUserToken;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -70,14 +72,18 @@ public class ItemViewerActivity extends AppCompatActivity {
         bookmark = findViewById(R.id.bookmark);
 
         //  api call to check if this manga is bookmarked or not
-        if (!Utils.getUserToken().isEmpty()) {
-            requestManager.checkForBookmark(listener2, mangaId);
+        if (getUserToken() != null) {
+            if (!getUserToken().isEmpty()) {
+                requestManager.checkForBookmark(listener2, mangaId);
+            }
         }
 
         bookmark.setOnClickListener(v -> {
-            if (!Utils.getUserToken().isEmpty()) {
-                bookmarked = !bookmarked;
-                requestManager.bookmark(listener3, new Bookmark(mangaId, bookmarked));
+            if (getUserToken() != null) {
+                if (!getUserToken().isEmpty()) {
+                    bookmarked = !bookmarked;
+                    requestManager.bookmark(listener3, new Bookmark(mangaId, bookmarked));
+                }
             } else {
                 Intent intent = new Intent(this, SignInActivity.class);
                 startActivity(intent);
@@ -98,9 +104,11 @@ public class ItemViewerActivity extends AppCompatActivity {
         public void onFetchData(MangaModel manga, String message, Context context) {
             mangaModel = manga;
 
-            if (!Utils.getUserToken().isEmpty()) {
-                requestManager.checkForBookmark(listener2, mangaId);
-            }
+           if (getUserToken() != null) {
+               if (!getUserToken().isEmpty()) {
+                   requestManager.checkForBookmark(listener2, mangaId);
+               }
+           }
 
             showChapters(mangaModel.getCount());
             swipeRefreshLayout.setRefreshing(false);
@@ -156,9 +164,6 @@ public class ItemViewerActivity extends AppCompatActivity {
     };
 
     private void showChapters(int count) {
-        Log.i("chapters", "showChapters: " + count);
-        Log.i("chapters", "showChapters: " + count / 50);
-
         String title;
         Bundle bundle = new Bundle();
         bundle.putString("mangaId", mangaId);
@@ -205,8 +210,10 @@ public class ItemViewerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (!Utils.getUserToken().isEmpty()) {
-            requestManager.checkForBookmark(listener2, mangaId);
+        if (getUserToken() != null) {
+            if (!getUserToken().isEmpty()) {
+                requestManager.checkForBookmark(listener2, mangaId);
+            }
         }
     }
 }
