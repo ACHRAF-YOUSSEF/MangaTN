@@ -106,7 +106,7 @@ public class ItemViewerActivity extends AppCompatActivity {
                             Intent intent1 = new Intent(ItemViewerActivity.this, MangaChapterViewerActivity.class);
 
                             intent1.putExtra("added", false);
-                            intent1.putExtra("data", response.getChapter());
+                            intent1.putExtra("chapterReference", response.getChapter().getReference());
                             intent1.putExtra("mangaId", mangaId);
 
                             startActivity(intent1);
