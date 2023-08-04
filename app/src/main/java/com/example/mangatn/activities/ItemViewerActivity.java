@@ -26,10 +26,14 @@ import com.example.mangatn.interfaces.OnBookmarkListener;
 import com.example.mangatn.interfaces.OnCheckForBookmarkListener;
 import com.example.mangatn.interfaces.OnFetchSingleDataListener;
 import com.example.mangatn.interfaces.OnFetchUpdateListener;
+import com.example.mangatn.interfaces.OnGetReadChapterListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.ApiResponse;
 import com.example.mangatn.models.Bookmark;
+import com.example.mangatn.models.ChapterModel;
 import com.example.mangatn.models.MangaModel;
+import com.example.mangatn.models.ReadChapterModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
 
@@ -42,6 +46,7 @@ public class ItemViewerActivity extends AppCompatActivity {
     private ImageButton bookmark;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private FloatingActionButton floatingActionButton;
     private MyPagerAdapter pagerAdapter;
 
     @Override
@@ -51,6 +56,7 @@ public class ItemViewerActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.view_tabLayout);
         viewPager = findViewById(R.id.view_viewPager);
+        floatingActionButton = findViewById(R.id.continueLastViewedChapterButton);
 
         getSupportActionBar().hide();
 
@@ -87,6 +93,31 @@ public class ItemViewerActivity extends AppCompatActivity {
             } else {
                 Intent intent = new Intent(this, SignInActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        floatingActionButton.setOnClickListener(v -> {
+            // api call to fetch the last viewed + in progress chapter
+            if (getUserToken() != null) {
+                if (!getUserToken().isEmpty()) {
+                    requestManager.getLastReadAndInProgressChapter(new OnGetReadChapterListener() {
+                        @Override
+                        public void onFetchData(ReadChapterModel response, String message, Context context) {
+                            Intent intent1 = new Intent(ItemViewerActivity.this, MangaChapterViewerActivity.class);
+
+                            intent1.putExtra("added", false);
+                            intent1.putExtra("data", response.getChapter());
+                            intent1.putExtra("mangaId", mangaId);
+
+                            startActivity(intent1);
+                        }
+
+                        @Override
+                        public void onError(String message, Context context) {
+
+                        }
+                    }, mangaId);
+                }
             }
         });
     }

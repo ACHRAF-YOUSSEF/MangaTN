@@ -97,7 +97,7 @@ public class TabFragment extends Fragment implements OnFetchMangaChaptersListLis
             Intent intent1 = new Intent(getContext(), MangaChapterViewerActivity.class);
 
             intent1.putExtra("added", added);
-            intent1.putExtra("data", chapters.get(position));
+            intent1.putExtra("chapterReference", chapters.get(position).getReference());
             intent1.putExtra("mangaId", mangaId);
 
             startActivity(intent1);
