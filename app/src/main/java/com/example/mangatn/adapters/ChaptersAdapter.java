@@ -17,8 +17,10 @@ import androidx.annotation.Nullable;
 
 import com.example.mangatn.R;
 import com.example.mangatn.interfaces.OnCheckIfAChapterIsViewedListener;
+import com.example.mangatn.interfaces.OnGetReadChapterListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.ChapterModel;
+import com.example.mangatn.models.ReadChapterModel;
 
 import java.util.List;
 
@@ -46,19 +48,13 @@ public class ChaptersAdapter extends ArrayAdapter<ChapterModel> {
         // api call to check if the chapter has already been read
         if (getUserToken() != null) {
             if (!getUserToken().isEmpty()) {
-                requestManager.checkIfAChapterIsViewed(new OnCheckIfAChapterIsViewedListener() {
-                    @Override
-                    public void onFetchData(Boolean response, String message, Context context) {
-                        if (response) {
-                            tvChapter.setTextColor(Color.parseColor("#9E9E9E"));
-                        }
-                    }
+                if (chapterModel.isInProgress()) {
+                    tvChapter.setTextColor(Color.parseColor("#9E9E9E"));
+                }
 
-                    @Override
-                    public void onError(String message, Context context) {
-                        Toast.makeText(context, "An Error Occurred!!!" + message, Toast.LENGTH_SHORT).show();
-                    }
-                }, chapterModel.getReference(), mangaId);
+                if (chapterModel.isCompleted()) {
+                    tvChapter.setTextColor(Color.parseColor("#4CAF50"));
+                }
             }
         }
 
