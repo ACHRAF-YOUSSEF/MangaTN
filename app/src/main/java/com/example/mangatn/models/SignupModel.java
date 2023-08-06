@@ -4,14 +4,24 @@ public class SignupModel {
     private String username;
     private String email;
     private String password;
+    private String role;
 
-    public SignupModel(String username, String email, String password) {
+    public SignupModel(String username, String email, String password, String role) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     public SignupModel() {}
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public String getUsername() {
         return username;

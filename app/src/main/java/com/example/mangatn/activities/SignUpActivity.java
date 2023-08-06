@@ -46,7 +46,7 @@ public class SignUpActivity extends AppCompatActivity implements OnSignupListene
             if (validateInputs(username, email, password)) {
                 RequestManager requestManager = new RequestManager(this);
 
-                requestManager.signup(this, new SignupModel(username, email, password));
+                requestManager.signup(this, new SignupModel(username, email, password, "ROLE_USER"));
             }
         });
     }
