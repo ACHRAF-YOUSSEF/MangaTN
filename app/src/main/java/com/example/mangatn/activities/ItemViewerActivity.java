@@ -103,13 +103,7 @@ public class ItemViewerActivity extends AppCompatActivity {
                     requestManager.getLastReadAndInProgressChapter(new OnGetReadChapterListener() {
                         @Override
                         public void onFetchData(ReadChapterModel response, String message, Context context) {
-                            Intent intent1 = new Intent(ItemViewerActivity.this, MangaChapterViewerActivity.class);
-
-                            intent1.putExtra("added", false);
-                            intent1.putExtra("chapterReference", response.getChapter().getReference());
-                            intent1.putExtra("mangaId", mangaId);
-
-                            startActivity(intent1);
+                            openChapter(response.getChapter().getReference());
                         }
 
                         @Override
@@ -118,8 +112,30 @@ public class ItemViewerActivity extends AppCompatActivity {
                         }
                     }, mangaId);
                 }
+            } else {
+                requestManager.getFirstChapter(new OnGetReadChapterListener() {
+                    @Override
+                    public void onFetchData(ReadChapterModel response, String message, Context context) {
+                        openChapter(response.getChapter().getReference());
+                    }
+
+                    @Override
+                    public void onError(String message, Context context) {
+
+                    }
+                }, mangaId);
             }
         });
+    }
+
+    private void openChapter(Integer reference) {
+        Intent intent1 = new Intent(ItemViewerActivity.this, MangaChapterViewerActivity.class);
+
+        intent1.putExtra("added", false);
+        intent1.putExtra("chapterReference", reference);
+        intent1.putExtra("mangaId", mangaId);
+
+        startActivity(intent1);
     }
 
     private void switchBookmark() {

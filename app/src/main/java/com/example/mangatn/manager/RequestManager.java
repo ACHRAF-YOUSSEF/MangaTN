@@ -657,6 +657,38 @@ public class RequestManager {
         }
     }
 
+    public void getFirstChapter(OnGetReadChapterListener listener, String mangaId) {
+        CallChapterApi callChapterApi = retrofit_chapter.create(CallChapterApi.class);
+        Call<ReadChapterModel> call = callChapterApi.callGetFirstChapter(mangaId);
+
+        try {
+            call.enqueue(new Callback<ReadChapterModel>() {
+                @Override
+                public void onResponse(Call<ReadChapterModel> call, Response<ReadChapterModel> response) {
+                    if (!response.isSuccessful()) {
+                        int statusCode = response.code();
+                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                        listener.onError("Request Failed!", context);
+                    } else {
+                        assert response.body() != null;
+
+                        listener.onFetchData(response.body(), response.message(), context);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ReadChapterModel> call, Throwable t) {
+                    listener.onError("Request Failed!", context);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void updateReadChapter(OnFetchUpdateListener listener, Integer chapterReference, String mangaId, ReadChapterModel readChapterModel) {
         CallChapterApi callChapterApi = retrofit_chapter.create(CallChapterApi.class);
         Call<ApiResponse> call = callChapterApi.callUpdateReadChapter(chapterReference, getUserToken(), mangaId, readChapterModel);
@@ -819,6 +851,11 @@ public class RequestManager {
         @GET("{mangaId}/lastViewedChapter")
         Call<ReadChapterModel> callGetLastReadAndInProgressChapter(
                 @Header("Authorization") String token,
+                @Path("mangaId") String mangaId
+        );
+
+        @GET("{mangaId}/getFirst")
+        Call<ReadChapterModel> callGetFirstChapter(
                 @Path("mangaId") String mangaId
         );
     }
