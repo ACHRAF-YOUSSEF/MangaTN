@@ -10,3 +10,6 @@ The code source for the API is still not ready!
         ...
         maven { url "https://jitpack.io" }
     }`
+- swiperefreshlayout : `implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'`
+- android-gif-drawable : `implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'`
+- PhotoView : `implementation 'com.github.chrisbanes:PhotoView:2.3.0'`
