@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,9 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
     private TextView textView, textView2;
     private RequestManager requestManager;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private final int pageSize = 5;
+    private int pageNumber = 0;
+    private final List<MangaModel> bookmarks = new ArrayList<>();
 
     @Override
     public void onResume() {
@@ -59,7 +63,22 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
 
         requestManager = new RequestManager(container.getContext());
 
-        updateData();
+        gridAdapter = new GridAdapter(container.getContext(), bookmarks, this);
+        gridView.setAdapter(gridAdapter);
+
+        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (!swipeRefreshLayout.isRefreshing() && firstVisibleItem + visibleItemCount >= totalItemCount) {
+                    updateData();
+                }
+            }
+        });
 
         textView.setOnClickListener(v -> {
             Intent intent = new Intent(container.getContext(), SignInActivity.class);
@@ -73,6 +92,9 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(true);
+            pageNumber = 0;
+            bookmarks.clear();
+
             updateData();
         });
 
@@ -86,7 +108,7 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
             if (!getUserToken().isEmpty()) {
                 // api call to get the bookmarked mangas
                 swipeRefreshLayout.setRefreshing(true);
-                requestManager.fetchBookmarked(this, 0, 100);
+                requestManager.fetchBookmarked(this, pageNumber, pageSize);
             }
         } else {
             textView.setVisibility(View.VISIBLE);
@@ -96,9 +118,13 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
         }
     }
 
-    private void showManga(List<MangaModel> list, Context context) {
-        gridAdapter = new GridAdapter(context, list, this);
-        gridView.setAdapter(gridAdapter);
+    private void showManga(List<MangaModel> list) {
+        if (!list.isEmpty()) {
+            bookmarks.addAll(list);
+
+            gridAdapter.notifyDataSetChanged();
+            pageNumber++;
+        }
     }
 
     @Override
@@ -111,7 +137,7 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
 
     @Override
     public void onFetchSuccess(List<MangaModel> bookmarkedMangas, String message, Context context) {
-        if (bookmarkedMangas.isEmpty()) {
+        if (bookmarkedMangas.isEmpty() &&  (pageNumber * pageSize < bookmarks.size())) {
             Toast.makeText(context, "No data found!!!", Toast.LENGTH_SHORT).show();
 
             textView.setVisibility(View.GONE);
@@ -120,7 +146,7 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
             textView2.setVisibility(View.VISIBLE);
 
         } else {
-            showManga(bookmarkedMangas, context);
+            showManga(bookmarkedMangas);
 
             textView.setVisibility(View.GONE);
             textView2.setVisibility(View.GONE);
