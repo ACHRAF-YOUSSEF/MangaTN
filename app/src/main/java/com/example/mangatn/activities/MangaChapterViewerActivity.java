@@ -2,6 +2,8 @@ package com.example.mangatn.activities;
 
 import static com.example.mangatn.Utils.getUserToken;
 
+import static java.lang.String.*;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,7 +37,7 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
     private ChapterModel chapterModel;
     private PhotoView imageView;
     private SeekBar seekBar;
-    private TextView chapterStart, chapterEnd;
+    private TextView chapterStart, chapterEnd, progress_text;
     private ImageButton bookmark;
     private ToggleButton LTR;
     private String mangaId;
@@ -61,6 +63,8 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
         TextView title = getSupportActionBar().getCustomView().findViewById(R.id.title);
         LTR = getSupportActionBar().getCustomView().findViewById(R.id.LeftToRightBtn);
         imageView = findViewById(R.id.imageView);
+
+        progress_text = findViewById(R.id.progress_counter_text);
 
         //
         init();
@@ -92,6 +96,8 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
                 if (mangaChapterImagesUrls.isEmpty()) {
                     Toast.makeText(MangaChapterViewerActivity.this, "error!", Toast.LENGTH_SHORT).show();
                 } else {
+                    progress_text.setText(format("%d/%d", index + 1, mangaChapterImagesUrls.size()));
+
                     Picasso.get().load(mangaChapterImagesUrls.get(index)).into(imageView);
                 }
 
@@ -119,7 +125,9 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
                                         index = response.getProgress();
                                         seekBar.setProgress(response.getProgress());
 
+                                        progress_text.setText(String.format("%d/%d", index + 1, mangaChapterImagesUrls.size()));
                                         Picasso.get().load(mangaChapterImagesUrls.get(index)).into(imageView);
+
                                         updateSeekBar();
                                         checkIfTheChapterIsNearlyCompletedOrCompleted();
                                     }
@@ -165,6 +173,8 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
                     findViewById(R.id.progressLeftToRight).setVisibility(View.VISIBLE);
                 }
 
+                findViewById(R.id.progress_counter).setVisibility(View.GONE);
+
                 getSupportActionBar().getCustomView().setVisibility(View.VISIBLE);
                 getSupportActionBar().show();
             } else {
@@ -173,6 +183,8 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
                 } else {
                     findViewById(R.id.progressLeftToRight).setVisibility(View.GONE);
                 }
+
+                findViewById(R.id.progress_counter).setVisibility(View.VISIBLE);
 
                 getSupportActionBar().getCustomView().setVisibility(View.GONE);
                 getSupportActionBar().hide();
@@ -190,9 +202,10 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
         }
 
         if (!mangaChapterImagesUrls.isEmpty()) {
-            chapterStart.setText(String.valueOf(index + 1));
+            chapterStart.setText(valueOf(index + 1));
             seekBar.setProgress(index);
 
+            progress_text.setText(String.format("%d/%d", index + 1, mangaChapterImagesUrls.size()));
             Picasso.get().load(mangaChapterImagesUrls.get(index)).into(imageView);
         }
 
@@ -207,9 +220,10 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
         }
 
         if (!mangaChapterImagesUrls.isEmpty()) {
-            chapterStart.setText(String.valueOf(index + 1));
+            chapterStart.setText(valueOf(index + 1));
             seekBar.setProgress(index);
 
+            progress_text.setText(String.format("%d/%d", index + 1, mangaChapterImagesUrls.size()));
             Picasso.get().load(mangaChapterImagesUrls.get(index)).into(imageView);
         }
 
@@ -239,11 +253,13 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
 
         init();
 
-        chapterStart.setText(String.valueOf(px + 1));
-        chapterEnd.setText(String.valueOf(mangaChapterImagesUrls.size()));
+        chapterStart.setText(valueOf(px + 1));
+        chapterEnd.setText(valueOf(mangaChapterImagesUrls.size()));
 
         seekBar.setMax(mangaChapterImagesUrls.size() - 1);
         seekBar.setProgress(px);
+
+        progress_text.setText(String.format("%d/%d", px + 1, mangaChapterImagesUrls.size()));
 
         imageView.setOnSingleFlingListener((e1, e2, velocityX, velocityY) -> {
             float diffX = e2.getX() - e1.getX();
@@ -280,7 +296,8 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
                 if (fromUser) {
                     index = progress;
 
-                    chapterStart.setText(String.valueOf(index + 1));
+                    progress_text.setText(String.format("%d/%d", index + 1, mangaChapterImagesUrls.size()));
+                    chapterStart.setText(valueOf(index + 1));
 
                     if (!mangaChapterImagesUrls.isEmpty()) {
                         Picasso.get().load(mangaChapterImagesUrls.get(index)).into(imageView);

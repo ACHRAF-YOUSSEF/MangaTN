@@ -18,6 +18,24 @@
         android:layout_alignParentTop="true" />
 
     <RelativeLayout
+        android:id="@+id/progress_counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="15dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/progress_counter_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="1/30" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/progressLeftToRight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -77,7 +95,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="30dp"
         android:background="@drawable/rounded_corners"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/chapterStartRightToLeft"
