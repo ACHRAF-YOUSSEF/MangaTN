@@ -1,7 +1,7 @@
 package com.example.mangatn;
 
 public class Utils {
-    public static final String API_URL = "http://192.168.31.40:8081/api";
+    public static final String API_URL = "http://192.168.215.152:8081/api";
     public static final String MANGA_URL = "/v1/manga/";
     public static final String CHAPTER_URL = "/v1/chapter/";
     public static final String USERS_URL = "/users/";

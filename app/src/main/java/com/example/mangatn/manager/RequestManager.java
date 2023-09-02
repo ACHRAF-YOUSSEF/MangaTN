@@ -95,6 +95,10 @@ public class RequestManager {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
 
+                        if (statusCode == 401) {
+                            setUserToken(null);
+                        }
+
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
                         listener.onError("Request Failed!", context);
@@ -126,6 +130,10 @@ public class RequestManager {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        if (statusCode == 401) {
+                            setUserToken(null);
+                        }
 
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
@@ -166,6 +174,10 @@ public class RequestManager {
                     int statusCode = response.code();
                     String errorMessage = "Error!! HTTP Status Code: " + statusCode;
 
+                    if (statusCode == 401) {
+                        setUserToken(null);
+                    }
+
                     Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
                     listener.onError(errorMessage, context);
@@ -197,6 +209,10 @@ public class RequestManager {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        if (statusCode == 401) {
+                            setUserToken(null);
+                        }
 
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
@@ -231,6 +247,10 @@ public class RequestManager {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        if (statusCode == 401) {
+                            setUserToken(null);
+                        }
 
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
@@ -268,6 +288,10 @@ public class RequestManager {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
 
+                        if (statusCode == 401) {
+                            setUserToken(null);
+                        }
+
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
                         listener.onError("Request Failed!", context);
@@ -300,6 +324,10 @@ public class RequestManager {
                 if (!response.isSuccessful()) {
                     int statusCode = response.code();
                     String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                    if (statusCode == 401) {
+                        setUserToken(null);
+                    }
 
                     Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
@@ -334,6 +362,10 @@ public class RequestManager {
                     int statusCode = response.code();
                     String errorMessage = "Error!! HTTP Status Code: " + statusCode;
 
+                    if (statusCode == 401) {
+                        setUserToken(null);
+                    }
+
                     Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
                     listener.onSignupError("Signup Failed!", context);
@@ -364,6 +396,10 @@ public class RequestManager {
                 if (!response.isSuccessful()) {
                     int statusCode = response.code();
                     String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                    if (statusCode == 401) {
+                        setUserToken(null);
+                    }
 
                     Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
@@ -398,6 +434,10 @@ public class RequestManager {
                 if (!response.isSuccessful()) {
                     int statusCode = response.code();
                     String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                    if (statusCode == 401) {
+                        setUserToken(null);
+                    }
 
                     Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
@@ -507,6 +547,10 @@ public class RequestManager {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
 
+                        if (statusCode == 401) {
+                            setUserToken(null);
+                        }
+
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
                         listener.onError("Request Failed!", context);
@@ -538,6 +582,10 @@ public class RequestManager {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        if (statusCode == 401) {
+                            setUserToken(null);
+                        }
 
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
@@ -573,6 +621,10 @@ public class RequestManager {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
 
+                        if (statusCode == 401) {
+                            setUserToken(null);
+                        }
+
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
                         listener.onError("Request Failed!", context);
@@ -604,6 +656,10 @@ public class RequestManager {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        if (statusCode == 401) {
+                            setUserToken(null);
+                        }
 
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
@@ -637,6 +693,10 @@ public class RequestManager {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
 
+                        if (statusCode == 401) {
+                            setUserToken(null);
+                        }
+
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
                         listener.onError("Request Failed!", context);
@@ -668,6 +728,10 @@ public class RequestManager {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        if (statusCode == 401) {
+                            setUserToken(null);
+                        }
 
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
@@ -701,6 +765,10 @@ public class RequestManager {
                        int statusCode = response.code();
                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
 
+                       if (statusCode == 401) {
+                           setUserToken(null);
+                       }
+
                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
                        listener.onError("Request Failed!", context);
@@ -732,6 +800,10 @@ public class RequestManager {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        if (statusCode == 401) {
+                            setUserToken(null);
+                        }
 
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
