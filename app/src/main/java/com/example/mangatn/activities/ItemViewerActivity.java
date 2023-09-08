@@ -303,7 +303,7 @@ public class ItemViewerActivity extends AppCompatActivity {
         Picasso.get().load(mangaModel.getCoverImgPath()).into(coverImage);
 
         expanded_summary_detail.setText(mangaModel.getSummary());
-        collapsed_summary_detail.setText(mangaModel.getSummary().substring(0, 180));
+        collapsed_summary_detail.setText(String.format("%s...", mangaModel.getSummary().substring(0, 180)));
         authors.setText(mangaModel.getAuthors());
     }
 
