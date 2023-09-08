@@ -11,6 +11,7 @@ The code source for the API is still not ready!
         maven { url "https://jitpack.io" }
     }`
 - swiperefreshlayout (in build.gradle) : `implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'`
-- glide (in build.gradle): 1. `annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2' `
-                           2. ` implementation 'com.github.bumptech.glide:glide:4.14.2'`
+- glide (in build.gradle):
+    1. `annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2' `
+    2. ` implementation 'com.github.bumptech.glide:glide:4.14.2'`
 - PhotoView (in build.gradle): `implementation 'com.github.chrisbanes:PhotoView:2.3.0'`
