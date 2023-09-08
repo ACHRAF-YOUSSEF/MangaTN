@@ -2,24 +2,24 @@ package com.example.mangatn.activities;
 
 import static com.example.mangatn.Utils.getUserToken;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mangatn.R;
-import com.example.mangatn.Utils;
 import com.example.mangatn.adapters.MyPagerAdapter;
 import com.example.mangatn.fragments.TabFragment;
 import com.example.mangatn.interfaces.OnBookmarkListener;
@@ -30,12 +30,10 @@ import com.example.mangatn.interfaces.OnGetReadChapterListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.ApiResponse;
 import com.example.mangatn.models.Bookmark;
-import com.example.mangatn.models.ChapterModel;
 import com.example.mangatn.models.MangaModel;
 import com.example.mangatn.models.ReadChapterModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-import com.robertlevonyan.views.expandable.Expandable;
 import com.squareup.picasso.Picasso;
 
 public class ItemViewerActivity extends AppCompatActivity {
@@ -44,24 +42,43 @@ public class ItemViewerActivity extends AppCompatActivity {
     private RequestManager requestManager;
     private SwipeRefreshLayout swipeRefreshLayout;
     private String mangaId;
-    private ImageButton bookmark;
+    private ImageButton bookmark, expanded_icon;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private FloatingActionButton floatingActionButton;
     private MyPagerAdapter pagerAdapter;
-    private Expandable expandable;
-    private TextView summary, authors;
+   /* private Expandable expandable;*/
+    private TextView collapsed_summary_detail, expanded_summary_detail, authors;
+    private boolean isExpanded = false;
+    private LinearLayout expandedContent, collapsedContent;
+    private CardView cardView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_viewer);
 
-        expandable = findViewById(R.id.expandable);
-        summary = findViewById(R.id.summary_detail);
+        collapsed_summary_detail = findViewById(R.id.collapsed_summary_detail);
+        expanded_summary_detail = findViewById(R.id.expanded_summary_detail);
         authors = findViewById(R.id.authors_detail);
 
-        expandable.collapse();
+        expanded_icon = findViewById(R.id.expanded_icon);
+
+        cardView = findViewById(R.id.cardView);
+        collapsedContent = findViewById(R.id.collapsedContent);
+        expandedContent = findViewById(R.id.expandedContent);
+
+        expanded_icon.setOnClickListener(v -> {
+            if (isExpanded) {
+                expanded_icon.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+                expandedContent.setVisibility(View.GONE);
+            } else {
+                expanded_icon.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
+                expandedContent.setVisibility(View.VISIBLE);
+            }
+
+            isExpanded = !isExpanded;
+        });
 
         tabLayout = findViewById(R.id.view_tabLayout);
         viewPager = findViewById(R.id.view_viewPager);
@@ -261,7 +278,8 @@ public class ItemViewerActivity extends AppCompatActivity {
         titleDetail.setText(mangaModel.getTitle());
         Picasso.get().load(mangaModel.getCoverImgPath()).into(coverImage);
 
-        summary.setText(mangaModel.getSummary());
+        expanded_summary_detail.setText(mangaModel.getSummary());
+        collapsed_summary_detail.setText(mangaModel.getSummary().substring(0, 50));
         authors.setText(mangaModel.getAuthors());
     }
 

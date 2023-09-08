@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -63,20 +63,63 @@
                     android:src="@drawable/baseline_bookmark_border_24"
                     android:contentDescription="bookmark"/>
 
-                <com.robertlevonyan.views.expandable.Expandable
-                    android:id="@+id/expandable"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/coverImage"
-                    app:exp_backgroundColor="?colorSecondary"
-                    app:exp_animateExpand="true">
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="?colorPrimary"
+                    android:layout_below="@id/coverImage">
 
-                    <TextView
-                        android:id="@+id/summary_detail"
+                    <!-- Content when collapsed -->
+                    <LinearLayout
+                        android:id="@+id/collapsedContent"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"/>
-                </com.robertlevonyan.views.expandable.Expandable>
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/collapsed_summary_detail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"/>
+
+                    </LinearLayout>
+
+                    <!-- Content when expanded -->
+                    <LinearLayout
+                        android:id="@+id/expandedContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/expanded_summary_detail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|bottom">
+
+                        <ImageButton
+                            android:id="@+id/expanded_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:src="@drawable/baseline_keyboard_arrow_down_24" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
 
             </RelativeLayout>
 
