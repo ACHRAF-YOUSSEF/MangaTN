@@ -35,6 +35,7 @@ import com.example.mangatn.models.MangaModel;
 import com.example.mangatn.models.ReadChapterModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.robertlevonyan.views.expandable.Expandable;
 import com.squareup.picasso.Picasso;
 
 public class ItemViewerActivity extends AppCompatActivity {
@@ -48,11 +49,19 @@ public class ItemViewerActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private FloatingActionButton floatingActionButton;
     private MyPagerAdapter pagerAdapter;
+    private Expandable expandable;
+    private TextView summary, authors;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_viewer);
+
+        expandable = findViewById(R.id.expandable);
+        summary = findViewById(R.id.summary_detail);
+        authors = findViewById(R.id.authors_detail);
+
+        expandable.collapse();
 
         tabLayout = findViewById(R.id.view_tabLayout);
         viewPager = findViewById(R.id.view_viewPager);
@@ -251,6 +260,9 @@ public class ItemViewerActivity extends AppCompatActivity {
 
         titleDetail.setText(mangaModel.getTitle());
         Picasso.get().load(mangaModel.getCoverImgPath()).into(coverImage);
+
+        summary.setText(mangaModel.getSummary());
+        authors.setText(mangaModel.getAuthors());
     }
 
     @Override
