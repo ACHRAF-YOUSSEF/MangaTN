@@ -5,10 +5,12 @@ import static com.example.mangatn.Utils.getUserToken;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,11 +49,11 @@ public class ItemViewerActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private FloatingActionButton floatingActionButton;
     private MyPagerAdapter pagerAdapter;
-   /* private Expandable expandable;*/
     private TextView collapsed_summary_detail, expanded_summary_detail, authors;
     private boolean isExpanded = false;
-    private LinearLayout expandedContent, collapsedContent;
+    private LinearLayout collapsedContent;
     private CardView cardView;
+    private ScrollView expandedContentScrollView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,18 +68,14 @@ public class ItemViewerActivity extends AppCompatActivity {
 
         cardView = findViewById(R.id.cardView);
         collapsedContent = findViewById(R.id.collapsedContent);
-        expandedContent = findViewById(R.id.expandedContent);
+        expandedContentScrollView = findViewById(R.id.expandedContentScrollView);
 
         expanded_icon.setOnClickListener(v -> {
-            if (isExpanded) {
-                expanded_icon.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
-                expandedContent.setVisibility(View.GONE);
-            } else {
-                expanded_icon.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
-                expandedContent.setVisibility(View.VISIBLE);
-            }
+            toggleCardViewContent();
+        });
 
-            isExpanded = !isExpanded;
+        cardView.setOnClickListener(v -> {
+            toggleCardViewContent();
         });
 
         tabLayout = findViewById(R.id.view_tabLayout);
@@ -137,6 +135,18 @@ public class ItemViewerActivity extends AppCompatActivity {
 
                         }
                     }, mangaId);
+                } else {
+                    requestManager.getFirstChapter(new OnGetReadChapterListener() {
+                        @Override
+                        public void onFetchData(ReadChapterModel response, String message, Context context) {
+                            openChapter(response.getChapter().getReference());
+                        }
+
+                        @Override
+                        public void onError(String message, Context context) {
+
+                        }
+                    }, mangaId);
                 }
             } else {
                 requestManager.getFirstChapter(new OnGetReadChapterListener() {
@@ -152,6 +162,20 @@ public class ItemViewerActivity extends AppCompatActivity {
                 }, mangaId);
             }
         });
+    }
+
+    private void toggleCardViewContent() {
+        if (isExpanded) {
+            expanded_icon.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+            expandedContentScrollView.setVisibility(View.GONE);
+            collapsedContent.setVisibility(View.VISIBLE);
+        } else {
+            expanded_icon.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
+            collapsedContent.setVisibility(View.GONE);
+            expandedContentScrollView.setVisibility(View.VISIBLE);
+        }
+
+        isExpanded = !isExpanded;
     }
 
     private void openChapter(Integer reference) {
@@ -279,7 +303,7 @@ public class ItemViewerActivity extends AppCompatActivity {
         Picasso.get().load(mangaModel.getCoverImgPath()).into(coverImage);
 
         expanded_summary_detail.setText(mangaModel.getSummary());
-        collapsed_summary_detail.setText(mangaModel.getSummary().substring(0, 50));
+        collapsed_summary_detail.setText(mangaModel.getSummary().substring(0, 180));
         authors.setText(mangaModel.getAuthors());
     }
 

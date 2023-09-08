@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,17 +8,15 @@
     tools:context=".activities.ItemViewerActivity"
     android:background="?colorPrimary">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/refresh_item_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_alignParentTop="true">
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:layout_margin="10dp">
 
             <RelativeLayout
                 android:id="@+id/details"
@@ -39,20 +38,20 @@
                     android:layout_marginTop="80dp"
                     android:layout_toEndOf="@id/coverImage"
                     android:text="manga title"
-                    android:textSize="20sp"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/authors_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/title_detail"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="4dp"
                     android:layout_toEndOf="@id/coverImage"
-                    android:layout_below="@id/title_detail"
                     android:text="manga authors"
-                    android:textSize="20sp"
-                    android:textColor="?colorSecondary"/>
+                    android:textColor="?colorSecondary"
+                    android:textSize="20sp" />
 
                 <ImageButton
                     android:id="@+id/bookmark"
@@ -60,109 +59,137 @@
                     android:layout_height="40dp"
                     android:layout_alignParentEnd="true"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/baseline_bookmark_border_24"
-                    android:contentDescription="bookmark"/>
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="8dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="?colorPrimary"
-                    android:layout_below="@id/coverImage">
-
-                    <!-- Content when collapsed -->
-                    <LinearLayout
-                        android:id="@+id/collapsedContent"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <TextView
-                            android:id="@+id/collapsed_summary_detail"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/white"/>
-
-                    </LinearLayout>
-
-                    <!-- Content when expanded -->
-                    <LinearLayout
-                        android:id="@+id/expandedContent"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:visibility="gone">
-
-                        <TextView
-                            android:id="@+id/expanded_summary_detail"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/white"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center|bottom">
-
-                        <ImageButton
-                            android:id="@+id/expanded_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@android:color/transparent"
-                            android:src="@drawable/baseline_keyboard_arrow_down_24" />
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
+                    android:contentDescription="bookmark"
+                    android:src="@drawable/baseline_bookmark_border_24" />
 
             </RelativeLayout>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray" />
-
-        <TextView
+        <androidx.cardview.widget.CardView
+            android:layout_below="@id/refresh_item_view"
+            android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/chapters"
-            android:paddingHorizontal="15dp"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
-            android:textSize="20sp"
-            android:background="?colorSecondary"
-            android:textColor="@color/white"/>
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            app:cardBackgroundColor="?colorPrimary"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray" />
+            <!-- Content when collapsed -->
+            <LinearLayout
+                android:id="@+id/collapsedContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/view_tabLayout"
+                <TextView
+                    android:id="@+id/collapsed_summary_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <!-- Content when expanded -->
+            <ScrollView
+                android:id="@+id/expandedContentScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/expandedContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp">
+
+                    <TextView
+                        android:id="@+id/expanded_summary_detail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+            </ScrollView>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom">
+
+                <ImageButton
+                    android:id="@+id/expanded_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/baseline_keyboard_arrow_down_24" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_below="@id/cardView"
+            android:id="@+id/content_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            app:tabIndicatorColor="#F44336"
-            app:tabSelectedTextColor="@color/white"
-            app:tabTextColor="@color/black"
-            app:tabGravity="fill"
-            app:tabMode="scrollable" />
+            android:layout_margin="10dp"
+            android:orientation="vertical">
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/view_viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?colorSecondary"
+                android:paddingHorizontal="15dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:text="@string/chapters"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/view_tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                app:tabGravity="fill"
+                app:tabIndicatorColor="#F44336"
+                app:tabMode="scrollable"
+                app:tabSelectedTextColor="@color/white"
+                app:tabTextColor="@color/black" />
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/view_viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/continueLastViewedChapterButton"
@@ -176,7 +203,6 @@
         android:focusable="true"
         app:backgroundTint="?colorSecondary"
         android:src="@drawable/baseline_play_circle_24"
-        android:tooltipText="Continue Reading Where You Left Off"
         android:contentDescription="Continue"/>
 
 </RelativeLayout>
