@@ -109,7 +109,6 @@ public class Fragment1 extends Fragment implements SelectListener {
             }
         });
 
-
         swipeRefreshLayout = view1.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(true);

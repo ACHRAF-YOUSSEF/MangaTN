@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">MangaTN V2.5</string>
     <string name="chapters">CHAPTERS</string>
+    <string name="Resume">Continue</string>
+    <string name="Start">Start</string>
+
     <string-array name="filter_options">
         <item>All</item>
         <item>Ongoing</item>

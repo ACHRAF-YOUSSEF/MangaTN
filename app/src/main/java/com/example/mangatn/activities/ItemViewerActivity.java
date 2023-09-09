@@ -34,6 +34,7 @@ import com.example.mangatn.models.Bookmark;
 import com.example.mangatn.models.Enum.EMangaStatus;
 import com.example.mangatn.models.MangaModel;
 import com.example.mangatn.models.ReadChapterModel;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
@@ -48,7 +49,8 @@ public class ItemViewerActivity extends AppCompatActivity {
     private ImageView status_icon;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private FloatingActionButton floatingActionButton;
+    /*private FloatingActionButton floatingActionButton;*/
+    private ExtendedFloatingActionButton floatingActionButton;
     private MyPagerAdapter pagerAdapter;
     private TextView collapsed_summary_detail, expanded_summary_detail, authors, status_details;
     private boolean isExpanded = false;

@@ -23,6 +23,7 @@ import com.example.mangatn.interfaces.OnFetchMangaChaptersListListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.ChapterModel;
 import com.example.mangatn.models.ChaptersListApiResponse;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -36,6 +37,8 @@ public class TabFragment extends Fragment implements OnFetchMangaChaptersListLis
     private boolean added = false;
     private TabLayout tabLayout;
     private String mangaId;
+    /*private FloatingActionButton floatingActionButton;*/
+    private ExtendedFloatingActionButton floatingActionButton;
 
     @Override
     public void onResume() {
@@ -68,6 +71,7 @@ public class TabFragment extends Fragment implements OnFetchMangaChaptersListLis
         if (bundle != null) {
             mangaId = bundle.getString("mangaId");
             tabLayout = activity.findViewById(R.id.view_tabLayout);
+            floatingActionButton = activity.findViewById(R.id.continueLastViewedChapterButton);
 
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
@@ -91,6 +95,12 @@ public class TabFragment extends Fragment implements OnFetchMangaChaptersListLis
     }
 
     private void showChapters(Context context, List<ChapterModel> chapters) {
+        if (chapters.stream().anyMatch(ChapterModel::isInProgress)) {
+            floatingActionButton.setText(R.string.Resume);
+        } else {
+            floatingActionButton.setText(R.string.Start);
+        }
+
         chaptersAdapter = new ChaptersAdapter(context, chapters, mangaId);
         chaptersListView.setAdapter(chaptersAdapter);
         chaptersListView.setOnItemClickListener((parent, view, position, id) -> {

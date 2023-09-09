@@ -219,7 +219,7 @@
 
     </RelativeLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/continueLastViewedChapterButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -231,6 +231,25 @@
         android:focusable="true"
         app:backgroundTint="?colorSecondary"
         android:src="@drawable/baseline_play_circle_24"
-        android:contentDescription="Continue"/>
+        android:contentDescription="Continue"/>-->
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/continueLastViewedChapterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="?colorSecondary"
+        android:contentDescription="@string/Resume"
+        android:text="@string/Resume"
+        app:icon="@drawable/baseline_play_circle_24"
+        app:iconTint="@color/white"
+        android:textColor="@color/white"
+        android:padding="6dp"
+        android:gravity="center"/>
 
 </RelativeLayout>
