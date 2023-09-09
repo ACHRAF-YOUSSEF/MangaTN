@@ -7,7 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.SearchView;
@@ -16,23 +19,29 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mangatn.R;
 import com.example.mangatn.activities.ItemViewerActivity;
+import com.example.mangatn.adapters.CustomSpinnerAdapter;
 import com.example.mangatn.adapters.GridAdapter;
 import com.example.mangatn.interfaces.OnFetchDataListener;
 import com.example.mangatn.interfaces.SelectListener;
 import com.example.mangatn.manager.RequestManager;
+import com.example.mangatn.models.Enum.EMangaStatus;
 import com.example.mangatn.models.MangaModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Fragment1 extends Fragment implements SelectListener {
     public GridView gridView;
     private GridAdapter gridAdapter;
     private SearchView searchView;
+    private Spinner spinnerFilter;
+    private CustomSpinnerAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private final int pageSize = 5;
     private int pageNumber = 0;
     private final List<MangaModel> mangaModels = new ArrayList<>();
+    private List<EMangaStatus> statusList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,6 +49,66 @@ public class Fragment1 extends Fragment implements SelectListener {
 
         gridView = view1.findViewById(R.id.gridView);
         searchView = view1.findViewById(R.id.search_view);
+
+        spinnerFilter = view1.findViewById(R.id.spinnerFilter);
+
+        adapter = new CustomSpinnerAdapter(
+                container.getContext(),
+                android.R.layout.simple_spinner_item,
+                Arrays.asList(getResources().getStringArray(R.array.filter_options))
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinnerFilter.setAdapter(adapter);
+
+        spinnerFilter.setSelection(0);
+
+        spinnerFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String selectedFilter = parentView
+                        .getItemAtPosition(position)
+                        .toString();
+
+                adapter.setSelectedItemPosition(position);
+
+                switch (selectedFilter) {
+                    case "Completed": {
+                        statusList = new ArrayList<>();
+
+                        statusList.add(EMangaStatus.COMPLETED);
+
+                        break;
+                    }
+                    case "Ongoing": {
+                        statusList = new ArrayList<>();
+
+                        statusList.add(EMangaStatus.ONGOING);
+
+                        break;
+                    }
+                    default: {
+                        statusList = new ArrayList<>();
+
+                        statusList.add(EMangaStatus.COMPLETED);
+                        statusList.add(EMangaStatus.ONGOING);
+
+                        break;
+                    }
+                }
+
+                mangaModels.clear();
+                pageNumber = 0;
+
+                loadData(container, searchView.getQuery().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+
+            }
+        });
+
 
         swipeRefreshLayout = view1.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -50,6 +119,9 @@ public class Fragment1 extends Fragment implements SelectListener {
 
             loadData(container, searchView.getQuery().toString());
         });
+
+        statusList.add(EMangaStatus.ONGOING);
+        statusList.add(EMangaStatus.COMPLETED);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -90,7 +162,7 @@ public class Fragment1 extends Fragment implements SelectListener {
         RequestManager requestManager = new RequestManager(container.getContext());
 
         swipeRefreshLayout.setRefreshing(true);
-        requestManager.getMangaList(listener, searchView, pageNumber, pageSize);
+        requestManager.getMangaList(listener, searchView, statusList, pageNumber, pageSize);
     }
 
     @Override

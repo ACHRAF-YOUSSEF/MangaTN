@@ -320,13 +320,20 @@ public class ItemViewerActivity extends AppCompatActivity {
 
         EMangaStatus status = mangaModel.getStatus();
 
-        if (status.equals(EMangaStatus.COMPLETED)) {
-            status_icon.setImageResource(R.drawable.outline_check_circle_24);
+        if (status != null) {
+            findViewById(R.id.manga_status).setVisibility(View.VISIBLE);
+
+            if (status.equals(EMangaStatus.COMPLETED)) {
+                status_icon.setImageResource(R.drawable.outline_check_circle_24);
+            } else {
+                status_icon.setImageResource(R.drawable.outline_access_time_24);
+            }
+
+            status_details.setText(EMangaStatus.getName(status));
         } else {
-            status_icon.setImageResource(R.drawable.outline_access_time_24);
+            findViewById(R.id.manga_status).setVisibility(View.GONE);
         }
 
-        status_details.setText(EMangaStatus.getName(status));
         authors.setText(mangaModel.getAuthors());
     }
 

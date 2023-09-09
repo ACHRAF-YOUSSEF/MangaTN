@@ -29,6 +29,7 @@ import com.example.mangatn.models.ApiResponse;
 import com.example.mangatn.models.Bookmark;
 import com.example.mangatn.models.ChapterModel;
 import com.example.mangatn.models.ChaptersListApiResponse;
+import com.example.mangatn.models.Enum.EMangaStatus;
 import com.example.mangatn.models.JwtResponse;
 import com.example.mangatn.models.LoginModel;
 import com.example.mangatn.models.MangaListApiResponse;
@@ -38,6 +39,7 @@ import com.example.mangatn.models.SignupModel;
 import com.example.mangatn.models.UpdateModel;
 import com.example.mangatn.models.UserModel;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -83,9 +85,9 @@ public class RequestManager {
         this.context = context;
     }
 
-    public void getMangaList(OnFetchDataListener listener, String query, int pageNumber, int pageSize) {
+    public void getMangaList(OnFetchDataListener listener, String query, List<EMangaStatus> statusList, int pageNumber, int pageSize) {
         CallMangaApi callMangaApi = retrofit_manga.create(CallMangaApi.class);
-        Call<MangaListApiResponse> call = callMangaApi.callManga(query, pageNumber, pageSize);
+        Call<MangaListApiResponse> call = callMangaApi.callManga(query, pageNumber, pageSize, statusList);
 
         try {
             call.enqueue(new Callback<MangaListApiResponse>() {
@@ -937,7 +939,8 @@ public class RequestManager {
         Call<MangaListApiResponse> callManga(
             @Query("query") String query,
             @Query("pageNumber") int pageNumber,
-            @Query("pageSize") int pageSize
+            @Query("pageSize") int pageSize,
+            @Query("statusList") List<EMangaStatus> statusList
         );
 
         @GET("{mangaId}")
