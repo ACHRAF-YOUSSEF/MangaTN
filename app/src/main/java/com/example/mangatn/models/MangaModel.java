@@ -1,5 +1,7 @@
 package com.example.mangatn.models;
 
+import com.example.mangatn.models.Enum.EMangaStatus;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -10,16 +12,18 @@ public class MangaModel implements Serializable {
     private String coverImgPath;
     private String summary;
     private String authors;
+    private EMangaStatus status;
     private int count;
     private Boolean upToDate;
 
-    public MangaModel(String title, List<ChapterModel> chapters, String mangaId, String coverImgPath, String summary, String authors, int count, Boolean upToDate) {
+    public MangaModel(String title, List<ChapterModel> chapters, String mangaId, String coverImgPath, String summary, String authors, EMangaStatus status, int count, Boolean upToDate) {
         this.title = title;
         this.chapters = chapters;
         this.mangaId = mangaId;
         this.coverImgPath = coverImgPath;
         this.summary = summary;
         this.authors = authors;
+        this.status = status;
         this.count = count;
         this.upToDate = upToDate;
     }
@@ -99,5 +103,13 @@ public class MangaModel implements Serializable {
                 ", coverImgPath='" + coverImgPath + '\'' +
                 ", count=" + count +
                 '}';
+    }
+
+    public EMangaStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(EMangaStatus status) {
+        this.status = status;
     }
 }

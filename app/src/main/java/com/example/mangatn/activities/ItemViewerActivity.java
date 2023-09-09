@@ -5,7 +5,6 @@ import static com.example.mangatn.Utils.getUserToken;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -32,6 +31,7 @@ import com.example.mangatn.interfaces.OnGetReadChapterListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.ApiResponse;
 import com.example.mangatn.models.Bookmark;
+import com.example.mangatn.models.Enum.EMangaStatus;
 import com.example.mangatn.models.MangaModel;
 import com.example.mangatn.models.ReadChapterModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -45,11 +45,12 @@ public class ItemViewerActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private String mangaId;
     private ImageButton bookmark, expanded_icon;
+    private ImageView status_icon;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private FloatingActionButton floatingActionButton;
     private MyPagerAdapter pagerAdapter;
-    private TextView collapsed_summary_detail, expanded_summary_detail, authors;
+    private TextView collapsed_summary_detail, expanded_summary_detail, authors, status_details;
     private boolean isExpanded = false;
     private LinearLayout collapsedContent;
     private CardView cardView;
@@ -65,6 +66,9 @@ public class ItemViewerActivity extends AppCompatActivity {
         authors = findViewById(R.id.authors_detail);
 
         expanded_icon = findViewById(R.id.expanded_icon);
+
+        status_details = findViewById(R.id.status_details);
+        status_icon = findViewById(R.id.status_icon);
 
         cardView = findViewById(R.id.cardView);
         collapsedContent = findViewById(R.id.collapsedContent);
@@ -283,7 +287,9 @@ public class ItemViewerActivity extends AppCompatActivity {
                 int from = i * 50 + 1;
                 int to = i * 50 + 50;
 
-                if (to > count) to = count;
+                if (to > count) {
+                    to = count;
+                }
 
                 title = String.format("%d-%d", from, to);
 
@@ -302,8 +308,25 @@ public class ItemViewerActivity extends AppCompatActivity {
         titleDetail.setText(mangaModel.getTitle());
         Picasso.get().load(mangaModel.getCoverImgPath()).into(coverImage);
 
-        expanded_summary_detail.setText(mangaModel.getSummary());
-        collapsed_summary_detail.setText(String.format("%s...", mangaModel.getSummary().substring(0, 180)));
+        String summaryText = mangaModel.getSummary();
+
+        if (summaryText.length() >= 180) {
+            expanded_summary_detail.setText(summaryText);
+            collapsed_summary_detail.setText(String.format("%s...", summaryText.substring(0, 180)));
+        } else {
+            expanded_summary_detail.setText(summaryText);
+            collapsed_summary_detail.setText(summaryText);
+        }
+
+        EMangaStatus status = mangaModel.getStatus();
+
+        if (status.equals(EMangaStatus.COMPLETED)) {
+            status_icon.setImageResource(R.drawable.outline_check_circle_24);
+        } else {
+            status_icon.setImageResource(R.drawable.outline_access_time_24);
+        }
+
+        status_details.setText(EMangaStatus.getName(status));
         authors.setText(mangaModel.getAuthors());
     }
 
