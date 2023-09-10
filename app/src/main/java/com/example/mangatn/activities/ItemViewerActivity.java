@@ -4,6 +4,7 @@ import static com.example.mangatn.Utils.getUserToken;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -34,6 +35,7 @@ import com.example.mangatn.models.bookmark.BookmarkModel;
 import com.example.mangatn.models.Enum.EMangaStatus;
 import com.example.mangatn.models.manga.MangaModel;
 import com.example.mangatn.models.chapter.ReadChapterModel;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
@@ -56,6 +58,7 @@ public class ItemViewerActivity extends AppCompatActivity {
     private LinearLayout collapsedContent;
     private CardView cardView;
     private ScrollView expandedContentScrollView;
+    private LinearLayout chipGroup;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -311,9 +314,9 @@ public class ItemViewerActivity extends AppCompatActivity {
 
         String summaryText = mangaModel.getSummary();
 
-        if (summaryText.length() >= 180) {
+        if (summaryText.length() >= 100) {
             expanded_summary_detail.setText(summaryText);
-            collapsed_summary_detail.setText(String.format("%s...", summaryText.substring(0, 180)));
+            collapsed_summary_detail.setText(String.format("%s...", summaryText.substring(0, 100)));
         } else {
             expanded_summary_detail.setText(summaryText);
             collapsed_summary_detail.setText(summaryText);
@@ -336,6 +339,39 @@ public class ItemViewerActivity extends AppCompatActivity {
         }
 
         authors.setText(mangaModel.getAuthors());
+
+        chipGroup = findViewById(R.id.chip_manga_genre_group);
+
+        for (String genre: mangaModel.getGenres()) {
+            Chip newChip = new Chip(ItemViewerActivity.this);
+
+            newChip.setText(
+                    String.format("%s%s",
+                            genre.charAt(0),
+                            genre.substring(1)
+                            .toLowerCase()
+                            .replaceAll("_", "")
+                            .replaceAll("manga", "")
+                    )
+            );
+            newChip.setTextSize(20);
+            newChip.setChipBackgroundColorResource(R.color.grey);
+            newChip.setTextColor(Color.WHITE);
+
+            // Create LayoutParams for the chip
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+
+            // Set margins for the chip (adjust values as needed)
+            layoutParams.setMargins(10, 0, 10, 10);
+
+            // Apply the LayoutParams to the chip
+            newChip.setLayoutParams(layoutParams);
+
+            chipGroup.addView(newChip);
+        }
     }
 
     @Override

@@ -94,8 +94,25 @@
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <androidx.cardview.widget.CardView
+        <HorizontalScrollView
+            android:id="@+id/scroll_view_for_chip_manga_genre_group"
             android:layout_below="@id/refresh_item_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:scrollbars="horizontal">
+
+            <LinearLayout
+                android:id="@+id/chip_manga_genre_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"/>
+
+        </HorizontalScrollView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_below="@id/scroll_view_for_chip_manga_genre_group"
             android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
