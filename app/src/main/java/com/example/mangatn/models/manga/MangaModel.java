@@ -1,8 +1,7 @@
 package com.example.mangatn.models.manga;
 
-import com.example.mangatn.models.chapter.ChapterModel;
 import com.example.mangatn.models.Enum.EMangaStatus;
-import com.example.mangatn.models.manga.genre.MangaGenreModel;
+import com.example.mangatn.models.chapter.ChapterModel;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,11 +15,11 @@ public class MangaModel implements Serializable {
     private String summary;
     private String authors;
     private EMangaStatus status;
-    private Set<MangaGenreModel> genres;
+    private Set<String> genres;
     private int count;
     private Boolean upToDate;
 
-    public MangaModel(String title, List<ChapterModel> chapters, String mangaId, String coverImgPath, String summary, String authors, EMangaStatus status, Set<MangaGenreModel> genres, int count, Boolean upToDate) {
+    public MangaModel(String title, List<ChapterModel> chapters, String mangaId, String coverImgPath, String summary, String authors, EMangaStatus status, Set<String> genres, int count, Boolean upToDate) {
         this.title = title;
         this.chapters = chapters;
         this.mangaId = mangaId;
@@ -118,11 +117,11 @@ public class MangaModel implements Serializable {
         this.status = status;
     }
 
-    public Set<MangaGenreModel> getGenres() {
+    public Set<String> getGenres() {
         return genres;
     }
 
-    public void setGenres(Set<MangaGenreModel> genres) {
+    public void setGenres(Set<String> genres) {
         this.genres = genres;
     }
 }

@@ -155,7 +155,7 @@ public class Fragment1 extends Fragment implements SelectListener {
             }
         });
 
-        RequestManager requestManager = new RequestManager(container.getContext());
+        /*RequestManager requestManager = new RequestManager(container.getContext());
         requestManager.getAllMangaGenre(new OnFetchAllGenreListener() {
             @Override
             public void onFetchData(List<String> list, String message, Context context) {
@@ -166,7 +166,7 @@ public class Fragment1 extends Fragment implements SelectListener {
             public void onError(String message, Context context) {
 
             }
-        });
+        });*/
 
         return view1;
     }
