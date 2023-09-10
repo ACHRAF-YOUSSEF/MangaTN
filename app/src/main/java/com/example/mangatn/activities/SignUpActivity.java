@@ -11,9 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mangatn.R;
-import com.example.mangatn.interfaces.OnSignupListener;
+import com.example.mangatn.interfaces.auth.OnSignupListener;
 import com.example.mangatn.manager.RequestManager;
-import com.example.mangatn.models.SignupModel;
+import com.example.mangatn.models.auth.SignupModel;
 
 public class SignUpActivity extends AppCompatActivity implements OnSignupListener {
     private EditText editTextUsername, editTextEmail, editTextPassword;

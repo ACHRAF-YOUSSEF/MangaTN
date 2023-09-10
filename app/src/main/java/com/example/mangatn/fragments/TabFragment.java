@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,14 +18,13 @@ import android.widget.Toast;
 import com.example.mangatn.R;
 import com.example.mangatn.activities.MangaChapterViewerActivity;
 import com.example.mangatn.adapters.ChaptersAdapter;
-import com.example.mangatn.interfaces.OnFetchMangaChaptersListListener;
+import com.example.mangatn.interfaces.chapter.OnFetchMangaChaptersListListener;
 import com.example.mangatn.manager.RequestManager;
-import com.example.mangatn.models.ChapterModel;
-import com.example.mangatn.models.ChaptersListApiResponse;
+import com.example.mangatn.models.chapter.ChapterModel;
+import com.example.mangatn.models.chapter.ChaptersListApiResponse;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TabFragment extends Fragment implements OnFetchMangaChaptersListListener {

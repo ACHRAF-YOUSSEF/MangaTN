@@ -23,19 +23,18 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.mangatn.R;
 import com.example.mangatn.adapters.MyPagerAdapter;
 import com.example.mangatn.fragments.TabFragment;
-import com.example.mangatn.interfaces.OnBookmarkListener;
-import com.example.mangatn.interfaces.OnCheckForBookmarkListener;
-import com.example.mangatn.interfaces.OnFetchSingleDataListener;
-import com.example.mangatn.interfaces.OnFetchUpdateListener;
-import com.example.mangatn.interfaces.OnGetReadChapterListener;
+import com.example.mangatn.interfaces.bookmark.OnBookmarkListener;
+import com.example.mangatn.interfaces.bookmark.OnCheckForBookmarkListener;
+import com.example.mangatn.interfaces.manga.OnFetchSingleDataListener;
+import com.example.mangatn.interfaces.update.OnFetchUpdateListener;
+import com.example.mangatn.interfaces.chapter.OnGetReadChapterListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.ApiResponse;
-import com.example.mangatn.models.Bookmark;
+import com.example.mangatn.models.bookmark.BookmarkModel;
 import com.example.mangatn.models.Enum.EMangaStatus;
-import com.example.mangatn.models.MangaModel;
-import com.example.mangatn.models.ReadChapterModel;
+import com.example.mangatn.models.manga.MangaModel;
+import com.example.mangatn.models.chapter.ReadChapterModel;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
 
@@ -105,7 +104,7 @@ public class ItemViewerActivity extends AppCompatActivity {
             requestManager.updateManga(listener1, mangaId);
         });
 
-        bookmark = findViewById(R.id.bookmark);
+        bookmark = findViewById(R.id.bookmarkModel);
 
         //  api call to check if this manga is bookmarked or not
         if (getUserToken() != null) {
@@ -118,7 +117,7 @@ public class ItemViewerActivity extends AppCompatActivity {
             if (getUserToken() != null) {
                 if (!getUserToken().isEmpty()) {
                     bookmarked = !bookmarked;
-                    requestManager.bookmark(listener3, new Bookmark(mangaId, bookmarked));
+                    requestManager.bookmark(listener3, new BookmarkModel(mangaId, bookmarked));
                 }
             } else {
                 Intent intent = new Intent(this, SignInActivity.class);

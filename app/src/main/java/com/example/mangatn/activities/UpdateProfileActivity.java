@@ -8,21 +8,17 @@ import android.os.Bundle;
 
 import com.example.mangatn.R;
 import com.example.mangatn.Utils;
-import com.example.mangatn.interfaces.OnSignInWithTokenListener;
-import com.example.mangatn.interfaces.OnUpdateUserListener;
+import com.example.mangatn.interfaces.auth.OnSignInWithTokenListener;
+import com.example.mangatn.interfaces.auth.OnUpdateUserListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.ApiResponse;
-import com.example.mangatn.models.UpdateModel;
-import com.example.mangatn.models.UserModel;
+import com.example.mangatn.models.auth.UpdateModel;
+import com.example.mangatn.models.auth.UserModel;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class UpdateProfileActivity extends AppCompatActivity implements OnSignInWithTokenListener {
     private RequestManager requestManager;

@@ -4,40 +4,40 @@ import static com.example.mangatn.Utils.*;
 import static com.example.mangatn.Utils.getUserToken;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.mangatn.Utils;
-import com.example.mangatn.interfaces.OnBookmarkListener;
-import com.example.mangatn.interfaces.OnCheckForBookmarkListener;
-import com.example.mangatn.interfaces.OnCheckForUpdateListener;
-import com.example.mangatn.interfaces.OnCheckIfAChapterIsViewedListener;
-import com.example.mangatn.interfaces.OnFetchBookmarkedMangasListener;
-import com.example.mangatn.interfaces.OnFetchDataListener;
-import com.example.mangatn.interfaces.OnFetchMangaChapterListener;
-import com.example.mangatn.interfaces.OnFetchMangaChaptersListListener;
-import com.example.mangatn.interfaces.OnFetchSingleDataListener;
-import com.example.mangatn.interfaces.OnFetchUpdateListener;
-import com.example.mangatn.interfaces.OnGetReadChapterListener;
-import com.example.mangatn.interfaces.OnMarkAsViewedOrNotListener;
-import com.example.mangatn.interfaces.OnSignInListener;
-import com.example.mangatn.interfaces.OnSignInWithTokenListener;
-import com.example.mangatn.interfaces.OnSignupListener;
-import com.example.mangatn.interfaces.OnUpdateUserListener;
+import com.example.mangatn.interfaces.bookmark.OnBookmarkListener;
+import com.example.mangatn.interfaces.bookmark.OnCheckForBookmarkListener;
+import com.example.mangatn.interfaces.manga.genre.OnFetchAllGenreListener;
+import com.example.mangatn.interfaces.update.OnCheckForUpdateListener;
+import com.example.mangatn.interfaces.update.OnCheckIfAChapterIsViewedListener;
+import com.example.mangatn.interfaces.bookmark.OnFetchBookmarkedMangasListener;
+import com.example.mangatn.interfaces.manga.OnFetchDataListener;
+import com.example.mangatn.interfaces.chapter.OnFetchMangaChapterListener;
+import com.example.mangatn.interfaces.chapter.OnFetchMangaChaptersListListener;
+import com.example.mangatn.interfaces.manga.OnFetchSingleDataListener;
+import com.example.mangatn.interfaces.update.OnFetchUpdateListener;
+import com.example.mangatn.interfaces.chapter.OnGetReadChapterListener;
+import com.example.mangatn.interfaces.update.OnMarkAsViewedOrNotListener;
+import com.example.mangatn.interfaces.auth.OnSignInListener;
+import com.example.mangatn.interfaces.auth.OnSignInWithTokenListener;
+import com.example.mangatn.interfaces.auth.OnSignupListener;
+import com.example.mangatn.interfaces.auth.OnUpdateUserListener;
 import com.example.mangatn.models.ApiResponse;
-import com.example.mangatn.models.Bookmark;
-import com.example.mangatn.models.ChapterModel;
-import com.example.mangatn.models.ChaptersListApiResponse;
+import com.example.mangatn.models.bookmark.BookmarkModel;
+import com.example.mangatn.models.chapter.ChapterModel;
+import com.example.mangatn.models.chapter.ChaptersListApiResponse;
 import com.example.mangatn.models.Enum.EMangaStatus;
 import com.example.mangatn.models.JwtResponse;
-import com.example.mangatn.models.LoginModel;
-import com.example.mangatn.models.MangaListApiResponse;
-import com.example.mangatn.models.MangaModel;
-import com.example.mangatn.models.ReadChapterModel;
-import com.example.mangatn.models.SignupModel;
-import com.example.mangatn.models.UpdateModel;
-import com.example.mangatn.models.UserModel;
+import com.example.mangatn.models.auth.LoginModel;
+import com.example.mangatn.models.manga.MangaListApiResponse;
+import com.example.mangatn.models.manga.MangaModel;
+import com.example.mangatn.models.chapter.ReadChapterModel;
+import com.example.mangatn.models.auth.SignupModel;
+import com.example.mangatn.models.auth.UpdateModel;
+import com.example.mangatn.models.auth.UserModel;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -83,6 +83,42 @@ public class RequestManager {
 
     public RequestManager(Context context) {
         this.context = context;
+    }
+
+    public void getAllMangaGenre(OnFetchAllGenreListener listener) {
+        CallMangaApi callMangaApi = retrofit_manga.create(CallMangaApi.class);
+        Call<List<String>> call = callMangaApi.callGetGenres();
+
+        try {
+            call.enqueue(new Callback<List<String>>() {
+                @Override
+                public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                    if (!response.isSuccessful()) {
+                        int statusCode = response.code();
+                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        if (statusCode == 401) {
+                            setUserToken(null);
+                        }
+
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                        listener.onError("Request Failed!", context);
+                    } else {
+                        assert response.body() != null;
+
+                        listener.onFetchData(response.body(), response.message(), context);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<String>> call, Throwable t) {
+                    listener.onError("Request Failed!", context);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void getMangaList(OnFetchDataListener listener, String query, List<EMangaStatus> statusList, int pageNumber, int pageSize) {
@@ -499,9 +535,9 @@ public class RequestManager {
         }
     }
 
-    public void bookmark(OnBookmarkListener listener, Bookmark bookmark) {
+    public void bookmark(OnBookmarkListener listener, BookmarkModel bookmarkModel) {
         CallMangaApi callMangaApi = retrofit_manga.create(CallMangaApi.class);
-        Call<ApiResponse> call = callMangaApi.callBookmark(getUserToken(), bookmark);
+        Call<ApiResponse> call = callMangaApi.callBookmark(getUserToken(), bookmarkModel);
 
         try {
             call.enqueue(new Callback<ApiResponse>() {
@@ -935,6 +971,9 @@ public class RequestManager {
     }
 
     public interface CallMangaApi {
+        @GET("genres")
+        Call<List<String>> callGetGenres();
+
         @GET("all")
         Call<MangaListApiResponse> callManga(
             @Query("query") String query,
@@ -964,10 +1003,10 @@ public class RequestManager {
                 @Path("mangaId") String mangaId
         );
 
-        @POST("bookmark")
+        @POST("bookmarkModel")
         Call<ApiResponse> callBookmark(
                 @Header("Authorization") String token,
-                @Body Bookmark bookmark
+                @Body BookmarkModel bookmarkModel
         );
 
         @GET("bookmarked")

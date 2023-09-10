@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -20,15 +19,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mangatn.R;
-import com.example.mangatn.Utils;
 import com.example.mangatn.activities.ItemViewerActivity;
 import com.example.mangatn.activities.SignInActivity;
 import com.example.mangatn.activities.UpdateProfileActivity;
 import com.example.mangatn.adapters.GridAdapter;
-import com.example.mangatn.interfaces.OnFetchBookmarkedMangasListener;
-import com.example.mangatn.interfaces.SelectListener;
+import com.example.mangatn.interfaces.bookmark.OnFetchBookmarkedMangasListener;
+import com.example.mangatn.interfaces.manga.SelectListener;
 import com.example.mangatn.manager.RequestManager;
-import com.example.mangatn.models.MangaModel;
+import com.example.mangatn.models.manga.MangaModel;
 
 import java.util.ArrayList;
 import java.util.List;

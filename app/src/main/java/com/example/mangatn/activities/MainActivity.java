@@ -5,7 +5,6 @@ import static com.example.mangatn.Utils.setUserToken;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -16,11 +15,10 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mangatn.R;
-import com.example.mangatn.Utils;
 import com.example.mangatn.adapters.VPAdapter;
 import com.example.mangatn.fragments.Fragment1;
 import com.example.mangatn.fragments.Fragment2;
-import com.example.mangatn.models.MangaModel;
+import com.example.mangatn.models.manga.MangaModel;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;

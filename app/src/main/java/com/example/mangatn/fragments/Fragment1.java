@@ -3,12 +3,12 @@ package com.example.mangatn.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -21,11 +21,12 @@ import com.example.mangatn.R;
 import com.example.mangatn.activities.ItemViewerActivity;
 import com.example.mangatn.adapters.CustomSpinnerAdapter;
 import com.example.mangatn.adapters.GridAdapter;
-import com.example.mangatn.interfaces.OnFetchDataListener;
-import com.example.mangatn.interfaces.SelectListener;
+import com.example.mangatn.interfaces.manga.OnFetchDataListener;
+import com.example.mangatn.interfaces.manga.SelectListener;
+import com.example.mangatn.interfaces.manga.genre.OnFetchAllGenreListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.Enum.EMangaStatus;
-import com.example.mangatn.models.MangaModel;
+import com.example.mangatn.models.manga.MangaModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -151,6 +152,19 @@ public class Fragment1 extends Fragment implements SelectListener {
                 if (!swipeRefreshLayout.isRefreshing() && firstVisibleItem + visibleItemCount >= totalItemCount) {
                     loadData(container, searchView.getQuery().toString());
                 }
+            }
+        });
+
+        RequestManager requestManager = new RequestManager(container.getContext());
+        requestManager.getAllMangaGenre(new OnFetchAllGenreListener() {
+            @Override
+            public void onFetchData(List<String> list, String message, Context context) {
+                Log.i("all genre", "onFetchData: " + list);
+            }
+
+            @Override
+            public void onError(String message, Context context) {
+
             }
         });
 

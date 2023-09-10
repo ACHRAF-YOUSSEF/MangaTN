@@ -4,23 +4,18 @@ import static com.example.mangatn.Utils.getUserToken;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.mangatn.R;
-import com.example.mangatn.interfaces.OnCheckIfAChapterIsViewedListener;
-import com.example.mangatn.interfaces.OnGetReadChapterListener;
 import com.example.mangatn.manager.RequestManager;
-import com.example.mangatn.models.ChapterModel;
-import com.example.mangatn.models.ReadChapterModel;
+import com.example.mangatn.models.chapter.ChapterModel;
 
 import java.util.List;
 
