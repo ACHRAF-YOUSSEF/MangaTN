@@ -255,7 +255,7 @@
         app:backgroundTint="?colorSecondary"
         android:contentDescription="@string/Resume"
         android:text="@string/Resume"
-        app:icon="@drawable/baseline_play_circle_24"
+        app:icon="@drawable/sharp_play_arrow_24"
         app:iconGravity="textStart"
         app:iconTint="@color/white"
         android:textColor="@color/white"
