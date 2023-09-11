@@ -1,10 +1,13 @@
 package com.example.mangatn.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mangatn.R;
 import com.example.mangatn.Utils;
@@ -14,17 +17,13 @@ import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.ApiResponse;
 import com.example.mangatn.models.auth.UpdateModel;
 import com.example.mangatn.models.auth.UserModel;
-
-import android.content.Intent;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import com.google.android.material.textfield.TextInputEditText;
 
 public class UpdateProfileActivity extends AppCompatActivity implements OnSignInWithTokenListener {
     private RequestManager requestManager;
-    private EditText usernameEditText;
-    private EditText passwordEditText;
-    private EditText emailEditText;
+    private TextInputEditText usernameEditText;
+    private TextInputEditText passwordEditText;
+    private TextInputEditText emailEditText;
     private Button updateButton;
     private Button logoutButton;
     private UserModel userModel;
