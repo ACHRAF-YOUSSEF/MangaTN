@@ -21,9 +21,16 @@
             android:layout_marginBottom="16dp" />
 
         <com.google.android.material.textfield.TextInputLayout
+            app:boxBackgroundColor="?colorSecondary"
+            app:placeholderTextColor="@color/white"
+            app:boxStrokeColor="@color/white"
+            app:hintTextColor="@color/white"
+            app:endIconTint="@color/white"
+            android:textColorHint="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/username"
+            app:endIconMode="clear_text"
             android:layout_marginBottom="16dp" >
 
             <com.google.android.material.textfield.TextInputEditText
@@ -36,9 +43,16 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            app:boxBackgroundColor="?colorSecondary"
+            app:placeholderTextColor="@color/white"
+            app:boxStrokeColor="@color/white"
+            app:hintTextColor="@color/white"
+            app:endIconTint="@color/white"
+            android:textColorHint="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email"
+            app:endIconMode="clear_text"
             android:layout_marginBottom="16dp" >
 
             <com.google.android.material.textfield.TextInputEditText
@@ -51,6 +65,12 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            app:boxBackgroundColor="?colorSecondary"
+            app:placeholderTextColor="@color/white"
+            app:boxStrokeColor="@color/white"
+            app:hintTextColor="@color/white"
+            app:endIconTint="@color/white"
+            android:textColorHint="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:endIconMode="password_toggle"
