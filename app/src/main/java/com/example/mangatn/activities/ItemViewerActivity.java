@@ -50,7 +50,6 @@ public class ItemViewerActivity extends AppCompatActivity {
     private ImageView status_icon;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    /*private FloatingActionButton floatingActionButton;*/
     private ExtendedFloatingActionButton floatingActionButton;
     private MyPagerAdapter pagerAdapter;
     private TextView collapsed_summary_detail, expanded_summary_detail, authors, status_details;
