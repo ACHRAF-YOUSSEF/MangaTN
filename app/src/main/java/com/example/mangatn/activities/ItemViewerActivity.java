@@ -77,13 +77,9 @@ public class ItemViewerActivity extends AppCompatActivity {
         collapsedContent = findViewById(R.id.collapsedContent);
         expandedContentScrollView = findViewById(R.id.expandedContentScrollView);
 
-        expanded_icon.setOnClickListener(v -> {
-            toggleCardViewContent();
-        });
+        expanded_icon.setOnClickListener(v -> toggleCardViewContent());
 
-        cardView.setOnClickListener(v -> {
-            toggleCardViewContent();
-        });
+        cardView.setOnClickListener(v -> toggleCardViewContent());
 
         tabLayout = findViewById(R.id.view_tabLayout);
         viewPager = findViewById(R.id.view_viewPager);
