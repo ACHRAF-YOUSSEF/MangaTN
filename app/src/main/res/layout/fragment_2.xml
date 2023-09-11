@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
-                android:text="No data found!!!"
+                android:text="@string/no_data_found"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="60sp"
@@ -63,7 +63,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.424" />
+                app:layout_constraintVertical_bias="0.5" />
 
             <TextView
                 android:id="@+id/textViewSignIn_favorites"
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
-                android:text="Please Sign in to view your favorite mangas"
+                android:text="@string/please_sign_in_to_view_your_favorite_mangas"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="30sp"
@@ -81,7 +81,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.424" />
+                app:layout_constraintVertical_bias="0.5" />
 
             <GridView
                 android:id="@+id/gridView_favorites"

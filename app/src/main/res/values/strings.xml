@@ -10,6 +10,8 @@
     <string name="username">Username</string>
     <string name="sign_up">Sign Up</string>
     <string name="already_have_an_account_sign_in">Already have an account? Sign in</string>
+    <string name="please_sign_in_to_view_your_favorite_mangas">Please Sign in to view your favorite mangas</string>
+    <string name="no_data_found">No data found!!!</string>
 
     <string-array name="filter_options">
         <item>All</item>
