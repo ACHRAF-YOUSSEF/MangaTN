@@ -9,20 +9,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/imageCard"
             android:layout_width="160dp"
             android:layout_height="240dp"
             app:cardCornerRadius="20dp"
-            android:backgroundTint="#C5C5C5">
+            app:strokeWidth="0dp"
+            android:backgroundTint="#C5C5C5"
+            android:clickable="true"
+            android:focusable="true"
+            android:checkable="false">
 
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_launcher_background">
-            </ImageView>
+                android:src="@drawable/ic_launcher_background" />
 
             <TextView
                 android:id="@+id/textView1"
@@ -50,7 +53,7 @@
                 android:textColor="#fff"
                 android:textSize="15sp"/>
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
     </RelativeLayout>
 

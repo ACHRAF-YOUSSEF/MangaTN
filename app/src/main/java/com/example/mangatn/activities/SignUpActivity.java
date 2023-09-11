@@ -1,22 +1,22 @@
 package com.example.mangatn.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mangatn.R;
 import com.example.mangatn.interfaces.auth.OnSignupListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.auth.SignupModel;
+import com.google.android.material.textfield.TextInputEditText;
 
 public class SignUpActivity extends AppCompatActivity implements OnSignupListener {
-    private EditText editTextUsername, editTextEmail, editTextPassword;
+    private TextInputEditText editTextUsername, editTextEmail, editTextPassword;
     private Button buttonSignUp;
     private TextView textViewSignIn;
 

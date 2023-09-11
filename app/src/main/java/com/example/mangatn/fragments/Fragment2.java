@@ -27,13 +27,15 @@ import com.example.mangatn.interfaces.bookmark.OnFetchBookmarkedMangasListener;
 import com.example.mangatn.interfaces.manga.SelectListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.manga.MangaModel;
+import com.google.android.material.divider.MaterialDivider;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Fragment2 extends Fragment implements SelectListener, OnFetchBookmarkedMangasListener {
     public GridView gridView;
-    private View divider, toolbar;
+    private View toolbar;
+    private MaterialDivider divider;
     private GridAdapter gridAdapter;
     private TextView textView, textView2;
     private RequestManager requestManager;
@@ -142,7 +144,6 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
             gridView.setVisibility(View.GONE);
             divider.setVisibility(View.VISIBLE);
             textView2.setVisibility(View.VISIBLE);
-
         } else {
             showManga(bookmarkedMangas);
 
@@ -150,7 +151,6 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
             textView2.setVisibility(View.GONE);
             divider.setVisibility(View.VISIBLE);
             gridView.setVisibility(View.VISIBLE);
-
         }
 
         swipeRefreshLayout.setVisibility(View.VISIBLE);

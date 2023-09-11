@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
     android:background="?colorPrimary">
@@ -19,34 +20,62 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp" />
 
-        <EditText
-            android:id="@+id/editTextUsername"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Username"
-            android:inputType="text" />
+            android:hint="@string/username"
+            android:layout_marginBottom="16dp" >
 
-        <EditText
-            android:id="@+id/editTextEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                app:errorEnabled="true" />
 
-        <EditText
-            android:id="@+id/editTextPassword"
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
-            android:inputType="textPassword" />
+            android:hint="@string/email"
+            android:layout_marginBottom="16dp" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                app:errorEnabled="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:endIconMode="password_toggle"
+            android:hint="@string/password"
+            android:layout_marginBottom="16dp" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                app:errorEnabled="true"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
+            style="@style/Widget.Material3.Button.ElevatedButton"
             android:id="@+id/buttonSignUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:text="Sign Up" />
+            android:text="@string/sign_up"
+            android:textColor="@color/white"
+            android:backgroundTint="?colorSecondary"/>
 
         <TextView
             android:id="@+id/textViewSignIn"
@@ -54,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:text="Already have an account? Sign in"
+            android:text="@string/already_have_an_account_sign_in"
             android:textColor="@color/grey" />
 
     </LinearLayout>

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
     android:background="?colorPrimary">
@@ -19,33 +20,53 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp" />
 
-        <EditText
-            android:id="@+id/editTextEmail"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
+            android:hint="@string/email"
+            android:layout_marginBottom="16dp" >
 
-        <EditText
-            android:id="@+id/editTextPassword"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                app:errorEnabled="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
-            android:inputType="textPassword" />
+            app:endIconMode="password_toggle"
+            android:hint="@string/password"
+            android:layout_marginBottom="16dp" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                app:errorEnabled="true"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
+            style="@style/Widget.Material3.Button.ElevatedButton"
             android:id="@+id/buttonSignIn"
+            android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign In"
+            android:text="@string/sign_in"
             android:layout_gravity="center"
-            android:layout_marginTop="16dp" />
+            android:backgroundTint="?colorSecondary"/>
 
         <TextView
             android:id="@+id/textViewSignUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Don't have an account? Sign up"
+            android:text="@string/don_t_have_an_account_sign_up"
             android:textColor="@color/grey"
             android:layout_gravity="center"
             android:layout_marginTop="16dp" />

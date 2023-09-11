@@ -82,12 +82,13 @@
                 </LinearLayout>
 
                 <ImageButton
+                    style="@style/Widget.Material3.Button.IconButton.Outlined"
                     android:id="@+id/bookmarkModel"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentEnd="true"
                     android:background="@android:color/transparent"
-                    android:contentDescription="bookmarkModel"
+                    android:contentDescription="bookmark"
                     android:src="@drawable/baseline_bookmark_border_24" />
 
             </RelativeLayout>
@@ -111,7 +112,7 @@
 
         </HorizontalScrollView>
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_below="@id/scroll_view_for_chip_manga_genre_group"
             android:id="@+id/cardView"
             android:layout_width="match_parent"
@@ -121,7 +122,10 @@
             android:layout_marginRight="10dp"
             app:cardBackgroundColor="?colorPrimary"
             app:cardCornerRadius="8dp"
-            app:cardElevation="2dp">
+            app:cardElevation="2dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:checkable="false">
 
             <!-- Content when collapsed -->
             <LinearLayout
@@ -185,7 +189,7 @@
 
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <LinearLayout
             android:layout_below="@id/cardView"
@@ -195,10 +199,9 @@
             android:layout_margin="10dp"
             android:orientation="vertical">
 
-            <View
+            <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray" />
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -211,10 +214,9 @@
                 android:textColor="@color/white"
                 android:textSize="20sp" />
 
-            <View
+            <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray" />
+                android:layout_height="wrap_content"/>
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/view_tabLayout"
@@ -222,7 +224,7 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/colorPrimary"
                 app:tabGravity="fill"
-                app:tabIndicatorColor="#F44336"
+                app:tabIndicatorColor="?colorSecondary"
                 app:tabMode="scrollable"
                 app:tabSelectedTextColor="@color/white"
                 app:tabTextColor="@color/black" />

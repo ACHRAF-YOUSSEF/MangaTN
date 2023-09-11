@@ -3,17 +3,15 @@ package com.example.mangatn.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.mangatn.R;
 import com.example.mangatn.activities.MangaChapterViewerActivity;
@@ -23,6 +21,7 @@ import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.chapter.ChapterModel;
 import com.example.mangatn.models.chapter.ChaptersListApiResponse;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
@@ -31,11 +30,10 @@ public class TabFragment extends Fragment implements OnFetchMangaChaptersListLis
     private ChaptersAdapter chaptersAdapter;
     private RequestManager requestManager;
     private ListView chaptersListView;
-    private ProgressBar progressBar;
+    private CircularProgressIndicator progressBar;
     private boolean added = false;
     private TabLayout tabLayout;
     private String mangaId;
-    /*private FloatingActionButton floatingActionButton;*/
     private ExtendedFloatingActionButton floatingActionButton;
 
     @Override

@@ -21,7 +21,7 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
 
         // Highlight the selected item
         if (position == selectedItemPosition) {
-            view.setBackgroundColor(Color.parseColor("#F44336")); // material red
+            view.setBackgroundColor(Color.parseColor("#808080")); // grey
         } else {
             view.setBackgroundColor(Color.TRANSPARENT);
         }
