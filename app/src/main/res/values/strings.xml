@@ -16,6 +16,10 @@
     <string name="update_profile">Update Profile</string>
     <string name="an_error_has_occurred">An Error Has Occurred</string>
     <string name="retry">Retry</string>
+    <string name="default_manga_count">133</string>
+    <string name="default_manga_title">Attack On Titan</string>
+    <string name="ltr">LTR</string>
+    <string name="rtl">RTL</string>
 
     <string-array name="filter_options">
         <item>All</item>

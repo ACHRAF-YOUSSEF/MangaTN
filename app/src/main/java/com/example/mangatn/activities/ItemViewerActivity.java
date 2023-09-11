@@ -89,8 +89,6 @@ public class ItemViewerActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.view_viewPager);
         floatingActionButton = findViewById(R.id.continueLastViewedChapterButton);
 
-        getSupportActionBar().hide();
-
         mangaModel = new MangaModel();
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
 

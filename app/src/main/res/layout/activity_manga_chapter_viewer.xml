@@ -7,15 +7,19 @@
     tools:context=".activities.MangaChapterViewerActivity"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@color/grey"
+    android:background="?colorSecondary"
     android:id="@+id/mainImageViewer">
+
+    <include
+        android:id="@+id/custom_toolbar"
+        layout="@layout/custom_action_bar" />
 
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/ic_launcher_background"
-        android:layout_alignParentTop="true" />
+        android:layout_below="@id/custom_toolbar" />
 
     <LinearLayout
         android:id="@+id/error_screen"

@@ -14,8 +14,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import androidx.appcompat.widget.Toolbar;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mangatn.R;
@@ -56,19 +56,19 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_chapter_viewer);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setCustomView(R.layout.custom_action_bar);
+        Toolbar toolbar = findViewById(R.id.custom_toolbar);
+
+        setSupportActionBar(toolbar);
 
         progressBar = findViewById(R.id.chapters_progressBar);
 
         findViewById(R.id.retry).setOnClickListener(v -> loadChapterImage());
 
         //
-        ImageButton back = getSupportActionBar().getCustomView().findViewById(R.id.btnBack);
-        bookmark = getSupportActionBar().getCustomView().findViewById(R.id.saveChapter);
-        TextView title = getSupportActionBar().getCustomView().findViewById(R.id.title);
-        LTR = getSupportActionBar().getCustomView().findViewById(R.id.LeftToRightBtn);
+        ImageButton back = toolbar.findViewById(R.id.btnBack);
+        bookmark = toolbar.findViewById(R.id.saveChapter);
+        TextView title = toolbar.findViewById(R.id.title);
+        LTR = toolbar.findViewById(R.id.LeftToRightBtn);
         imageView = findViewById(R.id.imageView);
 
         progress_text = findViewById(R.id.progress_counter_text);
@@ -96,7 +96,16 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
                 chapterModel = response;
 
                 //
-                title.setText(chapterModel.getTitle());
+                String modelTitle = chapterModel.getTitle();
+
+                title.setText(
+                        String.format(
+                                "%s",
+                                modelTitle.length() > 60 ?
+                                modelTitle.substring(0, 60) + "..." :
+                                modelTitle
+                        )
+                );
 
                 mangaChapterImagesUrls = chapterModel.getImgPaths();
 
@@ -182,7 +191,6 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
 
                 findViewById(R.id.progress_counter).setVisibility(View.GONE);
 
-                getSupportActionBar().getCustomView().setVisibility(View.VISIBLE);
                 getSupportActionBar().show();
             } else {
                 if (!LeftToRight) {
@@ -193,7 +201,6 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
 
                 findViewById(R.id.progress_counter).setVisibility(View.VISIBLE);
 
-                getSupportActionBar().getCustomView().setVisibility(View.GONE);
                 getSupportActionBar().hide();
             }
 

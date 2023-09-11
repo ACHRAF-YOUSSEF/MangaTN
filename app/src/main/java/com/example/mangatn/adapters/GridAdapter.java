@@ -64,9 +64,7 @@ public class GridAdapter extends BaseAdapter {
 
         Picasso.get().load(mangaModel.getCoverImgPath()).into(imageView);
 
-        convertView.setOnClickListener(v -> {
-            listener.OnMangaClicked(mangaModel, context);
-        });
+        convertView.setOnClickListener(v -> listener.OnMangaClicked(mangaModel, context));
 
         return convertView;
     }

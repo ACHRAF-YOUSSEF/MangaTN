@@ -37,7 +37,7 @@ public class Fragment1 extends Fragment implements SelectListener {
     private Spinner spinnerFilter;
     private CustomSpinnerAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private final int pageSize = 5;
+    private final int pageSize = 6;
     private int pageNumber = 0;
     private final List<MangaModel> mangaModels = new ArrayList<>();
     private List<EMangaStatus> statusList = new ArrayList<>();

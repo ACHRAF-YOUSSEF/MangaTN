@@ -125,7 +125,8 @@
             app:cardElevation="2dp"
             android:clickable="true"
             android:focusable="true"
-            android:checkable="false">
+            android:checkable="false"
+            app:strokeColor="?colorPrimary">
 
             <!-- Content when collapsed -->
             <LinearLayout
@@ -201,7 +202,8 @@
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                app:dividerColor="#EEEEEE" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -216,7 +218,8 @@
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                app:dividerColor="#EEEEEE" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/view_tabLayout"
@@ -253,9 +256,10 @@
         android:contentDescription="@string/Resume"
         android:text="@string/Resume"
         app:icon="@drawable/baseline_play_circle_24"
+        app:iconGravity="textStart"
         app:iconTint="@color/white"
         android:textColor="@color/white"
-        android:padding="6dp"
+        android:textAppearance="?attr/textAppearanceButton"
         android:gravity="center"/>
 
 </RelativeLayout>

@@ -34,6 +34,7 @@
                     android:id="@+id/search_view"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
+                    android:background="?colorPrimary"
                     app:iconifiedByDefault="false"
                     app:queryHint="Search Here..."
                     app:layout_constraintTop_toTopOf="parent"
@@ -53,6 +54,7 @@
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <com.google.android.material.divider.MaterialDivider
+            app:dividerColor="?colorSecondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
