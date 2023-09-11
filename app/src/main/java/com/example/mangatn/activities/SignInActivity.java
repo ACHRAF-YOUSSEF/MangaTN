@@ -52,10 +52,24 @@ public class SignInActivity extends AppCompatActivity implements OnSignInListene
     private boolean validateInputs(String email, String password) {
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_SHORT).show();
+
+            return false;
+        }
+
+        if (!isValidEmail(email)) {
+            editTextEmail.setError("Invalid email address");
+            Toast.makeText(this, "Invalid email address", Toast.LENGTH_SHORT).show();
+
             return false;
         }
 
         return true;
+    }
+
+    private boolean isValidEmail(String email) {
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+        return email.matches(emailPattern);
     }
 
     @Override

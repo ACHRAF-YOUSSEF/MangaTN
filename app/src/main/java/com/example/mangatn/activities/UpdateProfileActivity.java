@@ -83,8 +83,33 @@ public class UpdateProfileActivity extends AppCompatActivity implements OnSignIn
             String newUsername = usernameEditText.getText().toString().trim();
             String currentPassword = passwordEditText.getText().toString().trim();
 
-            requestManager.updateUser(listener, new UpdateModel(newEmail, newUsername, currentPassword));
+            if (validateInputs(newUsername, newEmail, currentPassword)) {
+                requestManager.updateUser(listener, new UpdateModel(newEmail, newUsername, currentPassword));
+            }
         });
+    }
+
+    private boolean validateInputs(String username, String email, String password) {
+        if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_SHORT).show();
+
+            return false;
+        }
+
+        if (!isValidEmail(email)) {
+            emailEditText.setError("Invalid email address");
+            Toast.makeText(this, "Invalid email address", Toast.LENGTH_SHORT).show();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isValidEmail(String email) {
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+        return email.matches(emailPattern);
     }
 
     @Override
