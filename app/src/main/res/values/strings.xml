@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">MangaTN V2.5</string>
     <string name="chapters">CHAPTERS</string>
-    <string name="Resume">Continue</string>
+    <string name="Resume">Resume</string>
     <string name="Start">Start</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
