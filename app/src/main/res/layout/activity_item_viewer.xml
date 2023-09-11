@@ -249,7 +249,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:clickable="true"
         android:focusable="true"
         app:backgroundTint="?colorSecondary"
@@ -260,6 +260,6 @@
         app:iconTint="@color/white"
         android:textColor="@color/white"
         android:textAppearance="?attr/textAppearanceButton"
-        android:gravity="center"/>
+        android:gravity="center" />
 
 </RelativeLayout>
