@@ -29,7 +29,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="An Error Has Occurred"
+            android:text="@string/an_error_has_occurred"
             android:textColor="#F44336"
             android:textSize="20sp"/>
 
@@ -37,18 +37,19 @@
             android:id="@+id/retry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Retry"
+            android:text="@string/retry"
             android:textSize="20sp"
             android:background="#2196F3"
             android:layout_marginTop="5dp"/>
 
     </LinearLayout>
 
-    <ProgressBar
+    <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/chapters_progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:indeterminate="true"
         android:visibility="gone" />
 
     <RelativeLayout

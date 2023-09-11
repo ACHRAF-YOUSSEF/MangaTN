@@ -1,8 +1,8 @@
 package com.example.mangatn.activities;
 
 import static com.example.mangatn.Utils.getUserToken;
-
-import static java.lang.String.*;
+import static java.lang.String.format;
+import static java.lang.String.valueOf;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,14 +20,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mangatn.R;
 import com.example.mangatn.interfaces.chapter.OnFetchMangaChapterListener;
-import com.example.mangatn.interfaces.update.OnFetchUpdateListener;
 import com.example.mangatn.interfaces.chapter.OnGetReadChapterListener;
+import com.example.mangatn.interfaces.update.OnFetchUpdateListener;
 import com.example.mangatn.interfaces.update.OnMarkAsViewedOrNotListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.ApiResponse;
 import com.example.mangatn.models.chapter.ChapterModel;
 import com.example.mangatn.models.chapter.ReadChapterModel;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -49,7 +49,7 @@ public class MangaChapterViewerActivity extends AppCompatActivity implements Vie
     private boolean added;
     private RequestManager requestManager;
     private Integer chapterReference;
-    private ProgressBar progressBar;
+    private CircularProgressIndicator progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
