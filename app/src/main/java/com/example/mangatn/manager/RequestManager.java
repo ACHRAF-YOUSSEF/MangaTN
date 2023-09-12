@@ -408,7 +408,7 @@ public class RequestManager {
                 } else {
                     ApiResponse apiResponse = response.body();
 
-                    if (apiResponse != null && apiResponse.getMessage().equals(USER_SUCCESSFULLY_CREATED)) {
+                    if (apiResponse != null) {
                         listener.onFetchData(response.body(), response.message(), context);
                     } else {
                         listener.onError("Request Failed!", context);
@@ -445,7 +445,7 @@ public class RequestManager {
                     listener.onError("Update Failed!", context);
                 } else {
                     ApiResponse apiResponse = response.body();
-                    if (apiResponse != null && apiResponse.getMessage().equals(USER_SUCCESSFULLY_UPDATED)) {
+                    if (apiResponse != null) {
                         listener.onSuccess(apiResponse,"Update Successful!", context);
                     } else {
                         listener.onError("Update Failed!", context);
@@ -950,14 +950,14 @@ public class RequestManager {
                 @Header("Authorization") String token
         );
 
-        @POST("/resetPassword/{resetToken}")
+        @POST("resetPassword/{resetToken}")
         Call<ApiResponse> callResetPassword(
                 @Path("resetToken") String resetToken,
                 @Query("os") EOS os,
                 @Body String password
         );
 
-        @POST("/forgetPassword/{email}")
+        @POST("forgetPassword/{email}")
         Call<ApiResponse> callForgotPassword(
                 @Path("email") String email,
                 @Query("os") EOS os
