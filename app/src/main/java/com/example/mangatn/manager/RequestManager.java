@@ -376,7 +376,7 @@ public class RequestManager {
                 } else {
                     ApiResponse apiResponse = response.body();
 
-                    if (apiResponse != null && apiResponse.getMessage().equals(USER_SUCCESSFULLY_CREATED)) {
+                    if (apiResponse != null) {
                         listener.onFetchData(response.body(), response.message(), context);
                     } else {
                         listener.onError("Request Failed!", context);
@@ -445,7 +445,7 @@ public class RequestManager {
                     listener.onError("Update Failed!", context);
                 } else {
                     ApiResponse apiResponse = response.body();
-                    if (apiResponse != null) {
+                    if (apiResponse != null && apiResponse.getMessage().equals(USER_SUCCESSFULLY_UPDATED)) {
                         listener.onSuccess(apiResponse,"Update Successful!", context);
                     } else {
                         listener.onError("Update Failed!", context);
