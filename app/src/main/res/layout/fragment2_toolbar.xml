@@ -13,6 +13,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:background="@android:color/transparent"
-        android:src="@drawable/outline_manage_accounts_24"/>
+        android:contentDescription="@string/open_menu"
+        android:src="@drawable/outline_manage_accounts_24" />
 
 </RelativeLayout>

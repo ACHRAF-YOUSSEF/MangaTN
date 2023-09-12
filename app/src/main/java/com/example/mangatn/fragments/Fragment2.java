@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -81,13 +82,36 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
         });
 
         textView.setOnClickListener(v -> {
-            Intent intent = new Intent(container.getContext(), SignInActivity.class);
-            startActivity(intent);
+            openSignInActivity(container);
         });
 
         toolbar.findViewById(R.id.viewAccount).setOnClickListener(v -> {
-            Intent intent = new Intent(container.getContext(), UpdateProfileActivity.class);
-            startActivity(intent);
+            // Create a PopupMenu
+            PopupMenu popupMenu = new PopupMenu(container.getContext(), v);
+
+            // Inflate the menu resource
+            popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+
+            // Set an item click listener for the menu items
+            popupMenu.setOnMenuItemClickListener(menuItem -> {
+                switch (menuItem.getItemId()) {
+                    case R.id.action_update_user:
+                        // Open the Update User activity
+                        openUpdateUserActivity(container);
+
+                        return true;
+                    case R.id.action_reset_password:
+                        // Open the Reset Password activity
+                        openResetPasswordActivity(container);
+
+                        return true;
+                    default:
+                        return false;
+                }
+            });
+
+            // Show the popup menu
+            popupMenu.show();
         });
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -99,6 +123,21 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
         });
 
         return view1;
+    }
+
+    private void openSignInActivity(ViewGroup container) {
+        Intent intent = new Intent(container.getContext(), SignInActivity.class);
+        startActivity(intent);
+    }
+
+    private void openUpdateUserActivity(ViewGroup container) {
+        Intent intent = new Intent(container.getContext(), UpdateProfileActivity.class);
+        startActivity(intent);
+    }
+
+    private void openResetPasswordActivity(ViewGroup container) {
+        // Intent intent = new Intent(this, ResetPasswordActivity.class);
+        // startActivity(intent);
     }
 
     public void updateData() {
