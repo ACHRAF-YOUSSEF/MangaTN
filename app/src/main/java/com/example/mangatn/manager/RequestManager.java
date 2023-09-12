@@ -8,6 +8,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.mangatn.Utils;
+import com.example.mangatn.interfaces.auth.OnForgotPasswordListener;
+import com.example.mangatn.interfaces.auth.OnResetPasswordListener;
 import com.example.mangatn.interfaces.bookmark.OnBookmarkListener;
 import com.example.mangatn.interfaces.bookmark.OnCheckForBookmarkListener;
 import com.example.mangatn.interfaces.manga.genre.OnFetchAllGenreListener;
@@ -26,6 +28,7 @@ import com.example.mangatn.interfaces.auth.OnSignInWithTokenListener;
 import com.example.mangatn.interfaces.auth.OnSignupListener;
 import com.example.mangatn.interfaces.auth.OnUpdateUserListener;
 import com.example.mangatn.models.ApiResponse;
+import com.example.mangatn.models.Enum.EOS;
 import com.example.mangatn.models.bookmark.BookmarkModel;
 import com.example.mangatn.models.chapter.ChapterModel;
 import com.example.mangatn.models.chapter.ChaptersListApiResponse;
@@ -350,6 +353,74 @@ public class RequestManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void resetPassword(OnResetPasswordListener<ApiResponse> listener, String verificationCode, String password) {
+        CallUsersApi callUsersApi = retrofit_users.create(CallUsersApi.class);
+        Call<ApiResponse> call = callUsersApi.callResetPassword(
+                verificationCode,
+                EOS.MOBILE,
+                password
+        );
+
+        call.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if (!response.isSuccessful()) {
+                    int statusCode = response.code();
+                    String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                    listener.onError("Signup Failed!", context);
+                } else {
+                    ApiResponse apiResponse = response.body();
+
+                    if (apiResponse != null && apiResponse.getMessage().equals(USER_SUCCESSFULLY_CREATED)) {
+                        listener.onFetchData(response.body(), response.message(), context);
+                    } else {
+                        listener.onError("Request Failed!", context);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                listener.onError("Request Failed!", context);
+            }
+        });
+    }
+
+    public void forgotPassword(OnForgotPasswordListener<ApiResponse> listener, String email) {
+        CallUsersApi callUsersApi = retrofit_users.create(CallUsersApi.class);
+        Call<ApiResponse> call = callUsersApi.callForgotPassword(email, EOS.MOBILE);
+
+        call.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if (!response.isSuccessful()) {
+                    int statusCode = response.code();
+                    String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                    listener.onError("Signup Failed!", context);
+                } else {
+                    ApiResponse apiResponse = response.body();
+
+                    if (apiResponse != null && apiResponse.getMessage().equals(USER_SUCCESSFULLY_CREATED)) {
+                        listener.onFetchData(response.body(), response.message(), context);
+                    } else {
+                        listener.onError("Request Failed!", context);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                listener.onError("Request Failed!", context);
+            }
+        });
     }
 
     public void updateUser(OnUpdateUserListener listener, UpdateModel updateRequest) {
@@ -877,6 +948,19 @@ public class RequestManager {
         @GET("sign-in-with-token")
         Call<UserModel> callFetchUserDetails(
                 @Header("Authorization") String token
+        );
+
+        @POST("/resetPassword/{resetToken}")
+        Call<ApiResponse> callResetPassword(
+                @Path("resetToken") String resetToken,
+                @Query("os") EOS os,
+                @Body String password
+        );
+
+        @POST("/forgetPassword/{email}")
+        Call<ApiResponse> callForgotPassword(
+                @Path("email") String email,
+                @Query("os") EOS os
         );
 
         @PUT("updateUser")
