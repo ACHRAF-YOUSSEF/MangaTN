@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.mangatn.R;
 import com.example.mangatn.activities.ItemViewerActivity;
+import com.example.mangatn.activities.ResetPasswordActivity;
 import com.example.mangatn.activities.SignInActivity;
 import com.example.mangatn.activities.UpdateProfileActivity;
 import com.example.mangatn.adapters.GridAdapter;
@@ -86,13 +87,12 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
         });
 
         toolbar.findViewById(R.id.viewAccount).setOnClickListener(v -> {
-            // Create a PopupMenu
             PopupMenu popupMenu = new PopupMenu(container.getContext(), v);
 
-            // Inflate the menu resource
+            popupMenu.setForceShowIcon(true);
+
             popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
 
-            // Set an item click listener for the menu items
             popupMenu.setOnMenuItemClickListener(menuItem -> {
                 switch (menuItem.getItemId()) {
                     case R.id.action_update_user:
@@ -136,8 +136,8 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
     }
 
     private void openResetPasswordActivity(ViewGroup container) {
-        // Intent intent = new Intent(this, ResetPasswordActivity.class);
-        // startActivity(intent);
+        Intent intent = new Intent(container.getContext(), ResetPasswordActivity.class);
+        startActivity(intent);
     }
 
     public void updateData() {

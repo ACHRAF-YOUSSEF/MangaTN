@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
     <item
+        android:icon="@drawable/outline_assignment_ind_24"
         android:id="@+id/action_update_user"
         android:title="@string/update_user" />
     <item
+        android:icon="@drawable/outline_password_24"
         android:id="@+id/action_reset_password"
         android:title="@string/reset_password" />
+
 </menu>

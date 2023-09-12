@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="?colorPrimary"
+    android:gravity="center"
+    android:padding="16dp" >
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:boxBackgroundColor="?colorSecondary"
+        app:placeholderTextColor="@color/white"
+        app:boxStrokeColor="@color/white"
+        app:hintTextColor="@color/white"
+        app:endIconTint="@color/white"
+        app:counterTextColor="@color/white"
+        android:textColorHint="@color/white"
+        app:helperTextTextColor="@color/white"
+        app:errorEnabled="true"
+        app:counterMaxLength="6"
+        app:counterEnabled="true"
+        android:hint="@string/verification_code"
+        app:helperTextEnabled="true"
+        app:helperText="Enter the 6-digit verification code" >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextVerificationCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/buttonConfirmVerification"
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/confirm"
+        android:layout_gravity="center"
+        android:backgroundTint="?colorSecondary"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>

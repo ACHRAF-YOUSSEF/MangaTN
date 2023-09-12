@@ -26,14 +26,15 @@
             app:boxStrokeColor="@color/white"
             app:hintTextColor="@color/white"
             app:endIconTint="@color/white"
+            app:helperTextTextColor="@color/white"
             android:textColorHint="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email"
             app:endIconMode="clear_text"
             android:layout_marginBottom="16dp"
-            app:errorEnabled="true"
-            app:counterEnabled="true" >
+            app:helperTextEnabled="true"
+            app:errorEnabled="true" >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextEmail"
@@ -49,13 +50,14 @@
             app:boxStrokeColor="@color/white"
             app:hintTextColor="@color/white"
             app:endIconTint="@color/white"
+            app:helperTextTextColor="@color/white"
             android:textColorHint="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:endIconMode="password_toggle"
             android:hint="@string/password"
             app:errorEnabled="true"
-            app:counterEnabled="true"
+            app:helperTextEnabled="true"
             android:layout_marginBottom="16dp" >
 
             <com.google.android.material.textfield.TextInputEditText

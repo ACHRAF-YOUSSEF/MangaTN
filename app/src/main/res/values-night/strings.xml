@@ -24,6 +24,11 @@
     <string name="update_user">Update User</string>
     <string name="reset_password">Reset Password</string>
     <string name="open_menu">Open Menu</string>
+    <string name="verify_email">Verify Email</string>
+    <string name="confirm">Confirm</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="change_password">Change Password</string>
+    <string name="new_password">New Password</string>
 
     <string-array name="filter_options">
         <item>All</item>

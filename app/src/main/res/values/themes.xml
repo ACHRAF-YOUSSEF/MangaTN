@@ -10,7 +10,19 @@
         <item name="colorSecondaryVariant">@color/grey</item>
         <item name="colorOnSecondary">@color/grey</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">#5B5B5B</item>
         <!-- Customize your theme here. -->
+        <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
+        <item name="android:itemTextAppearance">@style/ChangeTextColor</item>
     </style>
+
+    <style name="Widget.App.PopupMenu" parent="Widget.Material3.PopupMenu">
+        <item name="android:popupBackground">@drawable/custom_popupmenu_background</item>
+        <item name="android:itemBackground">@color/grey</item>
+    </style>
+    
+    <style name="ChangeTextColor">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>
