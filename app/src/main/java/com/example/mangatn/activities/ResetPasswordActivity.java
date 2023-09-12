@@ -132,7 +132,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
                     alertDialog.dismiss();
 
                     Toast.makeText(ResetPasswordActivity.this, "Password changed successfully", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(ResetPasswordActivity.this, apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
 
                     finish();
                 }
