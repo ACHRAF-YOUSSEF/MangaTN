@@ -21,6 +21,9 @@
     <string name="default_manga_title">Attack On Titan</string>
     <string name="ltr">LTR</string>
     <string name="rtl">RTL</string>
+    <string name="update_user">Update User</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="open_menu">Open Menu</string>
 
     <string-array name="filter_options">
         <item>All</item>
