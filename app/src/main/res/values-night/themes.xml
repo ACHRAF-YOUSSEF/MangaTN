@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.MangaTN" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -19,6 +19,10 @@
     <style name="Widget.App.PopupMenu" parent="Widget.Material3.PopupMenu">
         <item name="android:popupBackground">@drawable/custom_popupmenu_background</item>
         <item name="android:itemBackground">@color/grey</item>
+    </style>
+
+    <style name="CustomDialogStyle" parent="Theme.MaterialComponents.Dialog">
+        <item name="android:background">@color/grey</item>
     </style>
 
     <style name="ChangeTextColor">

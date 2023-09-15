@@ -1,8 +1,5 @@
 package com.example.mangatn.activities;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
@@ -10,6 +7,9 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mangatn.R;
 import com.example.mangatn.interfaces.auth.OnForgotPasswordListener;
@@ -65,7 +65,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         TextInputEditText editTextVerificationCode = dialogView.findViewById(R.id.editTextVerificationCode);
         Button buttonConfirmVerification = dialogView.findViewById(R.id.buttonConfirmVerification);
 
-        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(this)
+        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(this, R.style.CustomDialogStyle)
                 .setView(dialogView)
                 .setTitle("Enter Verification Code");
 
@@ -100,7 +100,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         TextInputEditText editTextNewPassword = dialogView.findViewById(R.id.editTextNewPassword);
         Button buttonChangePassword = dialogView.findViewById(R.id.buttonChangePassword);
 
-        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(this)
+        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(this, R.style.CustomDialogStyle)
                 .setView(dialogView)
                 .setTitle("Change Password");
 
@@ -109,7 +109,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
         buttonChangePassword.setEnabled(false);
         editTextNewPassword.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -119,7 +120,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) { }
+            public void afterTextChanged(Editable editable) {
+            }
         });
 
         buttonChangePassword.setOnClickListener(view -> {
