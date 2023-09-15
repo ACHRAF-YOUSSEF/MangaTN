@@ -56,7 +56,7 @@ public class FavoritesFragment extends Fragment implements SelectListener, OnFet
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view1 = inflater.inflate(R.layout.fragment_2, container, false);
+        View view1 = inflater.inflate(R.layout.favorites_fragment, container, false);
 
         gridView = view1.findViewById(R.id.gridView_favorites);
         textView = view1.findViewById(R.id.textViewSignIn_favorites);

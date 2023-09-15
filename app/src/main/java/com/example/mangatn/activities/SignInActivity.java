@@ -28,16 +28,16 @@ public class SignInActivity extends AppCompatActivity {
     public void switchToSignInFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
                 .replace(R.id.fragment_container, loginFragment)
-                .addToBackStack(null)
                 .commit();
     }
 
     public void switchToSignupFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
                 .replace(R.id.fragment_container, signupFragment)
-                .addToBackStack(null)
                 .commit();
     }
 }

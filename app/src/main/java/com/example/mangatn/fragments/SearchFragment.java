@@ -44,7 +44,7 @@ public class SearchFragment extends Fragment implements SelectListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view1 = inflater.inflate(R.layout.fragment_1, container, false);
+        View view1 = inflater.inflate(R.layout.search_fragment, container, false);
 
         gridView = view1.findViewById(R.id.gridView);
         searchView = view1.findViewById(R.id.search_view);
@@ -133,7 +133,9 @@ public class SearchFragment extends Fragment implements SelectListener {
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) { return false; }
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
         });
 
         gridAdapter = new GridAdapter(container.getContext(), this.mangaModels, this);

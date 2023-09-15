@@ -24,7 +24,7 @@
 
             <include
                 android:id="@+id/toolbar"
-                layout="@layout/fragment2_toolbar" />
+                layout="@layout/favorites_fragment_toolbar" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

@@ -122,9 +122,6 @@
             app:cardBackgroundColor="?colorPrimary"
             app:cardCornerRadius="8dp"
             app:cardElevation="2dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:checkable="false"
             app:strokeColor="?colorPrimary">
 
             <!-- Content when collapsed -->
@@ -151,8 +148,7 @@
             <ScrollView
                 android:id="@+id/expandedContentScrollView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:id="@+id/expandedContent"
@@ -162,7 +158,8 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:paddingTop="16dp"
-                    android:paddingBottom="16dp">
+                    android:paddingBottom="16dp"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/expanded_summary_detail"

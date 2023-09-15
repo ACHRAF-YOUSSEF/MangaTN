@@ -10,13 +10,11 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
@@ -36,6 +34,7 @@ import com.example.mangatn.models.Enum.EMangaStatus;
 import com.example.mangatn.models.bookmark.BookmarkModel;
 import com.example.mangatn.models.chapter.ReadChapterModel;
 import com.example.mangatn.models.manga.MangaModel;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -54,10 +53,8 @@ public class ItemViewerActivity extends AppCompatActivity {
     private ExtendedFloatingActionButton floatingActionButton;
     private MyPagerAdapter pagerAdapter;
     private TextView collapsed_summary_detail, expanded_summary_detail, authors, status_details;
-    private boolean isExpanded = false;
-    private LinearLayout collapsedContent;
-    private CardView cardView;
-    private ScrollView expandedContentScrollView;
+    private LinearLayout collapsedContent, expandedContent;
+    private MaterialCardView cardView;
     private LinearLayout chipGroup;
     private Integer lastViewedChapterId = null;
 
@@ -77,10 +74,9 @@ public class ItemViewerActivity extends AppCompatActivity {
 
         cardView = findViewById(R.id.cardView);
         collapsedContent = findViewById(R.id.collapsedContent);
-        expandedContentScrollView = findViewById(R.id.expandedContentScrollView);
+        expandedContent = findViewById(R.id.expandedContent);
 
         expanded_icon.setOnClickListener(v -> toggleCardViewContent());
-
         cardView.setOnClickListener(v -> toggleCardViewContent());
 
         tabLayout = findViewById(R.id.view_tabLayout);
@@ -174,17 +170,15 @@ public class ItemViewerActivity extends AppCompatActivity {
     }
 
     private void toggleCardViewContent() {
-        if (isExpanded) {
+        if (expandedContent.getVisibility() == View.VISIBLE) {
             expanded_icon.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
-            expandedContentScrollView.setVisibility(View.GONE);
             collapsedContent.setVisibility(View.VISIBLE);
+            expandedContent.setVisibility(View.GONE);
         } else {
             expanded_icon.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
             collapsedContent.setVisibility(View.GONE);
-            expandedContentScrollView.setVisibility(View.VISIBLE);
+            expandedContent.setVisibility(View.VISIBLE);
         }
-
-        isExpanded = !isExpanded;
     }
 
     private void openChapter(Integer reference) {
@@ -380,5 +374,7 @@ public class ItemViewerActivity extends AppCompatActivity {
         if (userIsAuthenticated()) {
             requestManager.checkForBookmark(listener2, mangaId);
         }
+
+        getLastViewedChapterOrFirstChapter();
     }
 }
