@@ -7,11 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.appcompat.widget.PopupMenu;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,10 +18,13 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.PopupMenu;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.example.mangatn.R;
 import com.example.mangatn.Utils;
 import com.example.mangatn.activities.ItemViewerActivity;
-import com.example.mangatn.activities.MainActivity;
 import com.example.mangatn.activities.ResetPasswordActivity;
 import com.example.mangatn.activities.SignInActivity;
 import com.example.mangatn.activities.UpdateProfileActivity;
@@ -97,14 +95,15 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
             popupMenu.getMenuInflater().inflate(R.menu.popup_menu, menu);
 
             MenuItem updateItem = menu.findItem(R.id.action_update_user);
+            MenuItem resetItem = menu.findItem(R.id.action_reset_password);
             MenuItem logoutItem = menu.findItem(R.id.action_logout);
-
-            Log.i("getUserToken", "onCreateView: " + getUserToken());
 
             if (userIsAuthenticated()) {
                 updateItem.setVisible(true);
                 logoutItem.setVisible(true);
+                resetItem.setVisible(false);
             } else {
+                resetItem.setVisible(true);
                 logoutItem.setVisible(false);
                 updateItem.setVisible(false);
             }
@@ -112,7 +111,7 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
             popupMenu.setOnMenuItemClickListener(menuItem -> {
                 switch (menuItem.getItemId()) {
                     case R.id.action_logout:
-                        // Open the Update User activity
+                        // log-out
                         logout(container);
 
                         return true;
@@ -211,7 +210,7 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
 
     @Override
     public void onFetchSuccess(List<MangaModel> bookmarkedMangas, String message, Context context) {
-        if (bookmarkedMangas.isEmpty() &&  (pageNumber * pageSize < bookmarks.size())) {
+        if (bookmarkedMangas.isEmpty() && (pageNumber * pageSize < bookmarks.size())) {
             Toast.makeText(context, "No data found!!!", Toast.LENGTH_SHORT).show();
 
             textView.setVisibility(View.GONE);
