@@ -1,6 +1,7 @@
 package com.example.mangatn.fragments;
 
 import static com.example.mangatn.Utils.getUserToken;
+import static com.example.mangatn.Utils.userIsAuthenticated;
 
 import android.content.Context;
 import android.content.Intent;
@@ -98,11 +99,11 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
             MenuItem updateItem = menu.findItem(R.id.action_update_user);
             MenuItem logoutItem = menu.findItem(R.id.action_logout);
 
-            if (getUserToken() != null) {
-                if (!getUserToken().isEmpty()) {
-                    updateItem.setVisible(true);
-                    logoutItem.setVisible(true);
-                }
+            Log.i("getUserToken", "onCreateView: " + getUserToken());
+
+            if (userIsAuthenticated()) {
+                updateItem.setVisible(true);
+                logoutItem.setVisible(true);
             } else {
                 logoutItem.setVisible(false);
                 updateItem.setVisible(false);
@@ -158,6 +159,8 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
         Utils.setUserToken(null);
 
         editor.apply();
+
+        updateData();
     }
 
     private void openSignInActivity(ViewGroup container) {
@@ -178,12 +181,10 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
     public void updateData() {
         Log.i("token:", "onCreateView: " + getUserToken());
 
-        if (getUserToken() != null) {
-            if (!getUserToken().isEmpty()) {
-                // api call to get the bookmarked mangas
-                swipeRefreshLayout.setRefreshing(true);
-                requestManager.fetchBookmarked(this, pageNumber, pageSize);
-            }
+        if (userIsAuthenticated()) {
+            // api call to get the bookmarked mangas
+            swipeRefreshLayout.setRefreshing(true);
+            requestManager.fetchBookmarked(this, pageNumber, pageSize);
         } else {
             textView.setVisibility(View.VISIBLE);
             gridView.setVisibility(View.GONE);

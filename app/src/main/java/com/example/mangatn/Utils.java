@@ -17,4 +17,8 @@ public class Utils {
     public static void setUserToken(String userToken) {
         Utils.userToken = userToken;
     }
+
+    public static boolean userIsAuthenticated() {
+        return userToken != null && !userToken.isEmpty();
+    }
 }

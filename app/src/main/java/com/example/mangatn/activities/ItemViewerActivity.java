@@ -1,6 +1,6 @@
 package com.example.mangatn.activities;
 
-import static com.example.mangatn.Utils.getUserToken;
+import static com.example.mangatn.Utils.userIsAuthenticated;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,16 +26,15 @@ import com.example.mangatn.adapters.MyPagerAdapter;
 import com.example.mangatn.fragments.TabFragment;
 import com.example.mangatn.interfaces.bookmark.OnBookmarkListener;
 import com.example.mangatn.interfaces.bookmark.OnCheckForBookmarkListener;
+import com.example.mangatn.interfaces.chapter.OnGetReadChapterListener;
 import com.example.mangatn.interfaces.manga.OnFetchSingleDataListener;
 import com.example.mangatn.interfaces.update.OnFetchUpdateListener;
-import com.example.mangatn.interfaces.chapter.OnGetReadChapterListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.ApiResponse;
-import com.example.mangatn.models.bookmark.BookmarkModel;
 import com.example.mangatn.models.Enum.EMangaStatus;
-import com.example.mangatn.models.chapter.ChapterModel;
-import com.example.mangatn.models.manga.MangaModel;
+import com.example.mangatn.models.bookmark.BookmarkModel;
 import com.example.mangatn.models.chapter.ReadChapterModel;
+import com.example.mangatn.models.manga.MangaModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -105,18 +104,14 @@ public class ItemViewerActivity extends AppCompatActivity {
         bookmark = findViewById(R.id.bookmarkModel);
 
         //  api call to check if this manga is bookmarked or not
-        if (getUserToken() != null) {
-            if (!getUserToken().isEmpty()) {
-                requestManager.checkForBookmark(listener2, mangaId);
-            }
+        if (userIsAuthenticated()) {
+            requestManager.checkForBookmark(listener2, mangaId);
         }
 
         bookmark.setOnClickListener(v -> {
-            if (getUserToken() != null) {
-                if (!getUserToken().isEmpty()) {
-                    bookmarked = !bookmarked;
-                    requestManager.bookmark(listener3, new BookmarkModel(mangaId, bookmarked));
-                }
+            if (userIsAuthenticated()) {
+                bookmarked = !bookmarked;
+                requestManager.bookmark(listener3, new BookmarkModel(mangaId, bookmarked));
             } else {
                 Intent intent = new Intent(this, SignInActivity.class);
                 startActivity(intent);
@@ -135,34 +130,20 @@ public class ItemViewerActivity extends AppCompatActivity {
         floatingActionButton.setText(R.string.Start);
 
         // api call to fetch the last viewed + in progress chapter
-        if (getUserToken() != null) {
-            if (!getUserToken().isEmpty()) {
-                requestManager.getLastReadAndInProgressChapter(new OnGetReadChapterListener() {
-                    @Override
-                    public void onFetchData(ReadChapterModel response, String message, Context context) {
-                        lastViewedChapterId = response.getChapter().getReference();
+        if (userIsAuthenticated()) {
+            requestManager.getLastReadAndInProgressChapter(new OnGetReadChapterListener() {
+                @Override
+                public void onFetchData(ReadChapterModel response, String message, Context context) {
+                    lastViewedChapterId = response.getChapter().getReference();
 
-                        floatingActionButton.setText(R.string.Resume);
-                    }
+                    floatingActionButton.setText(R.string.Resume);
+                }
 
-                    @Override
-                    public void onError(String message, Context context) {
+                @Override
+                public void onError(String message, Context context) {
 
-                    }
-                }, mangaId);
-            } else {
-                requestManager.getFirstChapter(new OnGetReadChapterListener() {
-                    @Override
-                    public void onFetchData(ReadChapterModel response, String message, Context context) {
-                        lastViewedChapterId = response.getChapter().getReference();
-                    }
-
-                    @Override
-                    public void onError(String message, Context context) {
-
-                    }
-                }, mangaId);
-            }
+                }
+            }, mangaId);
         } else {
             requestManager.getFirstChapter(new OnGetReadChapterListener() {
                 @Override
@@ -215,11 +196,9 @@ public class ItemViewerActivity extends AppCompatActivity {
         public void onFetchData(MangaModel manga, String message, Context context) {
             mangaModel = manga;
 
-           if (getUserToken() != null) {
-               if (!getUserToken().isEmpty()) {
-                   requestManager.checkForBookmark(listener2, mangaId);
-               }
-           }
+            if (userIsAuthenticated()) {
+                requestManager.checkForBookmark(listener2, mangaId);
+            }
 
             showChapters(mangaModel.getCount());
             swipeRefreshLayout.setRefreshing(false);
@@ -348,16 +327,16 @@ public class ItemViewerActivity extends AppCompatActivity {
 
         chipGroup = findViewById(R.id.chip_manga_genre_group);
 
-        for (String genre: mangaModel.getGenres()) {
+        for (String genre : mangaModel.getGenres()) {
             Chip newChip = new Chip(ItemViewerActivity.this);
 
             newChip.setText(
                     String.format("%s%s",
                             genre.charAt(0),
                             genre.substring(1)
-                            .toLowerCase()
-                            .replaceAll("_", "")
-                            .replaceAll("manga", "")
+                                    .toLowerCase()
+                                    .replaceAll("_", "")
+                                    .replaceAll("manga", "")
                     )
             );
             newChip.setTextSize(20);
@@ -384,10 +363,8 @@ public class ItemViewerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (getUserToken() != null) {
-            if (!getUserToken().isEmpty()) {
-                requestManager.checkForBookmark(listener2, mangaId);
-            }
+        if (userIsAuthenticated()) {
+            requestManager.checkForBookmark(listener2, mangaId);
         }
     }
 }

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mangatn.R;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_PERMISSION = 1;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private static final Fragment1 fragment1 = new Fragment1();
+    private static final Fragment2 fragment2 = new Fragment2();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
         VPAdapter vpAdapter = new VPAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
-        vpAdapter.addFragments(new Fragment1(), "SEARCH");
-        vpAdapter.addFragments(new Fragment2(), "FAVORITES");
+        vpAdapter.addFragments(fragment1, "SEARCH");
+        vpAdapter.addFragments(fragment2, "FAVORITES");
 
         viewPager.setAdapter(vpAdapter);
 
