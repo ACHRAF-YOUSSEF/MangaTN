@@ -25,7 +25,6 @@ public class UpdateProfileActivity extends AppCompatActivity implements OnSignIn
     private TextInputEditText passwordEditText;
     private TextInputEditText emailEditText;
     private Button updateButton;
-    private Button logoutButton;
     private UserModel userModel;
 
     @Override
@@ -37,18 +36,8 @@ public class UpdateProfileActivity extends AppCompatActivity implements OnSignIn
         usernameEditText = findViewById(R.id.usernameEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         updateButton = findViewById(R.id.updateButton);
-        logoutButton = findViewById(R.id.logoutButton);
 
         getCurrentUserDetails();
-
-        logoutButton.setOnClickListener(v -> {
-            logout();
-
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-
-            finish();
-        });
     }
 
     private void getCurrentUserDetails() {

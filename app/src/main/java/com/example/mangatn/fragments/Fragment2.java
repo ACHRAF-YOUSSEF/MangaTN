@@ -4,6 +4,7 @@ import static com.example.mangatn.Utils.getUserToken;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.PopupMenu;
@@ -12,6 +13,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -20,7 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mangatn.R;
+import com.example.mangatn.Utils;
 import com.example.mangatn.activities.ItemViewerActivity;
+import com.example.mangatn.activities.MainActivity;
 import com.example.mangatn.activities.ResetPasswordActivity;
 import com.example.mangatn.activities.SignInActivity;
 import com.example.mangatn.activities.UpdateProfileActivity;
@@ -29,7 +34,6 @@ import com.example.mangatn.interfaces.bookmark.OnFetchBookmarkedMangasListener;
 import com.example.mangatn.interfaces.manga.SelectListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.manga.MangaModel;
-import com.google.android.material.divider.MaterialDivider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +41,6 @@ import java.util.List;
 public class Fragment2 extends Fragment implements SelectListener, OnFetchBookmarkedMangasListener {
     public GridView gridView;
     private View toolbar;
-    private MaterialDivider divider;
     private GridAdapter gridAdapter;
     private TextView textView, textView2;
     private RequestManager requestManager;
@@ -60,7 +63,6 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
         textView = view1.findViewById(R.id.textViewSignIn_favorites);
         textView2 = view1.findViewById(R.id.noData);
         swipeRefreshLayout = view1.findViewById(R.id.refresh);
-        divider = view1.findViewById(R.id.divider);
         toolbar = view1.findViewById(R.id.toolbar);
 
         requestManager = new RequestManager(container.getContext());
@@ -82,19 +84,37 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
             }
         });
 
-        textView.setOnClickListener(v -> {
-            openSignInActivity(container);
-        });
+        textView.setOnClickListener(v -> openSignInActivity(container));
 
         toolbar.findViewById(R.id.viewAccount).setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(container.getContext(), v);
 
             popupMenu.setForceShowIcon(true);
 
-            popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+            Menu menu = popupMenu.getMenu();
+
+            popupMenu.getMenuInflater().inflate(R.menu.popup_menu, menu);
+
+            MenuItem updateItem = menu.findItem(R.id.action_update_user);
+            MenuItem logoutItem = menu.findItem(R.id.action_logout);
+
+            if (getUserToken() != null) {
+                if (!getUserToken().isEmpty()) {
+                    updateItem.setVisible(true);
+                    logoutItem.setVisible(true);
+                }
+            } else {
+                logoutItem.setVisible(false);
+                updateItem.setVisible(false);
+            }
 
             popupMenu.setOnMenuItemClickListener(menuItem -> {
                 switch (menuItem.getItemId()) {
+                    case R.id.action_logout:
+                        // Open the Update User activity
+                        logout(container);
+
+                        return true;
                     case R.id.action_update_user:
                         // Open the Update User activity
                         openUpdateUserActivity(container);
@@ -125,6 +145,21 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
         return view1;
     }
 
+    private void logout(ViewGroup container) {
+        Context context = container.getContext();
+
+        // Perform the logout logic, such as clearing session data or revoking access tokens
+        // Get the SharedPreferences instance
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        // Get the editor to make changes to SharedPreferences
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        // Save the token to SharedPreferences
+        editor.putString("token", null);
+        Utils.setUserToken(null);
+
+        editor.apply();
+    }
+
     private void openSignInActivity(ViewGroup container) {
         Intent intent = new Intent(container.getContext(), SignInActivity.class);
         startActivity(intent);
@@ -152,7 +187,6 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
         } else {
             textView.setVisibility(View.VISIBLE);
             gridView.setVisibility(View.GONE);
-            divider.setVisibility(View.GONE);
             swipeRefreshLayout.setRefreshing(false);
         }
     }
@@ -181,14 +215,12 @@ public class Fragment2 extends Fragment implements SelectListener, OnFetchBookma
 
             textView.setVisibility(View.GONE);
             gridView.setVisibility(View.GONE);
-            divider.setVisibility(View.VISIBLE);
             textView2.setVisibility(View.VISIBLE);
         } else {
             showManga(bookmarkedMangas);
 
             textView.setVisibility(View.GONE);
             textView2.setVisibility(View.GONE);
-            divider.setVisibility(View.VISIBLE);
             gridView.setVisibility(View.VISIBLE);
         }
 

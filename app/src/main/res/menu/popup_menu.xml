@@ -10,5 +10,8 @@
         android:icon="@drawable/outline_password_24"
         android:id="@+id/action_reset_password"
         android:title="@string/reset_password" />
-
+    <item
+        android:icon="@drawable/outline_logout_24"
+        android:id="@+id/action_logout"
+        android:title="@string/log_out" />
 </menu>
