@@ -26,6 +26,7 @@ import com.example.mangatn.adapters.MyPagerAdapter;
 import com.example.mangatn.fragments.TabFragment;
 import com.example.mangatn.interfaces.bookmark.OnBookmarkListener;
 import com.example.mangatn.interfaces.bookmark.OnCheckForBookmarkListener;
+import com.example.mangatn.interfaces.chapter.OnGetHasReadChapterListener;
 import com.example.mangatn.interfaces.chapter.OnGetReadChapterListener;
 import com.example.mangatn.interfaces.manga.OnFetchSingleDataListener;
 import com.example.mangatn.interfaces.update.OnFetchUpdateListener;
@@ -118,16 +119,31 @@ public class ItemViewerActivity extends AppCompatActivity {
             }
         });
 
-        getLastViewedChapter();
+        getLastViewedChapterOrFirstChapter();
 
         floatingActionButton.setOnClickListener(v -> {
             if (lastViewedChapterId != null) openChapter(lastViewedChapterId);
         });
     }
 
-    private void getLastViewedChapter() {
+    private void getLastViewedChapterOrFirstChapter() {
         lastViewedChapterId = null;
-        floatingActionButton.setText(R.string.Start);
+
+        requestManager.getHasReadChapter(new OnGetHasReadChapterListener() {
+            @Override
+            public void onFetchData(Boolean response, String message, Context context) {
+                if (response) {
+                    floatingActionButton.setText(R.string.Resume);
+                } else {
+                    floatingActionButton.setText(R.string.Start);
+                }
+            }
+
+            @Override
+            public void onError(String message, Context context) {
+                floatingActionButton.setText(R.string.Start);
+            }
+        }, mangaId);
 
         // api call to fetch the last viewed + in progress chapter
         if (userIsAuthenticated()) {
@@ -135,8 +151,6 @@ public class ItemViewerActivity extends AppCompatActivity {
                 @Override
                 public void onFetchData(ReadChapterModel response, String message, Context context) {
                     lastViewedChapterId = response.getChapter().getReference();
-
-                    floatingActionButton.setText(R.string.Resume);
                 }
 
                 @Override

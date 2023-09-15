@@ -37,7 +37,7 @@ import com.example.mangatn.models.manga.MangaModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Fragment2 extends Fragment implements SelectListener, OnFetchBookmarkedMangasListener {
+public class FavoritesFragment extends Fragment implements SelectListener, OnFetchBookmarkedMangasListener {
     public GridView gridView;
     private View toolbar;
     private GridAdapter gridAdapter;

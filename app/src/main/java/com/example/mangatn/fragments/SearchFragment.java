@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Fragment1 extends Fragment implements SelectListener {
+public class SearchFragment extends Fragment implements SelectListener {
     public GridView gridView;
     private GridAdapter gridAdapter;
     private SearchView searchView;

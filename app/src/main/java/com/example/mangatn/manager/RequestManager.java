@@ -1,7 +1,13 @@
 package com.example.mangatn.manager;
 
-import static com.example.mangatn.Utils.*;
+import static com.example.mangatn.Utils.API_URL;
+import static com.example.mangatn.Utils.CHAPTER_URL;
+import static com.example.mangatn.Utils.MANGA_URL;
+import static com.example.mangatn.Utils.USERS_URL;
+import static com.example.mangatn.Utils.USER_SUCCESSFULLY_CREATED;
+import static com.example.mangatn.Utils.USER_SUCCESSFULLY_UPDATED;
 import static com.example.mangatn.Utils.getUserToken;
+import static com.example.mangatn.Utils.setUserToken;
 
 import android.content.Context;
 import android.util.Log;
@@ -10,37 +16,38 @@ import android.widget.Toast;
 import com.example.mangatn.Utils;
 import com.example.mangatn.interfaces.auth.OnForgotPasswordListener;
 import com.example.mangatn.interfaces.auth.OnResetPasswordListener;
-import com.example.mangatn.interfaces.bookmark.OnBookmarkListener;
-import com.example.mangatn.interfaces.bookmark.OnCheckForBookmarkListener;
-import com.example.mangatn.interfaces.manga.genre.OnFetchAllGenreListener;
-import com.example.mangatn.interfaces.update.OnCheckForUpdateListener;
-import com.example.mangatn.interfaces.update.OnCheckIfAChapterIsViewedListener;
-import com.example.mangatn.interfaces.bookmark.OnFetchBookmarkedMangasListener;
-import com.example.mangatn.interfaces.manga.OnFetchDataListener;
-import com.example.mangatn.interfaces.chapter.OnFetchMangaChapterListener;
-import com.example.mangatn.interfaces.chapter.OnFetchMangaChaptersListListener;
-import com.example.mangatn.interfaces.manga.OnFetchSingleDataListener;
-import com.example.mangatn.interfaces.update.OnFetchUpdateListener;
-import com.example.mangatn.interfaces.chapter.OnGetReadChapterListener;
-import com.example.mangatn.interfaces.update.OnMarkAsViewedOrNotListener;
 import com.example.mangatn.interfaces.auth.OnSignInListener;
 import com.example.mangatn.interfaces.auth.OnSignInWithTokenListener;
 import com.example.mangatn.interfaces.auth.OnSignupListener;
 import com.example.mangatn.interfaces.auth.OnUpdateUserListener;
+import com.example.mangatn.interfaces.bookmark.OnBookmarkListener;
+import com.example.mangatn.interfaces.bookmark.OnCheckForBookmarkListener;
+import com.example.mangatn.interfaces.bookmark.OnFetchBookmarkedMangasListener;
+import com.example.mangatn.interfaces.chapter.OnFetchMangaChapterListener;
+import com.example.mangatn.interfaces.chapter.OnFetchMangaChaptersListListener;
+import com.example.mangatn.interfaces.chapter.OnGetHasReadChapterListener;
+import com.example.mangatn.interfaces.chapter.OnGetReadChapterListener;
+import com.example.mangatn.interfaces.manga.OnFetchDataListener;
+import com.example.mangatn.interfaces.manga.OnFetchSingleDataListener;
+import com.example.mangatn.interfaces.manga.genre.OnFetchAllGenreListener;
+import com.example.mangatn.interfaces.update.OnCheckForUpdateListener;
+import com.example.mangatn.interfaces.update.OnCheckIfAChapterIsViewedListener;
+import com.example.mangatn.interfaces.update.OnFetchUpdateListener;
+import com.example.mangatn.interfaces.update.OnMarkAsViewedOrNotListener;
 import com.example.mangatn.models.ApiResponse;
-import com.example.mangatn.models.Enum.EOS;
-import com.example.mangatn.models.bookmark.BookmarkModel;
-import com.example.mangatn.models.chapter.ChapterModel;
-import com.example.mangatn.models.chapter.ChaptersListApiResponse;
 import com.example.mangatn.models.Enum.EMangaStatus;
+import com.example.mangatn.models.Enum.EOS;
 import com.example.mangatn.models.JwtResponse;
 import com.example.mangatn.models.auth.LoginModel;
-import com.example.mangatn.models.manga.MangaListApiResponse;
-import com.example.mangatn.models.manga.MangaModel;
-import com.example.mangatn.models.chapter.ReadChapterModel;
 import com.example.mangatn.models.auth.SignupModel;
 import com.example.mangatn.models.auth.UpdateModel;
 import com.example.mangatn.models.auth.UserModel;
+import com.example.mangatn.models.bookmark.BookmarkModel;
+import com.example.mangatn.models.chapter.ChapterModel;
+import com.example.mangatn.models.chapter.ChaptersListApiResponse;
+import com.example.mangatn.models.chapter.ReadChapterModel;
+import com.example.mangatn.models.manga.MangaListApiResponse;
+import com.example.mangatn.models.manga.MangaModel;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -446,7 +453,7 @@ public class RequestManager {
                 } else {
                     ApiResponse apiResponse = response.body();
                     if (apiResponse != null && apiResponse.getMessage().equals(USER_SUCCESSFULLY_UPDATED)) {
-                        listener.onSuccess(apiResponse,"Update Successful!", context);
+                        listener.onSuccess(apiResponse, "Update Successful!", context);
                     } else {
                         listener.onError("Update Failed!", context);
                     }
@@ -519,7 +526,7 @@ public class RequestManager {
                     UserModel apiResponse = response.body();
 
                     if (apiResponse != null) {
-                        listener.onSignInSuccess(apiResponse,"Sign-In Successful!", context);
+                        listener.onSignInSuccess(apiResponse, "Sign-In Successful!", context);
                     } else {
                         listener.onSignInError("Sign-In Failed!", context);
                     }
@@ -826,6 +833,42 @@ public class RequestManager {
         }
     }
 
+    public void getHasReadChapter(OnGetHasReadChapterListener listener, String mangaId) {
+        CallChapterApi callChapterApi = retrofit_chapter.create(CallChapterApi.class);
+        Call<Boolean> call = callChapterApi.callHasReadChapter(getUserToken(), mangaId);
+
+        try {
+            call.enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    if (!response.isSuccessful()) {
+                        int statusCode = response.code();
+                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        if (statusCode == 401) {
+                            setUserToken(null);
+                        }
+
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                        listener.onError("Request Failed!", context);
+                    } else {
+                        assert response.body() != null;
+
+                        listener.onFetchData(response.body(), response.message(), context);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+                    listener.onError("Request Failed!", context);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void getFirstChapter(OnGetReadChapterListener listener, String mangaId) {
         CallChapterApi callChapterApi = retrofit_chapter.create(CallChapterApi.class);
         Call<ReadChapterModel> call = callChapterApi.callGetFirstChapter(mangaId);
@@ -866,36 +909,36 @@ public class RequestManager {
         CallChapterApi callChapterApi = retrofit_chapter.create(CallChapterApi.class);
         Call<ApiResponse> call = callChapterApi.callUpdateReadChapter(chapterReference, getUserToken(), mangaId, readChapterModel);
 
-       try {
-           call.enqueue(new Callback<ApiResponse>() {
-               @Override
-               public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                   if (!response.isSuccessful()) {
-                       int statusCode = response.code();
-                       String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+        try {
+            call.enqueue(new Callback<ApiResponse>() {
+                @Override
+                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                    if (!response.isSuccessful()) {
+                        int statusCode = response.code();
+                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
 
-                       if (statusCode == 401) {
-                           setUserToken(null);
-                       }
+                        if (statusCode == 401) {
+                            setUserToken(null);
+                        }
 
-                       Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
-                       listener.onError("Request Failed!", context);
-                   } else {
-                       assert response.body() != null;
+                        listener.onError("Request Failed!", context);
+                    } else {
+                        assert response.body() != null;
 
-                       listener.onFetchData(response.body(), response.message(), context);
-                   }
-               }
+                        listener.onFetchData(response.body(), response.message(), context);
+                    }
+                }
 
-               @Override
-               public void onFailure(Call<ApiResponse> call, Throwable t) {
-                   listener.onError("Request Failed!", context);
-               }
-           });
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
+                @Override
+                public void onFailure(Call<ApiResponse> call, Throwable t) {
+                    listener.onError("Request Failed!", context);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void getMangaChapter(OnFetchMangaChapterListener listener, Integer chapterReference, String mangaId) {
@@ -1048,6 +1091,12 @@ public class RequestManager {
                 @Path("mangaId") String mangaId
         );
 
+        @GET("{mangaId}/hasReadChapters")
+        Call<Boolean> callHasReadChapter(
+                @Header("Authorization") String token,
+                @Path("mangaId") String mangaId
+        );
+
         @GET("{mangaId}/getFirst")
         Call<ReadChapterModel> callGetFirstChapter(
                 @Path("mangaId") String mangaId
@@ -1060,15 +1109,15 @@ public class RequestManager {
 
         @GET("all")
         Call<MangaListApiResponse> callManga(
-            @Query("query") String query,
-            @Query("pageNumber") int pageNumber,
-            @Query("pageSize") int pageSize,
-            @Query("statusList") List<EMangaStatus> statusList
+                @Query("query") String query,
+                @Query("pageNumber") int pageNumber,
+                @Query("pageSize") int pageSize,
+                @Query("statusList") List<EMangaStatus> statusList
         );
 
         @GET("{mangaId}")
         Call<MangaModel> callFetchManga(
-            @Path("mangaId") String mangaId
+                @Path("mangaId") String mangaId
         );
 
         @GET("{mangaId}/check")

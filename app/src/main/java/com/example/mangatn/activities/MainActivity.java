@@ -12,13 +12,12 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mangatn.R;
 import com.example.mangatn.adapters.VPAdapter;
-import com.example.mangatn.fragments.Fragment1;
-import com.example.mangatn.fragments.Fragment2;
+import com.example.mangatn.fragments.FavoritesFragment;
+import com.example.mangatn.fragments.SearchFragment;
 import com.example.mangatn.models.manga.MangaModel;
 import com.google.android.material.tabs.TabLayout;
 
@@ -30,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_PERMISSION = 1;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private static final Fragment1 fragment1 = new Fragment1();
-    private static final Fragment2 fragment2 = new Fragment2();
+    private static final SearchFragment searchFragment = new SearchFragment();
+    private static final FavoritesFragment favoritesFragment = new FavoritesFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
         VPAdapter vpAdapter = new VPAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
-        vpAdapter.addFragments(fragment1, "SEARCH");
-        vpAdapter.addFragments(fragment2, "FAVORITES");
+        vpAdapter.addFragments(searchFragment, "SEARCH");
+        vpAdapter.addFragments(favoritesFragment, "FAVORITES");
 
         viewPager.setAdapter(vpAdapter);
 
@@ -54,11 +53,11 @@ public class MainActivity extends AppCompatActivity {
                 this,
                 android.Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(
-                        this,
-                            android.Manifest.permission.ACCESS_NETWORK_STATE
-                ) != PackageManager.PERMISSION_GRANTED
+                this,
+                android.Manifest.permission.ACCESS_NETWORK_STATE
+        ) != PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(this, new String[] {
+            ActivityCompat.requestPermissions(this, new String[]{
                     android.Manifest.permission.INTERNET,
                     Manifest.permission.ACCESS_NETWORK_STATE
             }, REQUEST_PERMISSION);

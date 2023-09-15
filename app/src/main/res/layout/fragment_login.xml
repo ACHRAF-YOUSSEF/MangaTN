@@ -10,8 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -26,37 +26,15 @@
             app:boxStrokeColor="@color/white"
             app:hintTextColor="@color/white"
             app:endIconTint="@color/white"
-            android:textColorHint="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/username"
-            app:endIconMode="clear_text"
-            android:layout_marginBottom="16dp"
-            app:errorEnabled="true"
-            app:counterEnabled="true" >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextUsername"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            app:boxBackgroundColor="?colorSecondary"
-            app:placeholderTextColor="@color/white"
-            app:boxStrokeColor="@color/white"
-            app:hintTextColor="@color/white"
-            app:endIconTint="@color/white"
+            app:helperTextTextColor="@color/white"
             android:textColorHint="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email"
             app:endIconMode="clear_text"
             android:layout_marginBottom="16dp"
-            app:errorEnabled="true"
-            app:counterEnabled="true" >
+            app:helperTextEnabled="true"
+            app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextEmail"
@@ -72,14 +50,15 @@
             app:boxStrokeColor="@color/white"
             app:hintTextColor="@color/white"
             app:endIconTint="@color/white"
+            app:helperTextTextColor="@color/white"
             android:textColorHint="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:endIconMode="password_toggle"
             android:hint="@string/password"
             app:errorEnabled="true"
-            app:counterEnabled="true"
-            android:layout_marginBottom="16dp" >
+            app:helperTextEnabled="true"
+            android:layout_marginBottom="16dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextPassword"
@@ -91,23 +70,22 @@
 
         <Button
             style="@style/Widget.Material3.Button.ElevatedButton"
-            android:id="@+id/buttonSignUp"
+            android:id="@+id/buttonSignIn"
+            android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/sign_in"
             android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:text="@string/sign_up"
-            android:textColor="@color/white"
-            android:backgroundTint="?colorSecondary"/>
+            android:backgroundTint="?colorSecondary" />
 
         <TextView
-            android:id="@+id/textViewSignIn"
+            android:id="@+id/textViewSignUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/don_t_have_an_account_sign_up"
+            android:textColor="@color/grey"
             android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:text="@string/already_have_an_account_sign_in"
-            android:textColor="@color/grey" />
+            android:layout_marginTop="16dp" />
 
     </LinearLayout>
 

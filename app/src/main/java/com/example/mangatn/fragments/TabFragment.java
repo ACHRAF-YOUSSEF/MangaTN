@@ -20,7 +20,6 @@ import com.example.mangatn.interfaces.chapter.OnFetchMangaChaptersListListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.chapter.ChapterModel;
 import com.example.mangatn.models.chapter.ChaptersListApiResponse;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.tabs.TabLayout;
 
@@ -61,6 +60,7 @@ public class TabFragment extends Fragment implements OnFetchMangaChaptersListLis
 
         Bundle bundle = getArguments();
         FragmentActivity activity = getActivity();
+
         requestManager = new RequestManager(getContext());
 
         if (bundle != null) {
