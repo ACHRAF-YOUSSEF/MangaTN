@@ -33,6 +33,7 @@ import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.ApiResponse;
 import com.example.mangatn.models.bookmark.BookmarkModel;
 import com.example.mangatn.models.Enum.EMangaStatus;
+import com.example.mangatn.models.chapter.ChapterModel;
 import com.example.mangatn.models.manga.MangaModel;
 import com.example.mangatn.models.chapter.ReadChapterModel;
 import com.google.android.material.chip.Chip;
@@ -58,6 +59,7 @@ public class ItemViewerActivity extends AppCompatActivity {
     private CardView cardView;
     private ScrollView expandedContentScrollView;
     private LinearLayout chipGroup;
+    private Integer lastViewedChapterId = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,39 +123,38 @@ public class ItemViewerActivity extends AppCompatActivity {
             }
         });
 
+        getLastViewedChapter();
+
         floatingActionButton.setOnClickListener(v -> {
-            // api call to fetch the last viewed + in progress chapter
-            if (getUserToken() != null) {
-                if (!getUserToken().isEmpty()) {
-                    requestManager.getLastReadAndInProgressChapter(new OnGetReadChapterListener() {
-                        @Override
-                        public void onFetchData(ReadChapterModel response, String message, Context context) {
-                            openChapter(response.getChapter().getReference());
-                        }
+            if (lastViewedChapterId != null) openChapter(lastViewedChapterId);
+        });
+    }
 
-                        @Override
-                        public void onError(String message, Context context) {
+    private void getLastViewedChapter() {
+        lastViewedChapterId = null;
+        floatingActionButton.setText(R.string.Start);
 
-                        }
-                    }, mangaId);
-                } else {
-                    requestManager.getFirstChapter(new OnGetReadChapterListener() {
-                        @Override
-                        public void onFetchData(ReadChapterModel response, String message, Context context) {
-                            openChapter(response.getChapter().getReference());
-                        }
+        // api call to fetch the last viewed + in progress chapter
+        if (getUserToken() != null) {
+            if (!getUserToken().isEmpty()) {
+                requestManager.getLastReadAndInProgressChapter(new OnGetReadChapterListener() {
+                    @Override
+                    public void onFetchData(ReadChapterModel response, String message, Context context) {
+                        lastViewedChapterId = response.getChapter().getReference();
 
-                        @Override
-                        public void onError(String message, Context context) {
+                        floatingActionButton.setText(R.string.Resume);
+                    }
 
-                        }
-                    }, mangaId);
-                }
+                    @Override
+                    public void onError(String message, Context context) {
+
+                    }
+                }, mangaId);
             } else {
                 requestManager.getFirstChapter(new OnGetReadChapterListener() {
                     @Override
                     public void onFetchData(ReadChapterModel response, String message, Context context) {
-                        openChapter(response.getChapter().getReference());
+                        lastViewedChapterId = response.getChapter().getReference();
                     }
 
                     @Override
@@ -162,7 +163,19 @@ public class ItemViewerActivity extends AppCompatActivity {
                     }
                 }, mangaId);
             }
-        });
+        } else {
+            requestManager.getFirstChapter(new OnGetReadChapterListener() {
+                @Override
+                public void onFetchData(ReadChapterModel response, String message, Context context) {
+                    lastViewedChapterId = response.getChapter().getReference();
+                }
+
+                @Override
+                public void onError(String message, Context context) {
+
+                }
+            }, mangaId);
+        }
     }
 
     private void toggleCardViewContent() {
