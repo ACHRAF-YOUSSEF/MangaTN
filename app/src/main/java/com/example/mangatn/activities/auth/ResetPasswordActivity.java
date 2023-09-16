@@ -1,4 +1,4 @@
-package com.example.mangatn.activities;
+package com.example.mangatn.activities.auth;
 
 import android.content.Context;
 import android.os.Bundle;

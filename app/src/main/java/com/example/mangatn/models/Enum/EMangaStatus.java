@@ -1,12 +1,30 @@
 package com.example.mangatn.models.Enum;
 
 public enum EMangaStatus {
-    ONGOING,
-    COMPLETED;
+    ONGOING("Ongoing"), // Custom display
+    COMPLETED("Completed"); // Custom display
+
+    private final String customDisplay;
+
+    EMangaStatus(String customDisplay) {
+        this.customDisplay = customDisplay;
+    }
+
+    public String getCustomDisplay() {
+        return customDisplay;
+    }
 
     public static String getName(EMangaStatus status) {
-        String name = status.name();
+        return status.customDisplay;
+    }
 
-        return name.charAt(0)  + name.substring(1).toLowerCase();
+    public static EMangaStatus fromCustomDisplay(String customDisplay) {
+        for (EMangaStatus status : EMangaStatus.values()) {
+            if (status.customDisplay.equalsIgnoreCase(customDisplay)) {
+                return status;
+            }
+        }
+
+        throw new IllegalArgumentException("No enum constant with custom display: " + customDisplay);
     }
 }

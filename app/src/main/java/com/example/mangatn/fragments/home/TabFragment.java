@@ -1,4 +1,4 @@
-package com.example.mangatn.fragments;
+package com.example.mangatn.fragments.home;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.mangatn.R;
-import com.example.mangatn.activities.MangaChapterViewerActivity;
+import com.example.mangatn.activities.manga.MangaChapterViewerActivity;
 import com.example.mangatn.adapters.ChaptersAdapter;
 import com.example.mangatn.interfaces.chapter.OnFetchMangaChaptersListListener;
 import com.example.mangatn.manager.RequestManager;

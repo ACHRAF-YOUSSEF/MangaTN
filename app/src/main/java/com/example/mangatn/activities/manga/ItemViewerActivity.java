@@ -1,4 +1,4 @@
-package com.example.mangatn.activities;
+package com.example.mangatn.activities.manga;
 
 import static com.example.mangatn.Utils.userIsAuthenticated;
 
@@ -20,8 +20,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mangatn.R;
+import com.example.mangatn.activities.auth.SignInActivity;
 import com.example.mangatn.adapters.MyPagerAdapter;
-import com.example.mangatn.fragments.TabFragment;
+import com.example.mangatn.fragments.home.TabFragment;
 import com.example.mangatn.interfaces.bookmark.OnBookmarkListener;
 import com.example.mangatn.interfaces.bookmark.OnCheckForBookmarkListener;
 import com.example.mangatn.interfaces.chapter.OnGetHasReadChapterListener;

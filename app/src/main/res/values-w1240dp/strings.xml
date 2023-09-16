@@ -5,4 +5,7 @@
     <string name="verification_code">Verification Code</string>
     <string name="change_password">Change Password</string>
     <string name="new_password">New Password</string>
+    <string name="apply_filters">Apply Filters</string>
+    <string name="all_status">All Status</string>
+    <string name="all_genres">All Genres</string>
 </resources>

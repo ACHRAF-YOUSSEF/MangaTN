@@ -1,4 +1,4 @@
-package com.example.mangatn.activities;
+package com.example.mangatn.activities.manga;
 
 import static com.example.mangatn.Utils.userIsAuthenticated;
 import static java.lang.String.format;

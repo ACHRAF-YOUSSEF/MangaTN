@@ -14,6 +14,7 @@
         <!-- Customize your theme here. -->
         <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
         <item name="android:itemTextAppearance">@style/ChangeTextColor</item>
+        <item name="checkboxStyle">@style/CustomMaterialCheckBoxStyle</item>
     </style>
 
     <style name="Widget.App.PopupMenu" parent="Widget.Material3.PopupMenu">
@@ -34,6 +35,11 @@
 
     <style name="ChangeTextColor">
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="CustomMaterialCheckBoxStyle" parent="Widget.Material3.CompoundButton.CheckBox">
+        <item name="buttonTint">@color/button_tint</item>
+        <item name="buttonIconTint">@color/button_icon_tint</item>
     </style>
 
 </resources>

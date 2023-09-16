@@ -1,4 +1,4 @@
-package com.example.mangatn.fragments;
+package com.example.mangatn.fragments.home;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,9 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Spinner;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.SearchView;
@@ -17,95 +16,46 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mangatn.R;
-import com.example.mangatn.activities.ItemViewerActivity;
-import com.example.mangatn.adapters.CustomSpinnerAdapter;
+import com.example.mangatn.activities.manga.ItemViewerActivity;
 import com.example.mangatn.adapters.GridAdapter;
+import com.example.mangatn.fragments.filter.MangaFilterFragment;
+import com.example.mangatn.fragments.filter.MangaFilterFragment.OnFilterAppliedListener;
 import com.example.mangatn.interfaces.manga.OnFetchDataListener;
 import com.example.mangatn.interfaces.manga.SelectListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.Enum.EMangaStatus;
 import com.example.mangatn.models.manga.MangaModel;
+import com.example.mangatn.models.manga.filter.MangaFilter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class SearchFragment extends Fragment implements SelectListener {
+public class SearchFragment extends Fragment implements SelectListener, OnFilterAppliedListener {
     public GridView gridView;
     private GridAdapter gridAdapter;
     private SearchView searchView;
-    private Spinner spinnerFilter;
-    private CustomSpinnerAdapter adapter;
+    private ImageButton mangaFilter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private final int pageSize = 6;
     private int pageNumber = 0;
     private final List<MangaModel> mangaModels = new ArrayList<>();
-    private List<EMangaStatus> statusList = new ArrayList<>();
+    private final List<EMangaStatus> statusList = new ArrayList<>();
+    private ViewGroup container;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view1 = inflater.inflate(R.layout.search_fragment, container, false);
 
+        this.container = container;
+
         gridView = view1.findViewById(R.id.gridView);
         searchView = view1.findViewById(R.id.search_view);
 
-        spinnerFilter = view1.findViewById(R.id.spinnerFilter);
+        mangaFilter = view1.findViewById(R.id.mangaFilter);
 
-        adapter = new CustomSpinnerAdapter(
-                container.getContext(),
-                android.R.layout.simple_spinner_item,
-                Arrays.asList(getResources().getStringArray(R.array.filter_options))
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinnerFilter.setAdapter(adapter);
-
-        spinnerFilter.setSelection(0);
-
-        spinnerFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String selectedFilter = parentView
-                        .getItemAtPosition(position)
-                        .toString();
-
-                adapter.setSelectedItemPosition(position);
-
-                switch (selectedFilter) {
-                    case "Completed": {
-                        statusList = new ArrayList<>();
-
-                        statusList.add(EMangaStatus.COMPLETED);
-
-                        break;
-                    }
-                    case "Ongoing": {
-                        statusList = new ArrayList<>();
-
-                        statusList.add(EMangaStatus.ONGOING);
-
-                        break;
-                    }
-                    default: {
-                        statusList = new ArrayList<>();
-
-                        statusList.add(EMangaStatus.COMPLETED);
-                        statusList.add(EMangaStatus.ONGOING);
-
-                        break;
-                    }
-                }
-
-                mangaModels.clear();
-                pageNumber = 0;
-
-                loadData(container, searchView.getQuery().toString());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-
-            }
+        mangaFilter.setOnClickListener(view -> {
+            MangaFilterFragment bottomSheetFragment = new MangaFilterFragment();
+            bottomSheetFragment.show(getChildFragmentManager(), bottomSheetFragment.getTag());
         });
 
         swipeRefreshLayout = view1.findViewById(R.id.swipeRefreshLayout);
@@ -155,19 +105,6 @@ public class SearchFragment extends Fragment implements SelectListener {
             }
         });
 
-        /*RequestManager requestManager = new RequestManager(container.getContext());
-        requestManager.getAllMangaGenre(new OnFetchAllGenreListener() {
-            @Override
-            public void onFetchData(List<String> list, String message, Context context) {
-                Log.i("all genre", "onFetchData: " + list);
-            }
-
-            @Override
-            public void onError(String message, Context context) {
-
-            }
-        });*/
-
         return view1;
     }
 
@@ -213,5 +150,16 @@ public class SearchFragment extends Fragment implements SelectListener {
             gridAdapter.notifyDataSetChanged();
             pageNumber++;
         }
+    }
+
+    @Override
+    public void onFilterApplied(MangaFilter selectedFilters) {
+        statusList.clear();
+        statusList.addAll(selectedFilters.getStatuses());
+
+        mangaModels.clear();
+        pageNumber = 0;
+
+        loadData(container, searchView.getQuery().toString());
     }
 }

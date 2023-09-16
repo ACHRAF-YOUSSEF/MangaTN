@@ -1,12 +1,12 @@
-package com.example.mangatn.activities;
+package com.example.mangatn.activities.auth;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mangatn.R;
-import com.example.mangatn.fragments.LoginFragment;
-import com.example.mangatn.fragments.SignupFragment;
+import com.example.mangatn.fragments.auth.LoginFragment;
+import com.example.mangatn.fragments.auth.SignupFragment;
 
 public class SignInActivity extends AppCompatActivity {
     private final LoginFragment loginFragment = new LoginFragment();

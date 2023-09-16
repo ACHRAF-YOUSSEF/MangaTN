@@ -1,4 +1,4 @@
-package com.example.mangatn.fragments;
+package com.example.mangatn.fragments.auth;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.mangatn.R;
-import com.example.mangatn.activities.SignInActivity;
+import com.example.mangatn.activities.auth.SignInActivity;
 import com.example.mangatn.interfaces.auth.OnSignupListener;
 import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.auth.SignupModel;

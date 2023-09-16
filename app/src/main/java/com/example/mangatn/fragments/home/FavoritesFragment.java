@@ -1,4 +1,4 @@
-package com.example.mangatn.fragments;
+package com.example.mangatn.fragments.home;
 
 import static com.example.mangatn.Utils.getUserToken;
 import static com.example.mangatn.Utils.userIsAuthenticated;
@@ -24,10 +24,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mangatn.R;
 import com.example.mangatn.Utils;
-import com.example.mangatn.activities.ItemViewerActivity;
-import com.example.mangatn.activities.ResetPasswordActivity;
-import com.example.mangatn.activities.SignInActivity;
-import com.example.mangatn.activities.UpdateProfileActivity;
+import com.example.mangatn.activities.auth.ResetPasswordActivity;
+import com.example.mangatn.activities.auth.SignInActivity;
+import com.example.mangatn.activities.auth.UpdateProfileActivity;
+import com.example.mangatn.activities.manga.ItemViewerActivity;
 import com.example.mangatn.adapters.GridAdapter;
 import com.example.mangatn.interfaces.bookmark.OnFetchBookmarkedMangasListener;
 import com.example.mangatn.interfaces.manga.SelectListener;

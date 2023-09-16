@@ -1,4 +1,4 @@
-package com.example.mangatn.activities;
+package com.example.mangatn.activities.home;
 
 import static com.example.mangatn.Utils.getUserToken;
 import static com.example.mangatn.Utils.setUserToken;
@@ -16,8 +16,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.mangatn.R;
 import com.example.mangatn.adapters.VPAdapter;
-import com.example.mangatn.fragments.FavoritesFragment;
-import com.example.mangatn.fragments.SearchFragment;
+import com.example.mangatn.fragments.home.FavoritesFragment;
+import com.example.mangatn.fragments.home.SearchFragment;
 import com.example.mangatn.models.manga.MangaModel;
 import com.google.android.material.tabs.TabLayout;
 

@@ -1,4 +1,4 @@
-package com.example.mangatn.activities;
+package com.example.mangatn.activities.auth;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mangatn.R;
 import com.example.mangatn.Utils;
+import com.example.mangatn.activities.home.MainActivity;
 import com.example.mangatn.interfaces.auth.OnSignInWithTokenListener;
 import com.example.mangatn.interfaces.auth.OnUpdateUserListener;
 import com.example.mangatn.manager.RequestManager;
