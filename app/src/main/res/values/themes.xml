@@ -15,6 +15,7 @@
         <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
         <item name="android:itemTextAppearance">@style/ChangeTextColor</item>
         <item name="checkboxStyle">@style/CustomMaterialCheckBoxStyle</item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
     </style>
 
     <style name="Widget.App.PopupMenu" parent="Widget.Material3.PopupMenu">
@@ -38,8 +39,27 @@
     </style>
 
     <style name="CustomMaterialCheckBoxStyle" parent="Widget.Material3.CompoundButton.CheckBox">
+        <item name="android:textColor">@color/white</item>
         <item name="buttonTint">@color/button_tint</item>
         <item name="buttonIconTint">@color/button_icon_tint</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/ModalBottomSheetDialog</item>
+    </style>
+
+    <style name="BottomSheetDragHandleView" parent="Widget.Material3.BottomSheet.DragHandle">
+        <item name="tint">@color/white</item>
+    </style>
+
+    <style name="ModalBottomSheetDialog" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="backgroundTint">#121212</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
+    </style>
+
+    <style name="ShapeAppearance.App.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">24dp</item>
     </style>
 
 </resources>

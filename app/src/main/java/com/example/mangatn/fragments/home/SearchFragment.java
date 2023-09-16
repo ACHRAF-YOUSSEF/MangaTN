@@ -56,6 +56,7 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
 
         mangaFilter.setOnClickListener(view -> {
             MangaFilterFragment bottomSheetFragment = new MangaFilterFragment();
+
             bottomSheetFragment.show(getChildFragmentManager(), bottomSheetFragment.getTag());
         });
 
