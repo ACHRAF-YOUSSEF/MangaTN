@@ -47,6 +47,7 @@ public class MangaFilterFragment extends BottomSheetDialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+
         onFilterAppliedListener = null;
     }
 
@@ -84,6 +85,8 @@ public class MangaFilterFragment extends BottomSheetDialogFragment {
             if (onFilterAppliedListener != null) {
                 onFilterAppliedListener.onFilterApplied(selectedFilters);
             }
+
+            dismiss();
         });
 
         return view;

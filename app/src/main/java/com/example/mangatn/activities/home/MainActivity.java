@@ -16,15 +16,17 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.mangatn.R;
 import com.example.mangatn.adapters.VPAdapter;
+import com.example.mangatn.fragments.filter.MangaFilterFragment.OnFilterAppliedListener;
 import com.example.mangatn.fragments.home.FavoritesFragment;
 import com.example.mangatn.fragments.home.SearchFragment;
 import com.example.mangatn.models.manga.MangaModel;
+import com.example.mangatn.models.manga.filter.MangaFilter;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnFilterAppliedListener {
     public static List<MangaModel> mangalList;
     private static final int REQUEST_PERMISSION = 1;
     private TabLayout tabLayout;
@@ -101,5 +103,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, SignInActivity.class);
             startActivity(intent);
         }*/
+    }
+
+    @Override
+    public void onFilterApplied(MangaFilter selectedFilters) {
+        searchFragment.onFilterApplied(selectedFilters);
     }
 }

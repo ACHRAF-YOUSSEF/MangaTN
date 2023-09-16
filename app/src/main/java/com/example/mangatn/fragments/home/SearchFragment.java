@@ -23,6 +23,7 @@ import com.example.mangatn.fragments.filter.MangaFilterFragment.OnFilterAppliedL
 import com.example.mangatn.interfaces.manga.OnFetchDataListener;
 import com.example.mangatn.interfaces.manga.SelectListener;
 import com.example.mangatn.manager.RequestManager;
+import com.example.mangatn.models.Enum.EMangaGenre;
 import com.example.mangatn.models.Enum.EMangaStatus;
 import com.example.mangatn.models.manga.MangaModel;
 import com.example.mangatn.models.manga.filter.MangaFilter;
@@ -39,7 +40,7 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
     private final int pageSize = 6;
     private int pageNumber = 0;
     private final List<MangaModel> mangaModels = new ArrayList<>();
-    private final List<EMangaStatus> statusList = new ArrayList<>();
+    private MangaFilter mangaFilterDto;
     private ViewGroup container;
 
     @Override
@@ -58,6 +59,8 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
             bottomSheetFragment.show(getChildFragmentManager(), bottomSheetFragment.getTag());
         });
 
+        mangaFilterDto = new MangaFilter("", EMangaStatus.getAll(), EMangaGenre.getAll());
+
         swipeRefreshLayout = view1.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(true);
@@ -67,9 +70,6 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
 
             loadData(container, searchView.getQuery().toString());
         });
-
-        statusList.add(EMangaStatus.ONGOING);
-        statusList.add(EMangaStatus.COMPLETED);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -112,7 +112,7 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
         RequestManager requestManager = new RequestManager(container.getContext());
 
         swipeRefreshLayout.setRefreshing(true);
-        requestManager.getMangaList(listener, searchView, statusList, pageNumber, pageSize);
+        requestManager.getMangaList(listener, searchView, mangaFilterDto, pageNumber, pageSize);
     }
 
     @Override
@@ -154,11 +154,10 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
 
     @Override
     public void onFilterApplied(MangaFilter selectedFilters) {
-        statusList.clear();
-        statusList.addAll(selectedFilters.getStatuses());
-
         mangaModels.clear();
         pageNumber = 0;
+
+        mangaFilterDto = selectedFilters;
 
         loadData(container, searchView.getQuery().toString());
     }

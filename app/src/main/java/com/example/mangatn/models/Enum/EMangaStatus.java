@@ -1,5 +1,8 @@
 package com.example.mangatn.models.Enum;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum EMangaStatus {
     ONGOING("Ongoing"), // Custom display
     COMPLETED("Completed"); // Custom display
@@ -26,5 +29,9 @@ public enum EMangaStatus {
         }
 
         throw new IllegalArgumentException("No enum constant with custom display: " + customDisplay);
+    }
+
+    public static List<EMangaStatus> getAll() {
+        return Arrays.asList(EMangaStatus.values());
     }
 }

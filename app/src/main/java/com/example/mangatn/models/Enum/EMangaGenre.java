@@ -1,5 +1,8 @@
 package com.example.mangatn.models.Enum;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum EMangaGenre {
     ACTION_MANGA("Action"),
     ADVENTURE_MANGA("Adventure"),
@@ -52,5 +55,9 @@ public enum EMangaGenre {
         }
 
         throw new IllegalArgumentException("No enum constant with custom display name: " + customDisplayName);
+    }
+
+    public static List<EMangaGenre> getAll() {
+        return Arrays.asList(EMangaGenre.values());
     }
 }

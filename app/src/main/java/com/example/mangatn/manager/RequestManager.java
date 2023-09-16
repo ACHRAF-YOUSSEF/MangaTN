@@ -35,7 +35,6 @@ import com.example.mangatn.interfaces.update.OnCheckIfAChapterIsViewedListener;
 import com.example.mangatn.interfaces.update.OnFetchUpdateListener;
 import com.example.mangatn.interfaces.update.OnMarkAsViewedOrNotListener;
 import com.example.mangatn.models.ApiResponse;
-import com.example.mangatn.models.Enum.EMangaStatus;
 import com.example.mangatn.models.Enum.EOS;
 import com.example.mangatn.models.JwtResponse;
 import com.example.mangatn.models.auth.LoginModel;
@@ -48,6 +47,7 @@ import com.example.mangatn.models.chapter.ChaptersListApiResponse;
 import com.example.mangatn.models.chapter.ReadChapterModel;
 import com.example.mangatn.models.manga.MangaListApiResponse;
 import com.example.mangatn.models.manga.MangaModel;
+import com.example.mangatn.models.manga.filter.MangaFilter;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -131,9 +131,9 @@ public class RequestManager {
         }
     }
 
-    public void getMangaList(OnFetchDataListener listener, String query, List<EMangaStatus> statusList, int pageNumber, int pageSize) {
+    public void getMangaList(OnFetchDataListener listener, String query, MangaFilter mangaFilterDto, int pageNumber, int pageSize) {
         CallMangaApi callMangaApi = retrofit_manga.create(CallMangaApi.class);
-        Call<MangaListApiResponse> call = callMangaApi.callManga(query, pageNumber, pageSize, statusList);
+        Call<MangaListApiResponse> call = callMangaApi.callManga(query, pageNumber, pageSize, mangaFilterDto);
 
         try {
             call.enqueue(new Callback<MangaListApiResponse>() {
@@ -1107,12 +1107,12 @@ public class RequestManager {
         @GET("genres")
         Call<List<String>> callGetGenres();
 
-        @GET("all")
+        @POST("all")
         Call<MangaListApiResponse> callManga(
                 @Query("query") String query,
                 @Query("pageNumber") int pageNumber,
                 @Query("pageSize") int pageSize,
-                @Query("statusList") List<EMangaStatus> statusList
+                @Body MangaFilter mangaFilterDto
         );
 
         @GET("{mangaId}")
