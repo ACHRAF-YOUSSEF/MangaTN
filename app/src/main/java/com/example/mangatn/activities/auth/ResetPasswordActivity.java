@@ -22,7 +22,6 @@ import com.google.android.material.textfield.TextInputEditText;
 
 public class ResetPasswordActivity extends AppCompatActivity {
     private TextInputEditText editTextEmail;
-    private Button buttonVerifyEmail;
     private String verificationCode;
 
     @Override
@@ -31,7 +30,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reset_password);
 
         editTextEmail = findViewById(R.id.editTextEmail);
-        buttonVerifyEmail = findViewById(R.id.buttonVerifyEmail);
+        Button buttonVerifyEmail = findViewById(R.id.buttonVerifyEmail);
 
         buttonVerifyEmail.setOnClickListener(view -> {
             String email = editTextEmail.getText().toString().trim();

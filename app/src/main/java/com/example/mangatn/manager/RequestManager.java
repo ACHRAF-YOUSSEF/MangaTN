@@ -13,6 +13,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.example.mangatn.Utils;
 import com.example.mangatn.interfaces.auth.OnForgotPasswordListener;
 import com.example.mangatn.interfaces.auth.OnResetPasswordListener;
@@ -29,9 +31,6 @@ import com.example.mangatn.interfaces.chapter.OnGetHasReadChapterListener;
 import com.example.mangatn.interfaces.chapter.OnGetReadChapterListener;
 import com.example.mangatn.interfaces.manga.OnFetchDataListener;
 import com.example.mangatn.interfaces.manga.OnFetchSingleDataListener;
-import com.example.mangatn.interfaces.manga.genre.OnFetchAllGenreListener;
-import com.example.mangatn.interfaces.update.OnCheckForUpdateListener;
-import com.example.mangatn.interfaces.update.OnCheckIfAChapterIsViewedListener;
 import com.example.mangatn.interfaces.update.OnFetchUpdateListener;
 import com.example.mangatn.interfaces.update.OnMarkAsViewedOrNotListener;
 import com.example.mangatn.models.ApiResponse;
@@ -49,7 +48,6 @@ import com.example.mangatn.models.manga.MangaListApiResponse;
 import com.example.mangatn.models.manga.MangaModel;
 import com.example.mangatn.models.manga.filter.MangaFilter;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -95,42 +93,6 @@ public class RequestManager {
         this.context = context;
     }
 
-    public void getAllMangaGenre(OnFetchAllGenreListener listener) {
-        CallMangaApi callMangaApi = retrofit_manga.create(CallMangaApi.class);
-        Call<List<String>> call = callMangaApi.callGetGenres();
-
-        try {
-            call.enqueue(new Callback<List<String>>() {
-                @Override
-                public void onResponse(Call<List<String>> call, Response<List<String>> response) {
-                    if (!response.isSuccessful()) {
-                        int statusCode = response.code();
-                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
-
-                        if (statusCode == 401) {
-                            setUserToken(null);
-                        }
-
-                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
-
-                        listener.onError("Request Failed!", context);
-                    } else {
-                        assert response.body() != null;
-
-                        listener.onFetchData(response.body(), response.message(), context);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<String>> call, Throwable t) {
-                    listener.onError("Request Failed!", context);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void getMangaList(OnFetchDataListener listener, String query, MangaFilter mangaFilterDto, int pageNumber, int pageSize) {
         CallMangaApi callMangaApi = retrofit_manga.create(CallMangaApi.class);
         Call<MangaListApiResponse> call = callMangaApi.callManga(query, pageNumber, pageSize, mangaFilterDto);
@@ -138,7 +100,7 @@ public class RequestManager {
         try {
             call.enqueue(new Callback<MangaListApiResponse>() {
                 @Override
-                public void onResponse(Call<MangaListApiResponse> call, Response<MangaListApiResponse> response) {
+                public void onResponse(@NonNull Call<MangaListApiResponse> call, @NonNull Response<MangaListApiResponse> response) {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -158,7 +120,7 @@ public class RequestManager {
                 }
 
                 @Override
-                public void onFailure(Call<MangaListApiResponse> call, Throwable t) {
+                public void onFailure(@NonNull Call<MangaListApiResponse> call, @NonNull Throwable t) {
                     listener.onError("Request Failed!", context);
                 }
             });
@@ -174,7 +136,7 @@ public class RequestManager {
         try {
             call.enqueue(new Callback<MangaModel>() {
                 @Override
-                public void onResponse(Call<MangaModel> call, Response<MangaModel> response) {
+                public void onResponse(@NonNull Call<MangaModel> call, @NonNull Response<MangaModel> response) {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -196,7 +158,7 @@ public class RequestManager {
                 }
 
                 @Override
-                public void onFailure(Call<MangaModel> call, Throwable t) {
+                public void onFailure(@NonNull Call<MangaModel> call, @NonNull Throwable t) {
                     listener.onError("Request Failed!", context);
                 }
             });
@@ -217,7 +179,7 @@ public class RequestManager {
 
         call.enqueue(new Callback<ChaptersListApiResponse>() {
             @Override
-            public void onResponse(Call<ChaptersListApiResponse> call, Response<ChaptersListApiResponse> response) {
+            public void onResponse(@NonNull Call<ChaptersListApiResponse> call, @NonNull Response<ChaptersListApiResponse> response) {
                 if (!response.isSuccessful()) {
                     int statusCode = response.code();
                     String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -240,48 +202,10 @@ public class RequestManager {
             }
 
             @Override
-            public void onFailure(Call<ChaptersListApiResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<ChaptersListApiResponse> call, @NonNull Throwable t) {
                 listener.onError("fetch Failed!" + t.getMessage(), context);
             }
         });
-    }
-
-    public void checkForUpdate(OnCheckForUpdateListener listener, String mangaId) {
-        CallMangaApi callMangaApi = retrofit_manga.create(CallMangaApi.class);
-        Call<Boolean> call = callMangaApi.callMangaCheckForUpdate(mangaId);
-
-        try {
-            call.enqueue(new Callback<Boolean>() {
-                @Override
-                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                    if (!response.isSuccessful()) {
-                        int statusCode = response.code();
-                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
-
-                        if (statusCode == 401) {
-                            setUserToken(null);
-                        }
-
-                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
-
-                        listener.onError("Request Failed!", context);
-                    } else {
-                        assert response.body() != null;
-
-                        Log.i("body", "onResponse: " + response.body());
-
-                        listener.onFetchData(response.body(), response.message(), context);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Boolean> call, Throwable t) {
-                    listener.onError("Request Failed!", context);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void checkForBookmark(OnCheckForBookmarkListener listener, String mangaId) {
@@ -291,7 +215,7 @@ public class RequestManager {
         try {
             call.enqueue(new Callback<Boolean>() {
                 @Override
-                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                public void onResponse(@NonNull Call<Boolean> call, @NonNull Response<Boolean> response) {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -315,7 +239,7 @@ public class RequestManager {
                 }
 
                 @Override
-                public void onFailure(Call<Boolean> call, Throwable t) {
+                public void onFailure(@NonNull Call<Boolean> call, @NonNull Throwable t) {
                     listener.onError("Request Failed!", context);
                 }
             });
@@ -331,7 +255,7 @@ public class RequestManager {
         try {
             call.enqueue(new Callback<ApiResponse>() {
                 @Override
-                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -353,7 +277,7 @@ public class RequestManager {
                 }
 
                 @Override
-                public void onFailure(Call<ApiResponse> call, Throwable t) {
+                public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable t) {
                     listener.onError("Request Failed!", context);
                 }
             });
@@ -372,7 +296,7 @@ public class RequestManager {
 
         call.enqueue(new Callback<ApiResponse>() {
             @Override
-            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+            public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
                 if (!response.isSuccessful()) {
                     int statusCode = response.code();
                     String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -392,7 +316,7 @@ public class RequestManager {
             }
 
             @Override
-            public void onFailure(Call<ApiResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable t) {
                 listener.onError("Request Failed!", context);
             }
         });
@@ -404,7 +328,7 @@ public class RequestManager {
 
         call.enqueue(new Callback<ApiResponse>() {
             @Override
-            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+            public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
                 if (!response.isSuccessful()) {
                     int statusCode = response.code();
                     String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -424,7 +348,7 @@ public class RequestManager {
             }
 
             @Override
-            public void onFailure(Call<ApiResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable t) {
                 listener.onError("Request Failed!", context);
             }
         });
@@ -436,7 +360,7 @@ public class RequestManager {
 
         call.enqueue(new Callback<ApiResponse>() {
             @Override
-            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+            public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
                 if (!response.isSuccessful()) {
                     int statusCode = response.code();
                     String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -461,7 +385,7 @@ public class RequestManager {
             }
 
             @Override
-            public void onFailure(Call<ApiResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable t) {
                 listener.onError(t.getMessage(), context);
             }
         });
@@ -473,7 +397,7 @@ public class RequestManager {
 
         call.enqueue(new Callback<ApiResponse>() {
             @Override
-            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+            public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
                 if (!response.isSuccessful()) {
                     int statusCode = response.code();
                     String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -496,7 +420,7 @@ public class RequestManager {
             }
 
             @Override
-            public void onFailure(Call<ApiResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable t) {
                 listener.onSignupError("Signup Failed!", context);
             }
         });
@@ -508,7 +432,7 @@ public class RequestManager {
 
         call.enqueue(new Callback<UserModel>() {
             @Override
-            public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+            public void onResponse(@NonNull Call<UserModel> call, @NonNull Response<UserModel> response) {
                 if (!response.isSuccessful()) {
                     int statusCode = response.code();
                     String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -534,7 +458,7 @@ public class RequestManager {
             }
 
             @Override
-            public void onFailure(Call<UserModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<UserModel> call, @NonNull Throwable t) {
                 listener.onSignInError("Sign-In Failed!:" + t.getMessage(), context);
             }
         });
@@ -546,7 +470,7 @@ public class RequestManager {
 
         call.enqueue(new Callback<JwtResponse>() {
             @Override
-            public void onResponse(Call<JwtResponse> call, Response<JwtResponse> response) {
+            public void onResponse(@NonNull Call<JwtResponse> call, @NonNull Response<JwtResponse> response) {
                 if (!response.isSuccessful()) {
                     int statusCode = response.code();
                     String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -573,7 +497,7 @@ public class RequestManager {
             }
 
             @Override
-            public void onFailure(Call<JwtResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<JwtResponse> call, @NonNull Throwable t) {
                 listener.onSignInError("Sign-In Failed!", context);
             }
         });
@@ -586,7 +510,7 @@ public class RequestManager {
         try {
             call.enqueue(new Callback<MangaListApiResponse>() {
                 @Override
-                public void onResponse(Call<MangaListApiResponse> call, Response<MangaListApiResponse> response) {
+                public void onResponse(@NonNull Call<MangaListApiResponse> call, @NonNull Response<MangaListApiResponse> response) {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -604,7 +528,7 @@ public class RequestManager {
                 }
 
                 @Override
-                public void onFailure(Call<MangaListApiResponse> call, Throwable t) {
+                public void onFailure(@NonNull Call<MangaListApiResponse> call, @NonNull Throwable t) {
                     listener.onFetchError("Request Failed!", context);
                 }
             });
@@ -620,7 +544,7 @@ public class RequestManager {
         try {
             call.enqueue(new Callback<ApiResponse>() {
                 @Override
-                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -640,81 +564,7 @@ public class RequestManager {
                 }
 
                 @Override
-                public void onFailure(Call<ApiResponse> call, Throwable t) {
-                    listener.onError("Request Failed!", context);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void markAsViewedOrNot(OnMarkAsViewedOrNotListener listener, Integer chapterReference, String mangaId, Boolean isViewed) {
-        CallChapterApi callChapterApi = retrofit_chapter.create(CallChapterApi.class);
-        Call<ApiResponse> call = isViewed ?
-                callChapterApi.callMarkAsViewed(chapterReference, getUserToken(), mangaId)
-                : callChapterApi.callMarkAsNotViewed(chapterReference, getUserToken(), mangaId);
-
-        try {
-            call.enqueue(new Callback<ApiResponse>() {
-                @Override
-                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                    if (!response.isSuccessful()) {
-                        int statusCode = response.code();
-                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
-
-                        if (statusCode == 401) {
-                            setUserToken(null);
-                        }
-
-                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
-
-                        listener.onError("Request Failed!", context);
-                    } else {
-                        assert response.body() != null;
-
-                        listener.onFetchData(response.body(), response.message(), context);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ApiResponse> call, Throwable t) {
-                    listener.onError("Request Failed!", context);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void checkIfAChapterIsViewed(OnCheckIfAChapterIsViewedListener listener, Integer chapterReference, String mangaId) {
-        CallChapterApi callChapterApi = retrofit_chapter.create(CallChapterApi.class);
-        Call<Boolean> call = callChapterApi.callCheckIfTheChapterIsViewed(chapterReference, getUserToken(), mangaId);
-
-        try {
-            call.enqueue(new Callback<Boolean>() {
-                @Override
-                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                    if (!response.isSuccessful()) {
-                        int statusCode = response.code();
-                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
-
-                        if (statusCode == 401) {
-                            setUserToken(null);
-                        }
-
-                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
-
-                        listener.onError("Request Failed!", context);
-                    } else {
-                        assert response.body() != null;
-
-                        listener.onFetchData(response.body(), response.message(), context);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Boolean> call, Throwable t) {
+                public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable t) {
                     listener.onError("Request Failed!", context);
                 }
             });
@@ -732,7 +582,7 @@ public class RequestManager {
         try {
             call.enqueue(new Callback<ApiResponse>() {
                 @Override
-                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -752,7 +602,7 @@ public class RequestManager {
                 }
 
                 @Override
-                public void onFailure(Call<ApiResponse> call, Throwable t) {
+                public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable t) {
                     listener.onError("Request Failed!", context);
                 }
             });
@@ -768,7 +618,7 @@ public class RequestManager {
         try {
             call.enqueue(new Callback<ReadChapterModel>() {
                 @Override
-                public void onResponse(Call<ReadChapterModel> call, Response<ReadChapterModel> response) {
+                public void onResponse(@NonNull Call<ReadChapterModel> call, @NonNull Response<ReadChapterModel> response) {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -788,7 +638,7 @@ public class RequestManager {
                 }
 
                 @Override
-                public void onFailure(Call<ReadChapterModel> call, Throwable t) {
+                public void onFailure(@NonNull Call<ReadChapterModel> call, @NonNull Throwable t) {
                     listener.onError("Request Failed!", context);
                 }
             });
@@ -804,7 +654,7 @@ public class RequestManager {
         try {
             call.enqueue(new Callback<ReadChapterModel>() {
                 @Override
-                public void onResponse(Call<ReadChapterModel> call, Response<ReadChapterModel> response) {
+                public void onResponse(@NonNull Call<ReadChapterModel> call, @NonNull Response<ReadChapterModel> response) {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -824,7 +674,7 @@ public class RequestManager {
                 }
 
                 @Override
-                public void onFailure(Call<ReadChapterModel> call, Throwable t) {
+                public void onFailure(@NonNull Call<ReadChapterModel> call, @NonNull Throwable t) {
                     listener.onError("Request Failed!", context);
                 }
             });
@@ -840,7 +690,7 @@ public class RequestManager {
         try {
             call.enqueue(new Callback<Boolean>() {
                 @Override
-                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                public void onResponse(@NonNull Call<Boolean> call, @NonNull Response<Boolean> response) {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -860,7 +710,7 @@ public class RequestManager {
                 }
 
                 @Override
-                public void onFailure(Call<Boolean> call, Throwable t) {
+                public void onFailure(@NonNull Call<Boolean> call, @NonNull Throwable t) {
                     listener.onError("Request Failed!", context);
                 }
             });
@@ -876,7 +726,7 @@ public class RequestManager {
         try {
             call.enqueue(new Callback<ReadChapterModel>() {
                 @Override
-                public void onResponse(Call<ReadChapterModel> call, Response<ReadChapterModel> response) {
+                public void onResponse(@NonNull Call<ReadChapterModel> call, @NonNull Response<ReadChapterModel> response) {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -896,7 +746,7 @@ public class RequestManager {
                 }
 
                 @Override
-                public void onFailure(Call<ReadChapterModel> call, Throwable t) {
+                public void onFailure(@NonNull Call<ReadChapterModel> call, @NonNull Throwable t) {
                     listener.onError("Request Failed!", context);
                 }
             });
@@ -905,14 +755,14 @@ public class RequestManager {
         }
     }
 
-    public void updateReadChapter(OnFetchUpdateListener listener, Integer chapterReference, String mangaId, ReadChapterModel readChapterModel) {
+    public void updateReadChapter(OnFetchUpdateListener<ApiResponse> listener, Integer chapterReference, String mangaId, ReadChapterModel readChapterModel) {
         CallChapterApi callChapterApi = retrofit_chapter.create(CallChapterApi.class);
         Call<ApiResponse> call = callChapterApi.callUpdateReadChapter(chapterReference, getUserToken(), mangaId, readChapterModel);
 
         try {
             call.enqueue(new Callback<ApiResponse>() {
                 @Override
-                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -932,7 +782,7 @@ public class RequestManager {
                 }
 
                 @Override
-                public void onFailure(Call<ApiResponse> call, Throwable t) {
+                public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable t) {
                     listener.onError("Request Failed!", context);
                 }
             });
@@ -948,7 +798,7 @@ public class RequestManager {
         try {
             call.enqueue(new Callback<ChapterModel>() {
                 @Override
-                public void onResponse(Call<ChapterModel> call, Response<ChapterModel> response) {
+                public void onResponse(@NonNull Call<ChapterModel> call, @NonNull Response<ChapterModel> response) {
                     if (!response.isSuccessful()) {
                         int statusCode = response.code();
                         String errorMessage = "Error!! HTTP Status Code: " + statusCode;
@@ -968,7 +818,7 @@ public class RequestManager {
                 }
 
                 @Override
-                public void onFailure(Call<ChapterModel> call, Throwable t) {
+                public void onFailure(@NonNull Call<ChapterModel> call, @NonNull Throwable t) {
                     listener.onError("Request Failed!", context);
                 }
             });
@@ -1035,27 +885,6 @@ public class RequestManager {
                 @Query("pageSize") int pageSiz
         );
 
-        @POST("{mangaId}/{chapterReference}/markAsViewed")
-        Call<ApiResponse> callMarkAsViewed(
-                @Path("chapterReference") Integer chapterReference,
-                @Header("Authorization") String token,
-                @Path("mangaId") String mangaId
-        );
-
-        @DELETE("{mangaId}/{chapterReference}/markAsNotViewed")
-        Call<ApiResponse> callMarkAsNotViewed(
-                @Path("chapterReference") Integer chapterReference,
-                @Header("Authorization") String token,
-                @Path("mangaId") String mangaId
-        );
-
-        @GET("{mangaId}/{chapterReference}/viewed")
-        Call<Boolean> callCheckIfTheChapterIsViewed(
-                @Path("chapterReference") Integer chapterReference,
-                @Header("Authorization") String token,
-                @Path("mangaId") String mangaId
-        );
-
         @POST("{mangaId}/{chapterReference}/createReadChapter")
         Call<ApiResponse> callCreateReadChapter(
                 @Path("chapterReference") Integer chapterReference,
@@ -1104,9 +933,6 @@ public class RequestManager {
     }
 
     public interface CallMangaApi {
-        @GET("genres")
-        Call<List<String>> callGetGenres();
-
         @POST("all")
         Call<MangaListApiResponse> callManga(
                 @Query("query") String query,
@@ -1117,11 +943,6 @@ public class RequestManager {
 
         @GET("{mangaId}")
         Call<MangaModel> callFetchManga(
-                @Path("mangaId") String mangaId
-        );
-
-        @GET("{mangaId}/check")
-        Call<Boolean> callMangaCheckForUpdate(
                 @Path("mangaId") String mangaId
         );
 

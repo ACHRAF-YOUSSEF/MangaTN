@@ -40,7 +40,7 @@ public class MangaFilterFragment extends BottomSheetDialogFragment {
         if (context instanceof OnFilterAppliedListener) {
             onFilterAppliedListener = (OnFilterAppliedListener) context;
         } else {
-            throw new ClassCastException(context.toString() + " must implement OnFilterAppliedListener");
+            throw new ClassCastException(context + " must implement OnFilterAppliedListener");
         }
     }
 
