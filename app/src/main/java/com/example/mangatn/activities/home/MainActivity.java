@@ -76,11 +76,11 @@ public class MainActivity extends AppCompatActivity implements OnFilterAppliedLi
     @Override
     protected void onPause() {
         super.onPause();
-        // Get the SharedPreferences instance
+
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        // Get the editor to make changes to SharedPreferences
+
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        // Save the token to SharedPreferences
+
         editor.putString("token", getUserToken());
         editor.apply();
     }
@@ -88,21 +88,16 @@ public class MainActivity extends AppCompatActivity implements OnFilterAppliedLi
     @Override
     protected void onResume() {
         super.onResume();
-        // Get the SharedPreferences instance
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        // Retrieve the token from SharedPreferences
         String token = sharedPreferences.getString("token", null);
-        // Use the retrieved token as needed
+
         if (token != null) {
-            // Token is available, use it
             if (!token.isEmpty()) {
                 setUserToken(token);
+            } else {
+                setUserToken(null);
             }
-        } /*else {
-            // Token is not available
-            Intent intent = new Intent(this, SignInActivity.class);
-            startActivity(intent);
-        }*/
+        }
     }
 
     @Override

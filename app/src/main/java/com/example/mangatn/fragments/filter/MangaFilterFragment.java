@@ -26,9 +26,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MangaFilterFragment extends BottomSheetDialogFragment {
-    private TabLayout tabLayout;
-    private ViewPager2 viewPager;
-    private Button applyFilterButton;
     private StatusFilterFragment statusFilterFragment;
     private GenreFilterFragment genreFilterFragment;
     private OnFilterAppliedListener onFilterAppliedListener;
@@ -56,9 +53,9 @@ public class MangaFilterFragment extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_manga_filter, container, false);
 
-        tabLayout = view.findViewById(R.id.manga_filter_tab_layout);
-        viewPager = view.findViewById(R.id.manga_filter_view_pager);
-        applyFilterButton = view.findViewById(R.id.manga_filter_button_apply_filter);
+        TabLayout tabLayout = view.findViewById(R.id.manga_filter_tab_layout);
+        ViewPager2 viewPager = view.findViewById(R.id.manga_filter_view_pager);
+        Button applyFilterButton = view.findViewById(R.id.manga_filter_button_apply_filter);
 
         EMangaGenre[] genreOptions = EMangaGenre.values();
         EMangaStatus[] statusOptions = EMangaStatus.values();

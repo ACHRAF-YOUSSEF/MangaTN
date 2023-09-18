@@ -1,43 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/Widget.Material3.BottomSheet"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-    app:behavior_peekHeight="auto"
-    android:orientation="vertical">
+    android:id="@+id/bottomSheet"
+    style="@style/Widget.Material3.BottomSheet.Modal"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
-        style="@style/BottomSheetDragHandleView"
-        android:id="@+id/drag_handle"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/manga_filter_tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#000000"
-        app:tabIndicatorColor="?colorSecondary"
-        app:tabSelectedTextColor="?colorSecondary"
-        app:tabTextColor="@color/white" />
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            style="@style/BottomSheetDragHandleView"
+            android:id="@+id/drag_handle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/manga_filter_view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/manga_filter_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#000000"
+            app:tabIndicatorColor="?colorSecondary"
+            app:tabSelectedTextColor="?colorSecondary"
+            app:tabTextColor="@color/white" />
 
-    <Button
-        android:id="@+id/manga_filter_button_apply_filter"
-        style="@style/Widget.Material3.Button.TextButton"
-        android:textColor="@color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="10dp"
-        android:text="@string/apply_filters" />
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/manga_filter_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/manga_filter_button_apply_filter"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:textColor="#FFFBFE"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/apply_filters" />
+
+    </LinearLayout>
+</FrameLayout>

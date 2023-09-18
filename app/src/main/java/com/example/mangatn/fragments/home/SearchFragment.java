@@ -11,6 +11,7 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -35,7 +36,6 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
     public GridView gridView;
     private GridAdapter gridAdapter;
     private SearchView searchView;
-    private ImageButton mangaFilter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private final int pageSize = 6;
     private int pageNumber = 0;
@@ -44,7 +44,7 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
     private ViewGroup container;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view1 = inflater.inflate(R.layout.search_fragment, container, false);
 
         this.container = container;
@@ -52,13 +52,9 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
         gridView = view1.findViewById(R.id.gridView);
         searchView = view1.findViewById(R.id.search_view);
 
-        mangaFilter = view1.findViewById(R.id.mangaFilter);
+        ImageButton mangaFilter = view1.findViewById(R.id.mangaFilter);
 
-        mangaFilter.setOnClickListener(view -> {
-            MangaFilterFragment bottomSheetFragment = new MangaFilterFragment();
-
-            bottomSheetFragment.show(getChildFragmentManager(), bottomSheetFragment.getTag());
-        });
+        mangaFilter.setOnClickListener(view -> openModal());
 
         mangaFilterDto = new MangaFilter("", EMangaStatus.getAll(), EMangaGenre.getAll());
 
@@ -107,6 +103,12 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
         });
 
         return view1;
+    }
+
+    private void openModal() {
+        MangaFilterFragment bottomSheetFragment = new MangaFilterFragment();
+
+        bottomSheetFragment.show(getChildFragmentManager(), bottomSheetFragment.getTag());
     }
 
     private void loadData(ViewGroup container, String searchView) {

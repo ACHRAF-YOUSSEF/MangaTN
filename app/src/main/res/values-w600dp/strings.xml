@@ -8,4 +8,11 @@
     <string name="apply_filters">Apply Filters</string>
     <string name="all_status">All Status</string>
     <string name="all_genres">All Genres</string>
+    <string name="manga_authors">manga authors</string>
+    <string name="manga_title">manga title</string>
+    <string name="manga_cover_image">manga cover image</string>
+    <string name="bookmark">bookmark</string>
+    <string name="favorites">FAVORITES</string>
+    <string name="search">SEARCH</string>
+    <string name="manga_filter">manga filter</string>
 </resources>

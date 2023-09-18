@@ -49,7 +49,7 @@
     </style>
 
     <style name="BottomSheetDragHandleView" parent="Widget.Material3.BottomSheet.DragHandle">
-        <item name="tint">@color/white</item>
+        <item name="tint">#FFFBFE</item>
     </style>
 
     <style name="ModalBottomSheetDialog" parent="Widget.Material3.BottomSheet.Modal">
