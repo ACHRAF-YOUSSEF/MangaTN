@@ -43,21 +43,17 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
     private PhotoView imageView;
     private SeekBar seekBar;
     private TextView chapterStart, chapterEnd, progress_text;
-    private ImageButton bookmark;
     private ToggleButton LTR;
     private final String mangaId;
     int index = 0;
     private boolean active = true;
     private boolean leftToRight;
-    private boolean added;
     private RequestManager requestManager;
     private final Integer chapterReference;
     private CircularProgressIndicator progressBar;
-    private Context context;
     private View view;
 
-    public MangaChapterFragment(String mangaId, Integer chapterReference, boolean added, boolean leftToRight) {
-        this.added = added;
+    public MangaChapterFragment(String mangaId, Integer chapterReference, boolean leftToRight) {
         this.mangaId = mangaId;
         this.leftToRight = leftToRight;
         this.chapterReference = chapterReference;
@@ -67,7 +63,7 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_manga_chapter, container, false);
 
-        context = container.getContext();
+        Context context = container.getContext();
 
         Toolbar toolbar = view.findViewById(R.id.custom_toolbar);
 
@@ -79,7 +75,6 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
 
         //
         ImageButton back = toolbar.findViewById(R.id.btnBack);
-        bookmark = toolbar.findViewById(R.id.saveChapter);
         TextView title = toolbar.findViewById(R.id.title);
         LTR = toolbar.findViewById(R.id.LeftToRightBtn);
         imageView = view.findViewById(R.id.imageView);
@@ -88,12 +83,6 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
 
         //
         init();
-
-        if (!added) {
-            bookmark.setImageResource(R.drawable.baseline_save_alt_24);
-        } else {
-            bookmark.setImageResource(R.drawable.baseline_offline_pin_24);
-        }
 
         requestManager = new RequestManager(context);
 
@@ -125,6 +114,7 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
                 }
 
                 updateSeekBar();
+                toggleToolBarAndSeekBar();
 
                 if (userIsAuthenticated()) {
                     requestManager.getReadChapter(new OnGetReadChapterListener() {
@@ -173,50 +163,37 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
         //
         LTR.setOnClickListener(this);
 
-        bookmark.setOnClickListener(v -> {
-            added = !added;
-
-            if (!added) {
-                bookmark.setImageResource(R.drawable.baseline_save_alt_24);
-            } else {
-                bookmark.setImageResource(R.drawable.baseline_offline_pin_24);
-            }
-
-            Toast.makeText(context, "not implemented yet!!", Toast.LENGTH_SHORT).show();
-        });
-
         back.setOnClickListener(v -> {
             if (getActivity() != null) {
                 getActivity().finish();
             }
         });
-        imageView.setOnClickListener(v -> {
-            if (!active) {
-                if (!leftToRight) {
-                    view.findViewById(R.id.progressRightToLeft).setVisibility(View.VISIBLE);
-                } else {
-                    view.findViewById(R.id.progressLeftToRight).setVisibility(View.VISIBLE);
-                }
-
-                view.findViewById(R.id.progress_counter).setVisibility(View.GONE);
-
-                ((AppCompatActivity) requireActivity()).getSupportActionBar().show();
-            } else {
-                if (!leftToRight) {
-                    view.findViewById(R.id.progressRightToLeft).setVisibility(View.GONE);
-                } else {
-                    view.findViewById(R.id.progressLeftToRight).setVisibility(View.GONE);
-                }
-
-                view.findViewById(R.id.progress_counter).setVisibility(View.VISIBLE);
-
-                ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
-            }
-
-            active = !active;
-        });
+        imageView.setOnClickListener(v -> toggleToolBarAndSeekBar());
 
         return view;
+    }
+
+    private void toggleToolBarAndSeekBar() {
+        if (!active) {
+            if (!leftToRight) {
+                view.findViewById(R.id.progressRightToLeft).setVisibility(View.VISIBLE);
+            } else {
+                view.findViewById(R.id.progressLeftToRight).setVisibility(View.VISIBLE);
+            }
+
+            view.findViewById(R.id.progress_counter).setVisibility(View.GONE);
+
+            ((AppCompatActivity) requireActivity()).getSupportActionBar().show();
+        } else {
+            view.findViewById(R.id.progressRightToLeft).setVisibility(View.GONE);
+            view.findViewById(R.id.progressLeftToRight).setVisibility(View.GONE);
+
+            view.findViewById(R.id.progress_counter).setVisibility(View.VISIBLE);
+
+            ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
+        }
+
+        active = !active;
     }
 
     private void loadChapterImage() {

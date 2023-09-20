@@ -14,19 +14,8 @@ import com.example.mangatn.models.chapter.ChapterModel;
 public class MangaChapterViewerActivity extends AppCompatActivity {
     private static final String EXTRA_MANGA_ID = "manga_id";
     private static final String EXTRA_CHAPTER_REFERENCE = "chapter_reference";
-    private static final String EXTRA_ADDED = "added";
     private String mangaId;
-
-    public Integer getChapterReference() {
-        return chapterReference;
-    }
-
-    public void setChapterReference(Integer chapterReference) {
-        this.chapterReference = chapterReference;
-    }
-
     private Integer chapterReference;
-    private boolean added;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +24,9 @@ public class MangaChapterViewerActivity extends AppCompatActivity {
 
         mangaId = getIntent().getStringExtra(EXTRA_MANGA_ID);
         chapterReference = getIntent().getIntExtra(EXTRA_CHAPTER_REFERENCE, 0);
-        added = getIntent().getBooleanExtra(EXTRA_ADDED, false);
 
         if (savedInstanceState == null) {
-            MangaChapterFragment mangaChapterFragment = new MangaChapterFragment(mangaId, chapterReference, added, false);
+            MangaChapterFragment mangaChapterFragment = new MangaChapterFragment(mangaId, chapterReference, false);
 
             getSupportFragmentManager()
                     .beginTransaction()
@@ -47,18 +35,21 @@ public class MangaChapterViewerActivity extends AppCompatActivity {
         }
     }
 
-    public static Intent newIntent(Context context, String mangaId, int chapterReference, boolean added) {
+    public void setChapterReference(Integer chapterReference) {
+        this.chapterReference = chapterReference;
+    }
+
+    public static Intent newIntent(Context context, String mangaId, int chapterReference) {
         Intent intent = new Intent(context, MangaChapterViewerActivity.class);
 
         intent.putExtra(EXTRA_MANGA_ID, mangaId);
         intent.putExtra(EXTRA_CHAPTER_REFERENCE, chapterReference);
-        intent.putExtra(EXTRA_ADDED, added);
 
         return intent;
     }
 
     public void replaceWithNextMangaChapter(ChapterModel chapterModel, boolean leftToRight) {
-        MangaChapterFragment mangaChapterFragment = new MangaChapterFragment(mangaId, chapterModel.getReference(), false, leftToRight);
+        MangaChapterFragment mangaChapterFragment = new MangaChapterFragment(mangaId, chapterModel.getReference(), leftToRight);
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -67,7 +58,7 @@ public class MangaChapterViewerActivity extends AppCompatActivity {
     }
 
     public void replaceWithPreviousMangaChapter(ChapterModel chapterModel, boolean leftToRight) {
-        MangaChapterFragment mangaChapterFragment = new MangaChapterFragment(mangaId, chapterModel.getReference(), false, leftToRight);
+        MangaChapterFragment mangaChapterFragment = new MangaChapterFragment(mangaId, chapterModel.getReference(), leftToRight);
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -85,7 +76,7 @@ public class MangaChapterViewerActivity extends AppCompatActivity {
     }
 
     public void replaceWithCurrentMangaChapter(boolean leftToRight) {
-        MangaChapterFragment mangaChapterFragment = new MangaChapterFragment(mangaId, chapterReference, added, leftToRight);
+        MangaChapterFragment mangaChapterFragment = new MangaChapterFragment(mangaId, chapterReference, leftToRight);
 
         getSupportFragmentManager()
                 .beginTransaction()

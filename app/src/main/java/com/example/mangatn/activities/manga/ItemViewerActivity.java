@@ -183,7 +183,7 @@ public class ItemViewerActivity extends AppCompatActivity {
     private void openChapter(Integer reference) {
         startActivity(
                 MangaChapterViewerActivity
-                        .newIntent(this, mangaId, reference, false)
+                        .newIntent(this, mangaId, reference)
         );
     }
 

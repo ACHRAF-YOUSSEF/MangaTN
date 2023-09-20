@@ -93,8 +93,7 @@ public class TabFragment extends Fragment implements OnFetchMangaChaptersListLis
                         .newIntent(
                                 getContext(),
                                 mangaId,
-                                chapters.get(position).getReference(),
-                                false
+                                chapters.get(position).getReference()
                         )
         ));
 
