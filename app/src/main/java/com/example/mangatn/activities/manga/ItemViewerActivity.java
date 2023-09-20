@@ -55,8 +55,6 @@ public class ItemViewerActivity extends AppCompatActivity {
     private MyPagerAdapter pagerAdapter;
     private TextView collapsed_summary_detail, expanded_summary_detail, authors, status_details;
     private LinearLayout collapsedContent, expandedContent;
-    private MaterialCardView cardView;
-    private LinearLayout chipGroup;
     private Integer lastViewedChapterId = null;
 
     @Override
@@ -73,7 +71,7 @@ public class ItemViewerActivity extends AppCompatActivity {
         status_details = findViewById(R.id.status_details);
         status_icon = findViewById(R.id.status_icon);
 
-        cardView = findViewById(R.id.cardView);
+        MaterialCardView cardView = findViewById(R.id.cardView);
         collapsedContent = findViewById(R.id.collapsedContent);
         expandedContent = findViewById(R.id.expandedContent);
 
@@ -183,13 +181,10 @@ public class ItemViewerActivity extends AppCompatActivity {
     }
 
     private void openChapter(Integer reference) {
-        Intent intent1 = new Intent(ItemViewerActivity.this, MangaChapterViewerActivity.class);
-
-        intent1.putExtra("added", false);
-        intent1.putExtra("chapterReference", reference);
-        intent1.putExtra("mangaId", mangaId);
-
-        startActivity(intent1);
+        startActivity(
+                MangaChapterViewerActivity
+                        .newIntent(this, mangaId, reference, false)
+        );
     }
 
     private void switchBookmark() {
@@ -334,7 +329,7 @@ public class ItemViewerActivity extends AppCompatActivity {
 
         authors.setText(mangaModel.getAuthors());
 
-        chipGroup = findViewById(R.id.chip_manga_genre_group);
+        LinearLayout chipGroup = findViewById(R.id.chip_manga_genre_group);
 
         for (String genre : mangaModel.getGenres()) {
             Chip newChip = new Chip(ItemViewerActivity.this);

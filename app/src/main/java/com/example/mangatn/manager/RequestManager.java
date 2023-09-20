@@ -827,6 +827,78 @@ public class RequestManager {
         }
     }
 
+    public void getNextMangaChapter(OnFetchMangaChapterListener listener, Integer chapterReference, String mangaId) {
+        CallChapterApi callChapterApi = retrofit_chapter.create(CallChapterApi.class);
+        Call<ChapterModel> call = callChapterApi.callGetNextChapter(mangaId, chapterReference);
+
+        try {
+            call.enqueue(new Callback<ChapterModel>() {
+                @Override
+                public void onResponse(@NonNull Call<ChapterModel> call, @NonNull Response<ChapterModel> response) {
+                    if (!response.isSuccessful()) {
+                        int statusCode = response.code();
+                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        if (statusCode == 401) {
+                            setUserToken(null);
+                        }
+
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                        listener.onError("Request Failed!", context);
+                    } else {
+                        assert response.body() != null;
+
+                        listener.onFetchData(response.body(), response.message(), context);
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ChapterModel> call, @NonNull Throwable t) {
+                    listener.onError("Request Failed!", context);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getPreviousMangaChapter(OnFetchMangaChapterListener listener, Integer chapterReference, String mangaId) {
+        CallChapterApi callChapterApi = retrofit_chapter.create(CallChapterApi.class);
+        Call<ChapterModel> call = callChapterApi.callGetPreviousChapter(mangaId, chapterReference);
+
+        try {
+            call.enqueue(new Callback<ChapterModel>() {
+                @Override
+                public void onResponse(@NonNull Call<ChapterModel> call, @NonNull Response<ChapterModel> response) {
+                    if (!response.isSuccessful()) {
+                        int statusCode = response.code();
+                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
+
+                        if (statusCode == 401) {
+                            setUserToken(null);
+                        }
+
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+
+                        listener.onError("Request Failed!", context);
+                    } else {
+                        assert response.body() != null;
+
+                        listener.onFetchData(response.body(), response.message(), context);
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ChapterModel> call, @NonNull Throwable t) {
+                    listener.onError("Request Failed!", context);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public interface CallUsersApi {
         @POST("signup")
         Call<ApiResponse> callSignup(
@@ -869,6 +941,18 @@ public class RequestManager {
                 @Path("mangaId") String mangaId,
                 @Query("pageNumber") int pageNumber,
                 @Query("pageSize") int pageSiz
+        );
+
+        @GET("{mangaId}/{chapterReference}/previous")
+        Call<ChapterModel> callGetPreviousChapter(
+                @Path("mangaId") String mangaId,
+                @Path("chapterReference") Integer chapterTitle
+        );
+
+        @GET("{mangaId}/{chapterReference}/next")
+        Call<ChapterModel> callGetNextChapter(
+                @Path("mangaId") String mangaId,
+                @Path("chapterReference") Integer chapterTitle
         );
 
         @GET("{mangaId}/{chapterReference}")

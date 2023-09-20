@@ -1,179 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.manga.MangaChapterViewerActivity"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:background="?colorSecondary"
-    android:id="@+id/mainImageViewer">
+    tools:context=".activities.manga.MangaChapterViewerActivity">
 
-    <include
-        android:id="@+id/custom_toolbar"
-        layout="@layout/custom_action_bar" />
-
-    <com.github.chrisbanes.photoview.PhotoView
-        android:id="@+id/imageView"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_launcher_background"
-        android:layout_below="@id/custom_toolbar" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/error_screen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/an_error_has_occurred"
-            android:textColor="#F44336"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/retry"
-            style="@style/Widget.Material3.Button.ElevatedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/retry"
-            android:textSize="20sp"
-            android:textColor="@color/white"
-            android:backgroundTint="#2196F3"
-            android:layout_marginTop="5dp" />
-
-    </LinearLayout>
-
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/chapters_progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:indeterminate="true"
-        android:visibility="gone" />
-
-    <RelativeLayout
-        android:id="@+id/progress_counter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="15dp"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/progress_counter_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="1/30" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/progressLeftToRight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/rounded_corners"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/chapterStartLeftToRight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:text="1"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
-
-        <SeekBar
-            android:id="@+id/seekBarLeftToRight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@id/chapterStartLeftToRight"
-            android:layout_alignEnd="@id/chapterEndLeftToRight"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="30dp"
-            android:backgroundTint="#fff"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:progressTint="#fff"
-            android:thumbTint="#fff" />
-
-        <TextView
-            android:id="@+id/chapterEndLeftToRight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:text="43"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/progressRightToLeft"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/rounded_corners"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/chapterStartRightToLeft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:text="43"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
-
-        <SeekBar
-            android:id="@+id/seekBarRightToLeft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@id/chapterEndRightToLeft"
-            android:layout_alignEnd="@id/chapterStartRightToLeft"
-            android:layout_centerInParent="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="30dp"
-            android:backgroundTint="#fff"
-            android:progressTint="#fff"
-            android:rotationY="180"
-            android:thumbTint="#fff" />
-
-        <TextView
-            android:id="@+id/chapterEndRightToLeft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:text="1"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
-
-    </RelativeLayout>
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

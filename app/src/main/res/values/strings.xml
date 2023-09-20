@@ -89,4 +89,12 @@
     <string name="favorites">FAVORITES</string>
     <string name="search">SEARCH</string>
     <string name="manga_filter">manga filter</string>
+    <string name="previous_chapter_name">Previous Chapter Name</string>
+    <string name="finished_chapter_name">Finished Chapter Name</string>
+    <string name="next_chapter_name">Next Chapter Name</string>
+    <string name="current_chapter_name">Current Chapter Name</string>
+    <string name="finished_chapter">Finished Chapter:</string>
+    <string name="next_chapter">Next Chapter:</string>
+    <string name="current_chapter">Current Chapter:</string>
+    <string name="previous_chapter">Previous Chapter</string>
 </resources>

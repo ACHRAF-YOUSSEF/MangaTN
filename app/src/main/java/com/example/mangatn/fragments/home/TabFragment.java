@@ -1,7 +1,6 @@
 package com.example.mangatn.fragments.home;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,11 +25,9 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.List;
 
 public class TabFragment extends Fragment implements OnFetchMangaChaptersListListener {
-    private ChaptersAdapter chaptersAdapter;
     private RequestManager requestManager;
     private ListView chaptersListView;
     private CircularProgressIndicator progressBar;
-    private boolean added = false;
     private TabLayout tabLayout;
     private String mangaId;
 
@@ -89,17 +86,17 @@ public class TabFragment extends Fragment implements OnFetchMangaChaptersListLis
     }
 
     private void showChapters(Context context, List<ChapterModel> chapters) {
-        chaptersAdapter = new ChaptersAdapter(context, chapters, mangaId);
+        ChaptersAdapter chaptersAdapter = new ChaptersAdapter(context, chapters, mangaId);
         chaptersListView.setAdapter(chaptersAdapter);
-        chaptersListView.setOnItemClickListener((parent, view, position, id) -> {
-            Intent intent1 = new Intent(getContext(), MangaChapterViewerActivity.class);
-
-            intent1.putExtra("added", added);
-            intent1.putExtra("chapterReference", chapters.get(position).getReference());
-            intent1.putExtra("mangaId", mangaId);
-
-            startActivity(intent1);
-        });
+        chaptersListView.setOnItemClickListener((parent, view, position, id) -> startActivity(
+                MangaChapterViewerActivity
+                        .newIntent(
+                                getContext(),
+                                mangaId,
+                                chapters.get(position).getReference(),
+                                false
+                        )
+        ));
 
         chaptersListView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
