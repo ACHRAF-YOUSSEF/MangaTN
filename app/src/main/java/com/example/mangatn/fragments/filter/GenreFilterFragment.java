@@ -19,11 +19,13 @@ import java.util.Map;
 
 public class GenreFilterFragment extends Fragment {
     private final EMangaGenre[] genreOptions;
+    private final List<String> appliedGenres;
     private MaterialCheckBox parentCheckBox;
     private final Map<String, MaterialCheckBox> checkBoxMap = new HashMap<>();
 
-    public GenreFilterFragment(EMangaGenre[] genreOptions) {
+    public GenreFilterFragment(EMangaGenre[] genreOptions, List<String> appliedGenres) {
         this.genreOptions = genreOptions;
+        this.appliedGenres = appliedGenres;
     }
 
     @Override
@@ -48,7 +50,19 @@ public class GenreFilterFragment extends Fragment {
         parentCheckBox
                 .setOnCheckedChangeListener((buttonView, isChecked) -> setChildCheckBoxesChecked(isChecked));
 
+        updateFilterItems();
+
         return view;
+    }
+
+    private void updateFilterItems() {
+        for (EMangaGenre option : genreOptions) {
+            MaterialCheckBox checkBox = checkBoxMap.get(option.getCustomDisplayName().toLowerCase());
+
+            if (checkBox != null) {
+                checkBox.setChecked(appliedGenres.contains(option.getCustomDisplayName()));
+            }
+        }
     }
 
     private void updateParentCheckBoxState() {

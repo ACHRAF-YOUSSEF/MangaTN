@@ -28,7 +28,12 @@ import java.util.stream.Collectors;
 public class MangaFilterFragment extends BottomSheetDialogFragment {
     private StatusFilterFragment statusFilterFragment;
     private GenreFilterFragment genreFilterFragment;
+    private final MangaFilter mangaFilter;
     private OnFilterAppliedListener onFilterAppliedListener;
+
+    public MangaFilterFragment(MangaFilter mangaFilter) {
+        this.mangaFilter = mangaFilter;
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -62,8 +67,22 @@ public class MangaFilterFragment extends BottomSheetDialogFragment {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
 
-        statusFilterFragment = new StatusFilterFragment(statusOptions);
-        genreFilterFragment = new GenreFilterFragment(genreOptions);
+        statusFilterFragment = new StatusFilterFragment(
+                statusOptions,
+                mangaFilter
+                        .getStatuses()
+                        .stream()
+                        .map(EMangaStatus::getCustomDisplay)
+                        .collect(Collectors.toList())
+        );
+        genreFilterFragment = new GenreFilterFragment(
+                genreOptions,
+                mangaFilter
+                        .getGenres()
+                        .stream()
+                        .map(EMangaGenre::getCustomDisplayName)
+                        .collect(Collectors.toList()))
+        ;
 
         adapter.addFragment(statusFilterFragment, "Status");
         adapter.addFragment(genreFilterFragment, "Genre");

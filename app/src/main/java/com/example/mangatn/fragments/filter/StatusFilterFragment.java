@@ -19,11 +19,13 @@ import java.util.Map;
 
 public class StatusFilterFragment extends Fragment {
     private final EMangaStatus[] statusOptions;
+    private final List<String> appliedStatus;
     private MaterialCheckBox parentCheckBox;
     private final Map<String, MaterialCheckBox> checkBoxMap = new HashMap<>();
 
-    public StatusFilterFragment(EMangaStatus[] statusOptions) {
+    public StatusFilterFragment(EMangaStatus[] statusOptions, List<String> appliedStatus) {
         this.statusOptions = statusOptions;
+        this.appliedStatus = appliedStatus;
     }
 
     @Override
@@ -48,7 +50,19 @@ public class StatusFilterFragment extends Fragment {
         parentCheckBox
                 .setOnCheckedChangeListener((buttonView, isChecked) -> setChildCheckBoxesChecked(isChecked));
 
+        updateFilterItems();
+
         return view;
+    }
+
+    private void updateFilterItems() {
+        for (EMangaStatus option : statusOptions) {
+            MaterialCheckBox checkBox = checkBoxMap.get(option.getCustomDisplay().toLowerCase());
+
+            if (checkBox != null) {
+                checkBox.setChecked(appliedStatus.contains(option.getCustomDisplay()));
+            }
+        }
     }
 
     private void updateParentCheckBoxState() {

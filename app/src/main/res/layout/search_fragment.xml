@@ -49,7 +49,7 @@
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/outline_filter_alt_24"
+                        android:src="@drawable/outline_filter_list_24"
                         android:background="@android:color/transparent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"

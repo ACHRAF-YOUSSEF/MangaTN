@@ -106,7 +106,7 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
     }
 
     private void openModal() {
-        MangaFilterFragment bottomSheetFragment = new MangaFilterFragment();
+        MangaFilterFragment bottomSheetFragment = new MangaFilterFragment(mangaFilterDto);
 
         bottomSheetFragment.show(getChildFragmentManager(), bottomSheetFragment.getTag());
     }
