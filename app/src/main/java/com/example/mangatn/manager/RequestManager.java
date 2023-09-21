@@ -551,8 +551,6 @@ public class RequestManager {
 
                         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
 
-                        setUserToken(null);
-
                         listener.onError("Request Failed!", context);
                     } else {
                         assert response.body() != null;
@@ -1041,7 +1039,7 @@ public class RequestManager {
                 @Path("mangaId") String mangaId
         );
 
-        @POST("bookmarkModel")
+        @POST("bookmark")
         Call<ApiResponse> callBookmark(
                 @Header("Authorization") String token,
                 @Body BookmarkModel bookmarkModel

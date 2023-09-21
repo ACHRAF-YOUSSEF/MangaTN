@@ -37,21 +37,33 @@
                         android:id="@+id/search_view"
                         android:layout_width="0dp"
                         android:layout_height="80dp"
+                        android:layout_marginStart="10dp"
                         android:background="?colorPrimary"
-                        app:iconifiedByDefault="false"
+                        app:iconifiedByDefault="true"
                         app:queryHint="Search Here..."
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/mangaFilter" />
 
                     <ImageButton
+                        android:id="@+id/viewAccount"
+                        android:layout_width="40dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="center"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/open_menu"
+                        android:src="@drawable/outline_manage_accounts_24" />
+
+                    <ImageButton
                         android:id="@+id/mangaFilter"
-                        android:layout_width="80dp"
+                        android:layout_width="50dp"
                         android:layout_height="80dp"
                         android:layout_gravity="center"
                         android:src="@drawable/outline_filter_list_24"
                         android:background="@android:color/transparent"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/viewAccount"
                         app:layout_constraintTop_toTopOf="parent"
                         android:contentDescription="@string/manga_filter" />
 

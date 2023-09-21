@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -35,6 +36,7 @@ import com.example.mangatn.models.Enum.EMangaStatus;
 import com.example.mangatn.models.bookmark.BookmarkModel;
 import com.example.mangatn.models.chapter.ReadChapterModel;
 import com.example.mangatn.models.manga.MangaModel;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -56,6 +58,8 @@ public class ItemViewerActivity extends AppCompatActivity {
     private TextView collapsed_summary_detail, expanded_summary_detail, authors, status_details;
     private LinearLayout collapsedContent, expandedContent;
     private Integer lastViewedChapterId = null;
+    private MenuItem bookmarkedIcon;
+    private MaterialToolbar materialToolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,26 +103,44 @@ public class ItemViewerActivity extends AppCompatActivity {
 
         bookmark = findViewById(R.id.bookmarkModel);
 
+        materialToolbar = findViewById(R.id.topAppBar);
+
+        materialToolbar.setNavigationOnClickListener(v -> finish());
+
+        bookmarkedIcon = materialToolbar.getMenu().findItem(R.id.bookmarked);
+
+        materialToolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.bookmarked) {
+                addOrDeleteBookmark();
+
+                return true;
+            }
+
+            return false;
+        });
+
         //  api call to check if this manga is bookmarked or not
         if (userIsAuthenticated()) {
             requestManager.checkForBookmark(listener2, mangaId);
         }
 
-        bookmark.setOnClickListener(v -> {
-            if (userIsAuthenticated()) {
-                bookmarked = !bookmarked;
-                requestManager.bookmark(listener3, new BookmarkModel(mangaId, bookmarked));
-            } else {
-                Intent intent = new Intent(this, SignInActivity.class);
-                startActivity(intent);
-            }
-        });
+        bookmark.setOnClickListener(v -> addOrDeleteBookmark());
 
         getLastViewedChapterOrFirstChapter();
 
         floatingActionButton.setOnClickListener(v -> {
             if (lastViewedChapterId != null) openChapter(lastViewedChapterId);
         });
+    }
+
+    private void addOrDeleteBookmark() {
+        if (userIsAuthenticated()) {
+            bookmarked = !bookmarked;
+            requestManager.bookmark(listener3, new BookmarkModel(mangaId, bookmarked));
+        } else {
+            Intent intent = new Intent(this, SignInActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void getLastViewedChapterOrFirstChapter() {
@@ -190,8 +212,10 @@ public class ItemViewerActivity extends AppCompatActivity {
     private void switchBookmark() {
         if (bookmarked) {
             bookmark.setImageResource(R.drawable.baseline_bookmark_24);
+            bookmarkedIcon.setIcon(R.drawable.baseline_bookmark_24);
         } else {
             bookmark.setImageResource(R.drawable.baseline_bookmark_border_24);
+            bookmarkedIcon.setIcon(R.drawable.baseline_bookmark_border_24);
         }
     }
 
@@ -263,7 +287,7 @@ public class ItemViewerActivity extends AppCompatActivity {
         bundle.putString("mangaId", mangaId);
 
         if (pagerAdapter.getCount() <= 0) {
-            for (int i = 0; i <= (int) (count / 50); i++) {
+            for (int i = 0; i <= (count / 50); i++) {
                 int from = i * 50 + 1;
                 int to = i * 50 + 50;
 
@@ -276,7 +300,7 @@ public class ItemViewerActivity extends AppCompatActivity {
                 fragment.setArguments(bundle);
             }
         } else {
-            for (int i = pagerAdapter.getCount(); i <= (int) (count / 50); i++) {
+            for (int i = pagerAdapter.getCount(); i <= (count / 50); i++) {
                 int from = i * 50 + 1;
                 int to = i * 50 + 50;
 
@@ -298,6 +322,7 @@ public class ItemViewerActivity extends AppCompatActivity {
         ImageView coverImage = findViewById(R.id.coverImage);
         TextView titleDetail = findViewById(R.id.title_detail);
 
+        materialToolbar.setTitle(mangaModel.getTitle());
         titleDetail.setText(mangaModel.getTitle());
         Picasso.get().load(mangaModel.getCoverImgPath()).into(coverImage);
 

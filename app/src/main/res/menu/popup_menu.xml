@@ -3,6 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:icon="@drawable/outline_login_24"
+        android:id="@+id/action_sign_in"
+        android:title="@string/sign_in" />
+
+    <item
         android:icon="@drawable/outline_assignment_ind_24"
         android:id="@+id/action_update_user"
         android:title="@string/update_user" />

@@ -23,4 +23,7 @@
     <string name="next_chapter">Next Chapter:</string>
     <string name="current_chapter">Current Chapter:</string>
     <string name="previous_chapter">Previous Chapter</string>
+    <string name="manga_status">manga status</string>
+    <string name="list">list</string>
+    <string name="check_icon">check icon</string>
 </resources>

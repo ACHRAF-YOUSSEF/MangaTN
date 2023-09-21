@@ -1,9 +1,14 @@
 package com.example.mangatn.fragments.home;
 
+import static com.example.mangatn.Utils.userIsAuthenticated;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -12,11 +17,16 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mangatn.R;
+import com.example.mangatn.Utils;
+import com.example.mangatn.activities.auth.ResetPasswordActivity;
+import com.example.mangatn.activities.auth.SignInActivity;
+import com.example.mangatn.activities.auth.UpdateProfileActivity;
 import com.example.mangatn.activities.manga.ItemViewerActivity;
 import com.example.mangatn.adapters.GridAdapter;
 import com.example.mangatn.fragments.filter.MangaFilterFragment;
@@ -51,6 +61,63 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
 
         gridView = view1.findViewById(R.id.gridView);
         searchView = view1.findViewById(R.id.search_view);
+
+        view1.findViewById(R.id.viewAccount).setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(container.getContext(), v);
+
+            popupMenu.setForceShowIcon(true);
+
+            Menu menu = popupMenu.getMenu();
+
+            popupMenu.getMenuInflater().inflate(R.menu.popup_menu, menu);
+
+            MenuItem logInItem = menu.findItem(R.id.action_sign_in);
+            MenuItem updateItem = menu.findItem(R.id.action_update_user);
+            MenuItem resetItem = menu.findItem(R.id.action_reset_password);
+            MenuItem logoutItem = menu.findItem(R.id.action_logout);
+
+            if (userIsAuthenticated()) {
+                logInItem.setVisible(false);
+                updateItem.setVisible(true);
+                logoutItem.setVisible(true);
+                resetItem.setVisible(false);
+            } else {
+                logInItem.setVisible(true);
+                resetItem.setVisible(true);
+                logoutItem.setVisible(false);
+                updateItem.setVisible(false);
+            }
+
+            popupMenu.setOnMenuItemClickListener(menuItem -> {
+                switch (menuItem.getItemId()) {
+                    case R.id.action_sign_in:
+                        // log-out
+                        openSignInActivity(container);
+
+                        return true;
+                    case R.id.action_logout:
+                        // log-out
+                        logout(container);
+
+                        return true;
+                    case R.id.action_update_user:
+                        // Open the Update User activity
+                        openUpdateUserActivity(container);
+
+                        return true;
+                    case R.id.action_reset_password:
+                        // Open the Reset Password activity
+                        openResetPasswordActivity(container);
+
+                        return true;
+                    default:
+                        return false;
+                }
+            });
+
+            // Show the popup menu
+            popupMenu.show();
+        });
 
         ImageButton mangaFilter = view1.findViewById(R.id.mangaFilter);
 
@@ -103,6 +170,45 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
         });
 
         return view1;
+    }
+
+    private void logout(ViewGroup container) {
+        Context context = container.getContext();
+
+        // Perform the logout logic, such as clearing session data or revoking access tokens
+        // Get the SharedPreferences instance
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        // Get the editor to make changes to SharedPreferences
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        // Save the token to SharedPreferences
+        editor.putString("token", null);
+        Utils.setUserToken(null);
+
+        editor.apply();
+
+        swipeRefreshLayout.setRefreshing(true);
+
+        mangaFilterDto = new MangaFilter("", EMangaStatus.getAll(), EMangaGenre.getAll());
+
+        mangaModels.clear();
+        pageNumber = 0;
+
+        loadData(container, searchView.getQuery().toString());
+    }
+
+    private void openSignInActivity(ViewGroup container) {
+        Intent intent = new Intent(container.getContext(), SignInActivity.class);
+        startActivity(intent);
+    }
+
+    private void openUpdateUserActivity(ViewGroup container) {
+        Intent intent = new Intent(container.getContext(), UpdateProfileActivity.class);
+        startActivity(intent);
+    }
+
+    private void openResetPasswordActivity(ViewGroup container) {
+        Intent intent = new Intent(container.getContext(), ResetPasswordActivity.class);
+        startActivity(intent);
     }
 
     private void openModal() {
