@@ -34,6 +34,7 @@ import com.example.mangatn.fragments.filter.MangaFilterFragment.OnFilterAppliedL
 import com.example.mangatn.interfaces.manga.OnFetchDataListener;
 import com.example.mangatn.interfaces.manga.SelectListener;
 import com.example.mangatn.manager.RequestManager;
+import com.example.mangatn.models.Enum.EMangaBookmark;
 import com.example.mangatn.models.Enum.EMangaGenre;
 import com.example.mangatn.models.Enum.EMangaStatus;
 import com.example.mangatn.models.manga.MangaModel;
@@ -123,7 +124,11 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
 
         mangaFilter.setOnClickListener(view -> openModal());
 
-        mangaFilterDto = new MangaFilter("", EMangaStatus.getAll(), EMangaGenre.getAll());
+        if (userIsAuthenticated()) {
+            mangaFilterDto = new MangaFilter("", EMangaStatus.getAll(), EMangaGenre.getAll(), EMangaBookmark.getAll());
+        } else {
+            mangaFilterDto = new MangaFilter("", EMangaStatus.getAll(), EMangaGenre.getAll());
+        }
 
         swipeRefreshLayout = view1.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(() -> {

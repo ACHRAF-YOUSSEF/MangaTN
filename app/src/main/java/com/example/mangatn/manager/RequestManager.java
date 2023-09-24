@@ -8,6 +8,7 @@ import static com.example.mangatn.Utils.USER_SUCCESSFULLY_CREATED;
 import static com.example.mangatn.Utils.USER_SUCCESSFULLY_UPDATED;
 import static com.example.mangatn.Utils.getUserToken;
 import static com.example.mangatn.Utils.setUserToken;
+import static com.example.mangatn.Utils.userIsAuthenticated;
 
 import android.content.Context;
 import android.util.Log;
@@ -24,7 +25,6 @@ import com.example.mangatn.interfaces.auth.OnSignupListener;
 import com.example.mangatn.interfaces.auth.OnUpdateUserListener;
 import com.example.mangatn.interfaces.bookmark.OnBookmarkListener;
 import com.example.mangatn.interfaces.bookmark.OnCheckForBookmarkListener;
-import com.example.mangatn.interfaces.bookmark.OnFetchBookmarkedMangasListener;
 import com.example.mangatn.interfaces.chapter.OnFetchMangaChapterListener;
 import com.example.mangatn.interfaces.chapter.OnFetchMangaChaptersListListener;
 import com.example.mangatn.interfaces.chapter.OnGetHasReadChapterListener;
@@ -95,7 +95,9 @@ public class RequestManager {
 
     public void getMangaList(OnFetchDataListener listener, String query, MangaFilter mangaFilterDto, int pageNumber, int pageSize) {
         CallMangaApi callMangaApi = retrofit_manga.create(CallMangaApi.class);
-        Call<MangaListApiResponse> call = callMangaApi.callManga(query, pageNumber, pageSize, mangaFilterDto);
+        Call<MangaListApiResponse> call = userIsAuthenticated() ?
+                callMangaApi.callGetMangas(getUserToken(), query, pageNumber, pageSize, mangaFilterDto) :
+                callMangaApi.callManga(query, pageNumber, pageSize, mangaFilterDto);
 
         try {
             call.enqueue(new Callback<MangaListApiResponse>() {
@@ -501,40 +503,6 @@ public class RequestManager {
                 listener.onSignInError("Sign-In Failed!", context);
             }
         });
-    }
-
-    public void fetchBookmarked(OnFetchBookmarkedMangasListener listener, int pageNumber, int pageSize) {
-        CallMangaApi callMangaApi = retrofit_manga.create(CallMangaApi.class);
-        Call<MangaListApiResponse> call = callMangaApi.fetchBookmarked(getUserToken(), pageNumber, pageSize);
-
-        try {
-            call.enqueue(new Callback<MangaListApiResponse>() {
-                @Override
-                public void onResponse(@NonNull Call<MangaListApiResponse> call, @NonNull Response<MangaListApiResponse> response) {
-                    if (!response.isSuccessful()) {
-                        int statusCode = response.code();
-                        String errorMessage = "Error!! HTTP Status Code: " + statusCode;
-
-                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
-
-                        setUserToken(null);
-
-                        listener.onFetchError("Request Failed!", context);
-                    } else {
-                        assert response.body() != null;
-
-                        listener.onFetchSuccess(response.body().getMangas(), response.message(), context);
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<MangaListApiResponse> call, @NonNull Throwable t) {
-                    listener.onFetchError("Request Failed!", context);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void bookmark(OnBookmarkListener listener, BookmarkModel bookmarkModel) {
@@ -1015,6 +983,15 @@ public class RequestManager {
     }
 
     public interface CallMangaApi {
+        @POST("all/user")
+        Call<MangaListApiResponse> callGetMangas(
+                @Header("Authorization") String token,
+                @Query("query") String query,
+                @Query("pageNumber") int pageNumber,
+                @Query("pageSize") int pageSize,
+                @Body MangaFilter mangaFilterDto
+        );
+
         @POST("all")
         Call<MangaListApiResponse> callManga(
                 @Query("query") String query,
@@ -1043,13 +1020,6 @@ public class RequestManager {
         Call<ApiResponse> callBookmark(
                 @Header("Authorization") String token,
                 @Body BookmarkModel bookmarkModel
-        );
-
-        @GET("bookmarked")
-        Call<MangaListApiResponse> fetchBookmarked(
-                @Header("Authorization") String token,
-                @Query("pageNumber") int pageNumber,
-                @Query("pageSize") int pageSize
         );
     }
 }

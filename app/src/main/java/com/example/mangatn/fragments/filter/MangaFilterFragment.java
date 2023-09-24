@@ -1,5 +1,7 @@
 package com.example.mangatn.fragments.filter;
 
+import static com.example.mangatn.Utils.userIsAuthenticated;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.mangatn.R;
+import com.example.mangatn.models.Enum.EMangaBookmark;
 import com.example.mangatn.models.Enum.EMangaGenre;
 import com.example.mangatn.models.Enum.EMangaStatus;
 import com.example.mangatn.models.manga.filter.MangaFilter;
@@ -28,6 +31,7 @@ import java.util.stream.Collectors;
 public class MangaFilterFragment extends BottomSheetDialogFragment {
     private StatusFilterFragment statusFilterFragment;
     private GenreFilterFragment genreFilterFragment;
+    private BookmarkFilterFragment bookmarkFilterFragment;
     private final MangaFilter mangaFilter;
     private OnFilterAppliedListener onFilterAppliedListener;
 
@@ -64,9 +68,17 @@ public class MangaFilterFragment extends BottomSheetDialogFragment {
 
         EMangaGenre[] genreOptions = EMangaGenre.values();
         EMangaStatus[] statusOptions = EMangaStatus.values();
+        EMangaBookmark[] bookmarksOptions = EMangaBookmark.values();
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
 
+        bookmarkFilterFragment = new BookmarkFilterFragment(
+                bookmarksOptions,
+                mangaFilter.getBookmarks()
+                        .stream()
+                        .map(EMangaBookmark::getCustomDisplay)
+                        .collect(Collectors.toList())
+        );
         statusFilterFragment = new StatusFilterFragment(
                 statusOptions,
                 mangaFilter
@@ -86,6 +98,10 @@ public class MangaFilterFragment extends BottomSheetDialogFragment {
 
         adapter.addFragment(statusFilterFragment, "Status");
         adapter.addFragment(genreFilterFragment, "Genre");
+
+        if (userIsAuthenticated()) {
+            adapter.addFragment(bookmarkFilterFragment, "Bookmark");
+        }
 
         viewPager.setAdapter(adapter);
 
@@ -136,7 +152,19 @@ public class MangaFilterFragment extends BottomSheetDialogFragment {
             );
         }
 
-        return new MangaFilter("", selectedStatus, selectedGenres);
+        MangaFilter filter = new MangaFilter("", selectedStatus, selectedGenres);
+
+        if (userIsAuthenticated()) {
+            filter.setBookmarks(
+                    bookmarkFilterFragment
+                            .getSelectedBookmarks()
+                            .stream()
+                            .map(EMangaBookmark::fromCustomDisplay)
+                            .collect(Collectors.toList())
+            );
+        }
+
+        return filter;
     }
 
     private static class ViewPagerAdapter extends FragmentStateAdapter {
