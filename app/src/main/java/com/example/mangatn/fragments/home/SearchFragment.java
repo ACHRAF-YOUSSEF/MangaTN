@@ -124,11 +124,7 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
 
         mangaFilter.setOnClickListener(view -> openModal());
 
-        if (userIsAuthenticated()) {
-            mangaFilterDto = new MangaFilter("", EMangaStatus.getAll(), EMangaGenre.getAll(), EMangaBookmark.getAll());
-        } else {
-            mangaFilterDto = new MangaFilter("", EMangaStatus.getAll(), EMangaGenre.getAll());
-        }
+        mangaFilterDto = new MangaFilter("", EMangaStatus.getAll(), EMangaGenre.getAll(), EMangaBookmark.getAll());
 
         swipeRefreshLayout = view1.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(() -> {

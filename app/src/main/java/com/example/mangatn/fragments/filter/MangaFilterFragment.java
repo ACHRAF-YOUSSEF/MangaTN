@@ -72,12 +72,24 @@ public class MangaFilterFragment extends BottomSheetDialogFragment {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
 
+        List<String> selectedBookmarks = new ArrayList<>();
+
+        if (userIsAuthenticated()) {
+            List<EMangaBookmark> bookmarks = mangaFilter.getBookmarks();
+
+            if (bookmarks != null) {
+                selectedBookmarks.addAll(
+                        bookmarks
+                                .stream()
+                                .map(EMangaBookmark::getCustomDisplay)
+                                .collect(Collectors.toList())
+                );
+            }
+        }
+
         bookmarkFilterFragment = new BookmarkFilterFragment(
                 bookmarksOptions,
-                mangaFilter.getBookmarks()
-                        .stream()
-                        .map(EMangaBookmark::getCustomDisplay)
-                        .collect(Collectors.toList())
+                selectedBookmarks
         );
         statusFilterFragment = new StatusFilterFragment(
                 statusOptions,
@@ -155,13 +167,15 @@ public class MangaFilterFragment extends BottomSheetDialogFragment {
         MangaFilter filter = new MangaFilter("", selectedStatus, selectedGenres);
 
         if (userIsAuthenticated()) {
-            filter.setBookmarks(
-                    bookmarkFilterFragment
-                            .getSelectedBookmarks()
-                            .stream()
-                            .map(EMangaBookmark::fromCustomDisplay)
-                            .collect(Collectors.toList())
-            );
+            if (bookmarkFilterFragment != null) {
+                filter.setBookmarks(
+                        bookmarkFilterFragment
+                                .getSelectedBookmarks()
+                                .stream()
+                                .map(EMangaBookmark::fromCustomDisplay)
+                                .collect(Collectors.toList())
+                );
+            }
         }
 
         return filter;
