@@ -6,11 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mangatn.R;
 import com.example.mangatn.activities.manga.MangaChapterViewerActivity;
@@ -26,10 +27,11 @@ import java.util.List;
 
 public class TabFragment extends Fragment implements OnFetchMangaChaptersListListener {
     private RequestManager requestManager;
-    private ListView chaptersListView;
+    private RecyclerView chaptersListView;
     private CircularProgressIndicator progressBar;
     private TabLayout tabLayout;
     private String mangaId;
+    private ChaptersAdapter chaptersAdapter;
 
     @Override
     public void onResume() {
@@ -82,19 +84,25 @@ public class TabFragment extends Fragment implements OnFetchMangaChaptersListLis
             });
         }
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        chaptersAdapter = new ChaptersAdapter(null);
+
+        chaptersListView.setLayoutManager(layoutManager);
+        chaptersListView.setAdapter(chaptersAdapter);
+
         return view1;
     }
 
-    private void showChapters(Context context, List<ChapterModel> chapters) {
-        ChaptersAdapter chaptersAdapter = new ChaptersAdapter(context, chapters);
+    private void showChapters(List<ChapterModel> chapters) {
+        chaptersAdapter = new ChaptersAdapter(chapters);
         chaptersListView.setAdapter(chaptersAdapter);
-        chaptersListView.setOnItemClickListener((parent, view, position, id) -> startActivity(
-                MangaChapterViewerActivity
-                        .newIntent(
-                                getContext(),
-                                mangaId,
-                                chapters.get(position).getReference()
-                        )
+
+        chaptersAdapter.setOnItemClickListener(position -> startActivity(
+                MangaChapterViewerActivity.newIntent(
+                        getContext(),
+                        mangaId,
+                        chapters.get(position).getReference()
+                )
         ));
 
         chaptersListView.setVisibility(View.VISIBLE);
@@ -103,7 +111,7 @@ public class TabFragment extends Fragment implements OnFetchMangaChaptersListLis
 
     @Override
     public void onFetchData(ChaptersListApiResponse response, String message, Context context) {
-        showChapters(getContext(), response.getChapters());
+        showChapters(response.getChapters());
     }
 
     @Override

@@ -323,6 +323,7 @@ public class ItemViewerActivity extends AppCompatActivity {
         TextView titleDetail = findViewById(R.id.title_detail);
 
         materialToolbar.setTitle(mangaModel.getTitle());
+
         titleDetail.setText(mangaModel.getTitle());
         Picasso.get().load(mangaModel.getCoverImgPath()).into(coverImage);
 

@@ -2,51 +2,80 @@ package com.example.mangatn.adapters;
 
 import static com.example.mangatn.Utils.getUserToken;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mangatn.R;
 import com.example.mangatn.models.chapter.ChapterModel;
 
 import java.util.List;
 
-public class ChaptersAdapter extends ArrayAdapter<ChapterModel> {
-    public ChaptersAdapter(@NonNull Context context, @NonNull List<ChapterModel> objects) {
-        super(context, 0, objects);
+public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHolder> {
+    private final List<ChapterModel> chapters;
+    private OnItemClickListener onItemClickListener;
+
+    public ChaptersAdapter(List<ChapterModel> chapters) {
+        this.chapters = chapters;
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chapter, null);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chapter, parent, false);
+        return new ViewHolder(view);
+    }
 
-        TextView tvChapter = convertView.findViewById(R.id.tvChapter);
-
-        ChapterModel chapterModel = getItem(position);
-
-        tvChapter.setText(chapterModel.getTitle());
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        ChapterModel chapterModel = chapters.get(position);
+        holder.tvChapter.setText(chapterModel.getTitle());
 
         // api call to check if the chapter has already been read
-        if (getUserToken() != null) {
-            if (!getUserToken().isEmpty()) {
-                if (chapterModel.isInProgress()) {
-                    tvChapter.setTextColor(Color.parseColor("#9E9E9E"));
-                }
-
-                if (chapterModel.isCompleted()) {
-                    tvChapter.setTextColor(Color.parseColor("#4CAF50"));
-                }
+        if (getUserToken() != null && !getUserToken().isEmpty()) {
+            if (chapterModel.isInProgress()) {
+                holder.tvChapter.setTextColor(Color.parseColor("#9E9E9E"));
+            }
+            if (chapterModel.isCompleted()) {
+                holder.tvChapter.setTextColor(Color.parseColor("#4CAF50"));
             }
         }
+    }
 
-        return convertView;
+    @Override
+    public int getItemCount() {
+        return chapters.size();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView tvChapter;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+
+            tvChapter = itemView.findViewById(R.id.tvChapter);
+
+            itemView.setOnClickListener(view -> {
+                if (onItemClickListener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        onItemClickListener.onItemClick(position);
+                    }
+                }
+            });
+        }
     }
 }
