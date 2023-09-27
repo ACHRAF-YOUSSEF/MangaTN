@@ -3,22 +3,17 @@ package com.example.mangatn.adapters;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Lifecycle;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyPagerAdapter extends FragmentStateAdapter {
+public class MyPagerAdapter extends FragmentPagerAdapter {
     private final List<Fragment> fragmentList = new ArrayList<>();
     private final List<String> fragmentTitleList = new ArrayList<>();
 
-    public MyPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
-        super(fragmentManager, lifecycle);
-    }
-
-    public List<String> getFragmentTitleList() {
-        return fragmentTitleList;
+    public MyPagerAdapter(FragmentManager fragmentManager) {
+        super(fragmentManager);
     }
 
     public void addFragment(Fragment fragment, String title) {
@@ -28,12 +23,17 @@ public class MyPagerAdapter extends FragmentStateAdapter {
 
     @NonNull
     @Override
-    public Fragment createFragment(int position) {
+    public Fragment getItem(int position) {
         return fragmentList.get(position);
     }
 
     @Override
-    public int getItemCount() {
+    public int getCount() {
         return fragmentList.size();
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return fragmentTitleList.get(position);
     }
 }

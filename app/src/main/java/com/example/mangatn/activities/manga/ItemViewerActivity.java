@@ -18,7 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager2.widget.ViewPager2;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.mangatn.R;
 import com.example.mangatn.activities.auth.SignInActivity;
@@ -41,7 +41,6 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 import com.squareup.picasso.Picasso;
 
 public class ItemViewerActivity extends AppCompatActivity {
@@ -53,7 +52,7 @@ public class ItemViewerActivity extends AppCompatActivity {
     private ImageButton bookmark, expanded_icon;
     private ImageView status_icon;
     private TabLayout tabLayout;
-    private ViewPager2 viewPager;
+    private ViewPager viewPager;
     private ExtendedFloatingActionButton floatingActionButton;
     private MyPagerAdapter pagerAdapter;
     private TextView collapsed_summary_detail, expanded_summary_detail, authors, status_details;
@@ -88,7 +87,7 @@ public class ItemViewerActivity extends AppCompatActivity {
         floatingActionButton = findViewById(R.id.continueLastViewedChapterButton);
 
         mangaModel = new MangaModel();
-        pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), getLifecycle());
+        pagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
 
         mangaId = getIntent().getStringExtra("mangaId");
 
@@ -287,7 +286,7 @@ public class ItemViewerActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putString("mangaId", mangaId);
 
-        if (pagerAdapter.getItemCount() <= 0) {
+        if (pagerAdapter.getCount() <= 0) {
             for (int i = 0; i <= (count / 50); i++) {
                 int from = i * 50 + 1;
                 int to = i * 50 + 50;
@@ -301,7 +300,7 @@ public class ItemViewerActivity extends AppCompatActivity {
                 fragment.setArguments(bundle);
             }
         } else {
-            for (int i = pagerAdapter.getItemCount(); i <= (count / 50); i++) {
+            for (int i = pagerAdapter.getCount(); i <= (count / 50); i++) {
                 int from = i * 50 + 1;
                 int to = i * 50 + 50;
 
@@ -318,10 +317,7 @@ public class ItemViewerActivity extends AppCompatActivity {
         }
 
         viewPager.setAdapter(pagerAdapter);
-
-        new TabLayoutMediator(tabLayout, viewPager, (tab, position) ->
-                tab.setText(pagerAdapter.getFragmentTitleList().get(position))
-        ).attach();
+        tabLayout.setupWithViewPager(viewPager);
 
         ImageView coverImage = findViewById(R.id.coverImage);
         TextView titleDetail = findViewById(R.id.title_detail);

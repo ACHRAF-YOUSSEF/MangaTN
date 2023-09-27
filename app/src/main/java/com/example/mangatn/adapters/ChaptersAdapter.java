@@ -14,19 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.mangatn.R;
-import com.example.mangatn.manager.RequestManager;
 import com.example.mangatn.models.chapter.ChapterModel;
 
 import java.util.List;
 
 public class ChaptersAdapter extends ArrayAdapter<ChapterModel> {
-    private RequestManager requestManager;
-    private String mangaId;
-
-    public ChaptersAdapter(@NonNull Context context, @NonNull List<ChapterModel> objects, String mangaId) {
+    public ChaptersAdapter(@NonNull Context context, @NonNull List<ChapterModel> objects) {
         super(context, 0, objects);
-        this.mangaId = mangaId;
-        requestManager = new RequestManager(context);
     }
 
     @NonNull
