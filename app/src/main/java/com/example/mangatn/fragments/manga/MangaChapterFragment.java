@@ -114,7 +114,6 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
                 }
 
                 updateSeekBar();
-                toggleToolBarAndSeekBar();
 
                 if (userIsAuthenticated()) {
                     requestManager.getReadChapter(new OnGetReadChapterListener() {
@@ -124,7 +123,7 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
                                 requestManager.createOrDeleteReadChapter(new OnMarkAsViewedOrNotListener() {
                                     @Override
                                     public void onFetchData(ApiResponse response, String message, Context context) {
-
+                                        toggleToolBarAndSeekBar();
                                     }
 
                                     @Override
@@ -141,6 +140,7 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
                                     loadChapterImage();
 
                                     updateSeekBar();
+                                    toggleToolBarAndSeekBar();
                                     checkIfTheChapterIsNearlyCompletedOrCompleted();
                                 }
                             }

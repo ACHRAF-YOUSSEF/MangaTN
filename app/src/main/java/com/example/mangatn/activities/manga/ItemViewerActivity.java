@@ -36,6 +36,7 @@ import com.example.mangatn.models.Enum.EMangaStatus;
 import com.example.mangatn.models.bookmark.BookmarkModel;
 import com.example.mangatn.models.chapter.ReadChapterModel;
 import com.example.mangatn.models.manga.MangaModel;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
@@ -100,6 +101,11 @@ public class ItemViewerActivity extends AppCompatActivity {
             swipeRefreshLayout.setRefreshing(true);
             requestManager.updateManga(listener1, mangaId);
         });
+
+        ((AppBarLayout) findViewById(R.id.appBarLayout))
+                .addOnOffsetChangedListener(
+                        (appBarLayout1, verticalOffset) -> swipeRefreshLayout.setEnabled(verticalOffset == 0)
+                );
 
         bookmark = findViewById(R.id.bookmarkModel);
 
@@ -204,8 +210,11 @@ public class ItemViewerActivity extends AppCompatActivity {
 
     private void openChapter(Integer reference) {
         startActivity(
-                MangaChapterViewerActivity
-                        .newIntent(this, mangaId, reference)
+                MangaChapterViewerActivity.newIntent(
+                        this,
+                        mangaId,
+                        reference
+                )
         );
     }
 
