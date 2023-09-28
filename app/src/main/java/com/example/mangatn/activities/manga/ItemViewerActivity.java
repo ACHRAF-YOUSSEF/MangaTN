@@ -17,12 +17,12 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mangatn.R;
 import com.example.mangatn.activities.auth.SignInActivity;
 import com.example.mangatn.adapters.MyPagerAdapter;
+import com.example.mangatn.custom.MySwipeToRefresh;
 import com.example.mangatn.fragments.home.TabFragment;
 import com.example.mangatn.interfaces.bookmark.OnBookmarkListener;
 import com.example.mangatn.interfaces.bookmark.OnCheckForBookmarkListener;
@@ -40,6 +40,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
@@ -48,7 +49,7 @@ public class ItemViewerActivity extends AppCompatActivity {
     private MangaModel mangaModel;
     private boolean bookmarked = false;
     private RequestManager requestManager;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private MySwipeToRefresh swipeRefreshLayout;
     private String mangaId;
     private ImageButton bookmark, expanded_icon;
     private ImageView status_icon;
@@ -364,7 +365,7 @@ public class ItemViewerActivity extends AppCompatActivity {
 
         authors.setText(mangaModel.getAuthors());
 
-        LinearLayout chipGroup = findViewById(R.id.chip_manga_genre_group);
+        ChipGroup chipGroup = findViewById(R.id.chip_manga_genre_group);
 
         for (String genre : mangaModel.getGenres()) {
             Chip newChip = new Chip(ItemViewerActivity.this);
@@ -381,18 +382,6 @@ public class ItemViewerActivity extends AppCompatActivity {
             newChip.setTextSize(20);
             newChip.setChipBackgroundColorResource(R.color.grey);
             newChip.setTextColor(Color.WHITE);
-
-            // Create LayoutParams for the chip
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-
-            // Set margins for the chip (adjust values as needed)
-            layoutParams.setMargins(10, 0, 10, 10);
-
-            // Apply the LayoutParams to the chip
-            newChip.setLayoutParams(layoutParams);
 
             chipGroup.addView(newChip);
         }

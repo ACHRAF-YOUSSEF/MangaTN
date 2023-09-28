@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.mangatn.custom.MySwipeToRefresh xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.manga.ItemViewerActivity"
@@ -132,11 +132,12 @@
                         android:layout_marginRight="10dp"
                         android:scrollbars="horizontal">
 
-                        <LinearLayout
+                        <com.google.android.material.chip.ChipGroup
                             android:id="@+id/chip_manga_genre_group"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal" />
+                            app:chipSpacingHorizontal="16dp"
+                            app:singleLine="true" />
 
                     </HorizontalScrollView>
 
@@ -239,7 +240,7 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="90dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             app:cardBackgroundColor="?colorPrimary"
@@ -283,7 +284,6 @@
                 <androidx.viewpager.widget.ViewPager
                     android:id="@+id/view_viewPager"
                     android:contentDescription="@string/list"
-                    android:layout_marginBottom="90dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_width="match_parent"
@@ -316,4 +316,4 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</com.example.mangatn.custom.MySwipeToRefresh>
