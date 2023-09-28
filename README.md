@@ -2,6 +2,8 @@
 ---
 The code source for the API is still not ready!
 ----
+- manga icon (by TulPahn): `https://www.flaticon.com/free-icon/manga_2074206?related_id=2074206&origin=pack`
+----
 ## requires:
 - picasso (in build.gradle) : `implementation 'com.squareup.picasso:picasso:2.8'`
 - retrofit (in build.gradle) : `implementation 'com.squareup.retrofit2:retrofit:2.9.0'`
