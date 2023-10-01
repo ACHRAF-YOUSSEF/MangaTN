@@ -1,7 +1,5 @@
 package com.example.mangatn.adapters;
 
-import static com.example.mangatn.Utils.getUserToken;
-
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,14 +34,11 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
         ChapterModel chapterModel = chapters.get(position);
         holder.tvChapter.setText(chapterModel.getTitle());
 
-        // api call to check if the chapter has already been read
-        if (getUserToken() != null && !getUserToken().isEmpty()) {
-            if (chapterModel.isInProgress()) {
-                holder.tvChapter.setTextColor(Color.parseColor("#9E9E9E"));
-            }
-            if (chapterModel.isCompleted()) {
-                holder.tvChapter.setTextColor(Color.parseColor("#4CAF50"));
-            }
+        if (chapterModel.isInProgress()) {
+            holder.tvChapter.setTextColor(Color.parseColor("#9E9E9E"));
+        }
+        if (chapterModel.isCompleted()) {
+            holder.tvChapter.setTextColor(Color.parseColor("#4CAF50"));
         }
     }
 

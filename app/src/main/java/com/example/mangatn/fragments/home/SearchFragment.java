@@ -27,8 +27,10 @@ import com.example.mangatn.Utils;
 import com.example.mangatn.activities.auth.ResetPasswordActivity;
 import com.example.mangatn.activities.auth.SignInActivity;
 import com.example.mangatn.activities.auth.UpdateProfileActivity;
+import com.example.mangatn.activities.home.MainActivity;
 import com.example.mangatn.activities.manga.ItemViewerActivity;
 import com.example.mangatn.adapters.GridAdapter;
+import com.example.mangatn.db.MangaDatabaseHelper;
 import com.example.mangatn.fragments.filter.MangaFilterFragment;
 import com.example.mangatn.fragments.filter.MangaFilterFragment.OnFilterAppliedListener;
 import com.example.mangatn.interfaces.manga.OnFetchDataListener;
@@ -42,6 +44,7 @@ import com.example.mangatn.models.manga.filter.MangaFilter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SearchFragment extends Fragment implements SelectListener, OnFilterAppliedListener {
     public GridView gridView;
@@ -239,7 +242,30 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
             if (list.isEmpty() && (pageNumber * pageSize < mangaModels.size())) {
                 Toast.makeText(context, "No data found!!!", Toast.LENGTH_SHORT).show();
             } else {
-                showManga(list);
+                MainActivity
+                        .getConnectionStateMonitor(container.getContext())
+                        .startMonitoring(isConnected -> {
+                            if (isConnected) {
+                                if (!userIsAuthenticated()) {
+                                    list.clear();
+
+                                    List<String> bookmarkedChapters = MangaDatabaseHelper
+                                            .getInstance(context)
+                                            .getBookmarkedChapters();
+
+                                    list.addAll(
+                                            list.stream()
+                                                    .filter(
+                                                            mangaModel -> bookmarkedChapters
+                                                                    .contains(mangaModel.getMangaId())
+                                                    )
+                                                    .collect(Collectors.toList())
+                                    );
+                                }
+
+                                showManga(list);
+                            }
+                        });
             }
 
             swipeRefreshLayout.setRefreshing(false);
@@ -266,6 +292,16 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
     public void onFilterApplied(MangaFilter selectedFilters) {
         mangaModels.clear();
         pageNumber = 0;
+
+        MainActivity
+                .getConnectionStateMonitor(container.getContext())
+                .startMonitoring(isConnected -> {
+                    if (isConnected) {
+                        if (!userIsAuthenticated()) {
+                            selectedFilters.setBookmarks(EMangaBookmark.getAll());
+                        }
+                    }
+                });
 
         mangaFilterDto = selectedFilters;
 

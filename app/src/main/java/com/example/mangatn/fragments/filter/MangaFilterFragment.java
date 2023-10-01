@@ -1,7 +1,5 @@
 package com.example.mangatn.fragments.filter;
 
-import static com.example.mangatn.Utils.userIsAuthenticated;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -74,17 +72,16 @@ public class MangaFilterFragment extends BottomSheetDialogFragment {
 
         List<String> selectedBookmarks = new ArrayList<>();
 
-        if (userIsAuthenticated()) {
-            List<EMangaBookmark> bookmarks = mangaFilter.getBookmarks();
 
-            if (bookmarks != null) {
-                selectedBookmarks.addAll(
-                        bookmarks
-                                .stream()
-                                .map(EMangaBookmark::getCustomDisplay)
-                                .collect(Collectors.toList())
-                );
-            }
+        List<EMangaBookmark> bookmarks = mangaFilter.getBookmarks();
+
+        if (bookmarks != null) {
+            selectedBookmarks.addAll(
+                    bookmarks
+                            .stream()
+                            .map(EMangaBookmark::getCustomDisplay)
+                            .collect(Collectors.toList())
+            );
         }
 
         bookmarkFilterFragment = new BookmarkFilterFragment(
@@ -110,10 +107,7 @@ public class MangaFilterFragment extends BottomSheetDialogFragment {
 
         adapter.addFragment(statusFilterFragment, "Status");
         adapter.addFragment(genreFilterFragment, "Genre");
-
-        if (userIsAuthenticated()) {
-            adapter.addFragment(bookmarkFilterFragment, "Bookmark");
-        }
+        adapter.addFragment(bookmarkFilterFragment, "Bookmark");
 
         viewPager.setAdapter(adapter);
 
@@ -166,16 +160,14 @@ public class MangaFilterFragment extends BottomSheetDialogFragment {
 
         MangaFilter filter = new MangaFilter("", selectedStatus, selectedGenres);
 
-        if (userIsAuthenticated()) {
-            if (bookmarkFilterFragment != null) {
-                filter.setBookmarks(
-                        bookmarkFilterFragment
-                                .getSelectedBookmarks()
-                                .stream()
-                                .map(EMangaBookmark::fromCustomDisplay)
-                                .collect(Collectors.toList())
-                );
-            }
+        if (bookmarkFilterFragment != null) {
+            filter.setBookmarks(
+                    bookmarkFilterFragment
+                            .getSelectedBookmarks()
+                            .stream()
+                            .map(EMangaBookmark::fromCustomDisplay)
+                            .collect(Collectors.toList())
+            );
         }
 
         return filter;

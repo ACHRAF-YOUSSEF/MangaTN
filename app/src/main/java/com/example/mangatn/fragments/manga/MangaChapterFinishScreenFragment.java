@@ -2,7 +2,6 @@ package com.example.mangatn.fragments.manga;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,6 +26,7 @@ public class MangaChapterFinishScreenFragment extends Fragment implements View.O
     private final String current;
     private final boolean isNext;
     private final boolean leftToRight;
+    private final boolean isHorizontal;
     private ChapterModel chapterModelToOpen;
     private CircularProgressIndicator progressBar;
     private GestureDetector gestureDetector;
@@ -38,6 +38,8 @@ public class MangaChapterFinishScreenFragment extends Fragment implements View.O
         this.current = current;
         this.isNext = isNextOrPrevious;
         this.leftToRight = leftToRight;
+
+        isHorizontal = true;
     }
 
     @Override
@@ -118,12 +120,8 @@ public class MangaChapterFinishScreenFragment extends Fragment implements View.O
             if (Math.abs(deltaX) > Math.abs(deltaY)) {
                 if (Math.abs(deltaX) > MIN_SWIPE_DISTANCE && Math.abs(velocityX) > MAX_SWIPE_DURATION) {
                     if (deltaX > 0) {
-                        Log.i("isNext|leftToRight|reference", "handleSwipeRight: " + isNext + "|" + leftToRight + "|" + chapterModelToOpen.getReference());
-
                         handleSwipeRight();
                     } else {
-                        Log.i("isNext|leftToRight|reference", "handleSwipeLeft: " + isNext + "|" + leftToRight + "|" + chapterModelToOpen.getReference());
-
                         handleSwipeLeft();
                     }
 

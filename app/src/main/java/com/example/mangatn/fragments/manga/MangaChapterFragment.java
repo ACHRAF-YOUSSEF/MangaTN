@@ -6,7 +6,6 @@ import static java.lang.String.valueOf;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.example.mangatn.R;
+import com.example.mangatn.activities.home.MainActivity;
 import com.example.mangatn.activities.manga.MangaChapterViewerActivity;
+import com.example.mangatn.db.MangaDatabaseHelper;
 import com.example.mangatn.interfaces.chapter.OnFetchMangaChapterListener;
 import com.example.mangatn.interfaces.chapter.OnGetReadChapterListener;
 import com.example.mangatn.interfaces.update.OnFetchUpdateListener;
@@ -52,6 +53,8 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
     private final Integer chapterReference;
     private CircularProgressIndicator progressBar;
     private View view;
+    private Context context;
+    private MangaDatabaseHelper helper;
 
     public MangaChapterFragment(String mangaId, Integer chapterReference, boolean leftToRight) {
         this.mangaId = mangaId;
@@ -63,7 +66,9 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_manga_chapter, container, false);
 
-        Context context = container.getContext();
+        context = container.getContext();
+
+        helper = MangaDatabaseHelper.getInstance(context);
 
         Toolbar toolbar = view.findViewById(R.id.custom_toolbar);
 
@@ -115,43 +120,69 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
 
                 updateSeekBar();
 
-                if (userIsAuthenticated()) {
-                    requestManager.getReadChapter(new OnGetReadChapterListener() {
-                        @Override
-                        public void onFetchData(ReadChapterModel response, String message, Context context) {
-                            if (!response.isInProgress() && !response.isCompleted()) {
-                                requestManager.createOrDeleteReadChapter(new OnMarkAsViewedOrNotListener() {
-                                    @Override
-                                    public void onFetchData(ApiResponse response, String message, Context context) {
+                MainActivity
+                        .getConnectionStateMonitor(context)
+                        .startMonitoring(isConnected -> {
+                            if (isConnected) {
+                                if (userIsAuthenticated()) {
+                                    requestManager.getReadChapter(new OnGetReadChapterListener() {
+                                        @Override
+                                        public void onFetchData(ReadChapterModel response, String message, Context context) {
+                                            if (!response.isInProgress() && !response.isCompleted()) {
+                                                requestManager.createOrDeleteReadChapter(new OnMarkAsViewedOrNotListener() {
+                                                    @Override
+                                                    public void onFetchData(ApiResponse response, String message, Context context) {
+                                                        toggleToolBarAndSeekBar();
+                                                    }
+
+                                                    @Override
+                                                    public void onError(String message, Context context) {
+                                                        Toast.makeText(context, "An Error Occurred!!!" + message, Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }, chapterModel.getReference(), mangaId, true);
+                                            } else if (response.isInProgress()) {
+                                                if (!mangaChapterImagesUrls.isEmpty()) {
+                                                    index = response.getProgress();
+                                                    seekBar.setProgress(response.getProgress());
+
+                                                    progress_text.setText(String.format("%d/%d", index + 1, mangaChapterImagesUrls.size()));
+                                                    loadChapterImage();
+
+                                                    updateSeekBar();
+                                                    toggleToolBarAndSeekBar();
+                                                    checkIfTheChapterIsNearlyCompletedOrCompleted();
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onError(String message, Context context) {
+                                            Toast.makeText(context, "An Error Occurred!!!" + message, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }, chapterModel.getReference(), mangaId);
+                                } else {
+                                    ReadChapterModel readChapter = helper
+                                            .getReadChapter(chapterReference, mangaId);
+
+                                    if (!readChapter.isInProgress() && !readChapter.isCompleted()) {
+                                        helper.storeReadChapter(mangaId, chapterReference);
                                         toggleToolBarAndSeekBar();
+                                    } else if (readChapter.isInProgress()) {
+                                        if (!mangaChapterImagesUrls.isEmpty()) {
+                                            index = readChapter.getProgress();
+                                            seekBar.setProgress(readChapter.getProgress());
+
+                                            progress_text.setText(String.format("%d/%d", index + 1, mangaChapterImagesUrls.size()));
+                                            loadChapterImage();
+
+                                            updateSeekBar();
+                                            toggleToolBarAndSeekBar();
+                                            checkIfTheChapterIsNearlyCompletedOrCompleted();
+                                        }
                                     }
-
-                                    @Override
-                                    public void onError(String message, Context context) {
-                                        Toast.makeText(context, "An Error Occurred!!!" + message, Toast.LENGTH_SHORT).show();
-                                    }
-                                }, chapterModel.getReference(), mangaId, true);
-                            } else if (response.isInProgress()) {
-                                if (!mangaChapterImagesUrls.isEmpty()) {
-                                    index = response.getProgress();
-                                    seekBar.setProgress(response.getProgress());
-
-                                    progress_text.setText(String.format("%d/%d", index + 1, mangaChapterImagesUrls.size()));
-                                    loadChapterImage();
-
-                                    updateSeekBar();
-                                    toggleToolBarAndSeekBar();
-                                    checkIfTheChapterIsNearlyCompletedOrCompleted();
                                 }
                             }
-                        }
-
-                        @Override
-                        public void onError(String message, Context context) {
-                            Toast.makeText(context, "An Error Occurred!!!" + message, Toast.LENGTH_SHORT).show();
-                        }
-                    }, chapterModel.getReference(), mangaId);
-                }
+                        });
             }
 
             @Override
@@ -168,6 +199,7 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
                 getActivity().finish();
             }
         });
+
         imageView.setOnClickListener(v -> toggleToolBarAndSeekBar());
 
         return view;
@@ -366,50 +398,74 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
         int progress = seekBar.getProgress();
         int max = seekBar.getMax();
 
-        Log.i("progress", "checkIfTheChapterIsNearlyCompletedOrCompleted: " + progress + ":" + max);
-
-        if (userIsAuthenticated()) {
-            requestManager.getReadChapter(new OnGetReadChapterListener() {
-                @Override
-                public void onFetchData(ReadChapterModel response, String message, Context context) {
-                    if (!response.isCompleted()) {
-                        if (isFinished()) {
-                            // api call to mark the chapter as viewed for the current user
-                            requestManager.updateReadChapter(new OnFetchUpdateListener() {
+        MainActivity
+                .getConnectionStateMonitor(context)
+                .startMonitoring(isConnected -> {
+                    if (isConnected) {
+                        if (userIsAuthenticated()) {
+                            requestManager.getReadChapter(new OnGetReadChapterListener() {
                                 @Override
-                                public void onFetchData(Object o, String message, Context context) {
+                                public void onFetchData(ReadChapterModel response, String message, Context context) {
+                                    if (!response.isCompleted()) {
+                                        if (isFinished()) {
+                                            requestManager.updateReadChapter(new OnFetchUpdateListener<ApiResponse>() {
+                                                @Override
+                                                public void onFetchData(ApiResponse apiResponse, String message, Context context) {
 
+                                                }
+
+                                                @Override
+                                                public void onError(String message, Context context) {
+                                                    Toast.makeText(context, "An Error Occurred!!!" + message, Toast.LENGTH_SHORT).show();
+                                                }
+                                            }, chapterModel.getReference(), mangaId, new ReadChapterModel(true, false, progress, chapterModel, mangaId));
+                                        } else if (progress < max) {
+                                            requestManager.updateReadChapter(new OnFetchUpdateListener<ApiResponse>() {
+                                                @Override
+                                                public void onFetchData(ApiResponse apiResponse, String message, Context context) {
+
+                                                }
+
+                                                @Override
+                                                public void onError(String message, Context context) {
+                                                    Toast.makeText(context, "An Error Occurred!!!" + message, Toast.LENGTH_SHORT).show();
+                                                }
+                                            }, chapterModel.getReference(), mangaId, new ReadChapterModel(false, true, progress, chapterModel, mangaId));
+                                        }
+                                    }
                                 }
 
                                 @Override
                                 public void onError(String message, Context context) {
                                     Toast.makeText(context, "An Error Occurred!!!" + message, Toast.LENGTH_SHORT).show();
                                 }
-                            }, chapterModel.getReference(), mangaId, new ReadChapterModel(true, false, progress, chapterModel, mangaId));
-                        } else if (progress < max) {
-                            if (userIsAuthenticated()) {
-                                requestManager.updateReadChapter(new OnFetchUpdateListener() {
-                                    @Override
-                                    public void onFetchData(Object o, String message, Context context) {
+                            }, chapterReference, mangaId);
+                        } else {
+                            ReadChapterModel readChapter = helper
+                                    .getReadChapter(chapterReference, mangaId);
 
-                                    }
-
-                                    @Override
-                                    public void onError(String message, Context context) {
-                                        Toast.makeText(context, "An Error Occurred!!!" + message, Toast.LENGTH_SHORT).show();
-                                    }
-                                }, chapterModel.getReference(), mangaId, new ReadChapterModel(false, true, progress, chapterModel, mangaId));
+                            if (!readChapter.isCompleted()) {
+                                if (isFinished()) {
+                                    helper.updateReadChapter(
+                                            mangaId,
+                                            chapterReference,
+                                            progress,
+                                            true,
+                                            false
+                                    );
+                                } else if (progress < max) {
+                                    helper.updateReadChapter(
+                                            mangaId,
+                                            chapterReference,
+                                            progress,
+                                            false,
+                                            true
+                                    );
+                                }
                             }
                         }
                     }
-                }
-
-                @Override
-                public void onError(String message, Context context) {
-                    Toast.makeText(context, "An Error Occurred!!!" + message, Toast.LENGTH_SHORT).show();
-                }
-            }, chapterModel.getReference(), mangaId);
-        }
+                });
     }
 
     private boolean isFinished() {

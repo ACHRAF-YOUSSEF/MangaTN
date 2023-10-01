@@ -1,7 +1,5 @@
 package com.example.mangatn;
 
-import org.jetbrains.annotations.Contract;
-
 public class Utils {
     public static final String API_URL = "http://192.168.31.40:8081/api";
     public static final String MANGA_URL = "/v1/manga/";
@@ -12,7 +10,6 @@ public class Utils {
 
     private static String userToken = "";
 
-    @Contract(pure = true)
     public static String getUserToken() {
         return userToken;
     }
@@ -21,7 +18,6 @@ public class Utils {
         Utils.userToken = userToken;
     }
 
-    @Contract(pure = true)
     public static boolean userIsAuthenticated() {
         return userToken != null && !userToken.isEmpty();
     }

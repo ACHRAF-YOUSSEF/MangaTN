@@ -13,12 +13,13 @@ public class ChapterModel implements Serializable {
     public ChapterModel(String title, List<String> imgPaths, Integer reference, boolean completed, boolean inProgress) {
         this.title = title;
         this.imgPaths = imgPaths;
-        this.reference =reference;
+        this.reference = reference;
         this.completed = completed;
         this.inProgress = inProgress;
     }
 
-    public ChapterModel() {}
+    public ChapterModel() {
+    }
 
     public boolean isCompleted() {
         return completed;

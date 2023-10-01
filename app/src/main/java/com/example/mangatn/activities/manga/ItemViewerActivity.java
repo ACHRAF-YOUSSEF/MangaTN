@@ -3,7 +3,6 @@ package com.example.mangatn.activities.manga;
 import static com.example.mangatn.Utils.userIsAuthenticated;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -20,9 +19,10 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mangatn.R;
-import com.example.mangatn.activities.auth.SignInActivity;
+import com.example.mangatn.activities.home.MainActivity;
 import com.example.mangatn.adapters.MyPagerAdapter;
 import com.example.mangatn.custom.MySwipeToRefresh;
+import com.example.mangatn.db.MangaDatabaseHelper;
 import com.example.mangatn.fragments.home.TabFragment;
 import com.example.mangatn.interfaces.bookmark.OnBookmarkListener;
 import com.example.mangatn.interfaces.bookmark.OnCheckForBookmarkListener;
@@ -62,6 +62,7 @@ public class ItemViewerActivity extends AppCompatActivity {
     private Integer lastViewedChapterId = null;
     private MenuItem bookmarkedIcon;
     private MaterialToolbar materialToolbar;
+    private final MangaDatabaseHelper helper = MangaDatabaseHelper.getInstance(this);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,10 +127,7 @@ public class ItemViewerActivity extends AppCompatActivity {
             return false;
         });
 
-        //  api call to check if this manga is bookmarked or not
-        if (userIsAuthenticated()) {
-            requestManager.checkForBookmark(listener2, mangaId);
-        }
+        checkForBookmarkAndUpdateTheBookmarkIcon();
 
         bookmark.setOnClickListener(v -> addOrDeleteBookmark());
 
@@ -140,61 +138,91 @@ public class ItemViewerActivity extends AppCompatActivity {
         });
     }
 
+    private void checkForBookmarkAndUpdateTheBookmarkIcon() {
+        MainActivity
+                .getConnectionStateMonitor(this)
+                .startMonitoring(isConnected -> {
+                    if (isConnected) {
+                        if (userIsAuthenticated()) {
+                            requestManager.checkForBookmark(listener2, mangaId);
+                        } else {
+                            bookmarked = helper.checkIfBookmarkExists(mangaId);
+
+                            switchBookmark();
+                        }
+                    }
+                });
+    }
+
     private void addOrDeleteBookmark() {
-        if (userIsAuthenticated()) {
-            bookmarked = !bookmarked;
-            requestManager.bookmark(listener3, new BookmarkModel(mangaId, bookmarked));
-        } else {
-            Intent intent = new Intent(this, SignInActivity.class);
-            startActivity(intent);
-        }
+        MainActivity
+                .getConnectionStateMonitor(this)
+                .startMonitoring(isConnected -> {
+                    if (isConnected) {
+                        bookmarked = !bookmarked;
+
+                        if (userIsAuthenticated()) {
+                            requestManager.bookmark(listener3, new BookmarkModel(mangaId, bookmarked));
+                        } else {
+                            if (bookmarked) {
+                                helper.storeBookmark(mangaId);
+                            } else {
+                                helper.removeBookmark(mangaId);
+                            }
+                        }
+                    }
+                });
     }
 
     private void getLastViewedChapterOrFirstChapter() {
         lastViewedChapterId = null;
 
-        requestManager.getHasReadChapter(new OnGetHasReadChapterListener() {
-            @Override
-            public void onFetchData(Boolean response, String message, Context context) {
-                if (response) {
-                    floatingActionButton.setText(R.string.Resume);
-                } else {
-                    floatingActionButton.setText(R.string.Start);
-                }
-            }
+        MainActivity
+                .getConnectionStateMonitor(this)
+                .startMonitoring(isConnected -> {
+                    if (isConnected) {
+                        if (userIsAuthenticated()) {
+                            requestManager.getHasReadChapter(new OnGetHasReadChapterListener() {
+                                @Override
+                                public void onFetchData(Boolean response, String message, Context context) {
+                                    if (response) {
+                                        floatingActionButton.setText(R.string.Resume);
+                                    } else {
+                                        floatingActionButton.setText(R.string.Start);
+                                    }
+                                }
 
-            @Override
-            public void onError(String message, Context context) {
-                floatingActionButton.setText(R.string.Start);
-            }
-        }, mangaId);
+                                @Override
+                                public void onError(String message, Context context) {
+                                    floatingActionButton.setText(R.string.Start);
+                                }
+                            }, mangaId);
 
-        // api call to fetch the last viewed + in progress chapter
-        if (userIsAuthenticated()) {
-            requestManager.getLastReadAndInProgressChapter(new OnGetReadChapterListener() {
-                @Override
-                public void onFetchData(ReadChapterModel response, String message, Context context) {
-                    lastViewedChapterId = response.getChapter().getReference();
-                }
+                            requestManager.getLastReadAndInProgressChapter(new OnGetReadChapterListener() {
+                                @Override
+                                public void onFetchData(ReadChapterModel response, String message, Context context) {
+                                    lastViewedChapterId = response.getChapter().getReference();
+                                }
 
-                @Override
-                public void onError(String message, Context context) {
+                                @Override
+                                public void onError(String message, Context context) {
 
-                }
-            }, mangaId);
-        } else {
-            requestManager.getFirstChapter(new OnGetReadChapterListener() {
-                @Override
-                public void onFetchData(ReadChapterModel response, String message, Context context) {
-                    lastViewedChapterId = response.getChapter().getReference();
-                }
+                                }
+                            }, mangaId);
+                        } else {
+                            if (helper.checkIfHasReadChapters(mangaId)) {
+                                floatingActionButton.setText(R.string.Resume);
+                            } else {
+                                floatingActionButton.setText(R.string.Start);
+                            }
 
-                @Override
-                public void onError(String message, Context context) {
-
-                }
-            }, mangaId);
-        }
+                            lastViewedChapterId = helper
+                                    .getLastReadAndInProgressChapter(mangaId)
+                                    .getChapter()
+                                    .getReference();
+                        }
+                    }
+                });
     }
 
     private void toggleCardViewContent() {
@@ -234,9 +262,7 @@ public class ItemViewerActivity extends AppCompatActivity {
         public void onFetchData(MangaModel manga, String message, Context context) {
             mangaModel = manga;
 
-            if (userIsAuthenticated()) {
-                requestManager.checkForBookmark(listener2, mangaId);
-            }
+            checkForBookmarkAndUpdateTheBookmarkIcon();
 
             showChapters(mangaModel.getCount());
             swipeRefreshLayout.setRefreshing(false);
@@ -391,9 +417,7 @@ public class ItemViewerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (userIsAuthenticated()) {
-            requestManager.checkForBookmark(listener2, mangaId);
-        }
+        checkForBookmarkAndUpdateTheBookmarkIcon();
 
         getLastViewedChapterOrFirstChapter();
     }
