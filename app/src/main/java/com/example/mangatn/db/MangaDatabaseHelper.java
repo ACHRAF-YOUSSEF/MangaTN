@@ -327,7 +327,7 @@ public class MangaDatabaseHelper extends SQLiteOpenHelper {
 
         return lastReadChapter;
     }
-    
+
     public List<String> getBookmarkedChapters() {
         List<String> bookmarkedChapters = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -356,7 +356,7 @@ public class MangaDatabaseHelper extends SQLiteOpenHelper {
         return bookmarkedChapters;
     }
 
-    public void processJournalEntries(Context context) {
+    public boolean processJournalEntries(Context context) {
         requestManager = new RequestManager(context);
 
         try (SQLiteDatabase db = getWritableDatabase()) {
@@ -534,7 +534,11 @@ public class MangaDatabaseHelper extends SQLiteOpenHelper {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+
+            return false;
         }
+
+        return true;
     }
 
     private void removeJournalEntry(String journalTableName, int id) {

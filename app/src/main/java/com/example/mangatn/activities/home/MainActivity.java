@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -70,7 +71,9 @@ public class MainActivity extends AppCompatActivity implements OnFilterAppliedLi
                 .startMonitoring(isConnected -> {
                     if (isConnected) {
                         if (userIsAuthenticated()) {
-                            helper.processJournalEntries(this);
+                            if (helper.processJournalEntries(this)) {
+                                Toast.makeText(this, "Data successfully synced", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 });
