@@ -236,7 +236,7 @@ public class SearchFragment extends Fragment implements SelectListener, OnFilter
     private final OnFetchDataListener listener = new OnFetchDataListener() {
         @Override
         public void onFetchData(List<MangaModel> list, String message, Context context) {
-            if (list.isEmpty() && (pageNumber * pageSize < mangaModels.size())) {
+            if (list == null || (list.isEmpty() && (pageNumber * pageSize < mangaModels.size()))) {
                 Toast.makeText(context, "No data found!!!", Toast.LENGTH_SHORT).show();
             } else {
                 showManga(list);

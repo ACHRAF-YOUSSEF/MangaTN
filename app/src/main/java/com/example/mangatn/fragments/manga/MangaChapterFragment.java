@@ -36,6 +36,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 public class MangaChapterFragment extends Fragment implements View.OnClickListener {
     private List<String> mangaChapterImagesUrls;
@@ -108,7 +110,7 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
                 if (mangaChapterImagesUrls.isEmpty()) {
                     Toast.makeText(context, "error!", Toast.LENGTH_SHORT).show();
                 } else {
-                    progress_text.setText(format("%d/%d", index + 1, mangaChapterImagesUrls.size()));
+                    progress_text.setText(format(Locale.getDefault(), "%d/%d", index + 1, mangaChapterImagesUrls.size()));
 
                     loadChapterImage();
                 }
@@ -136,7 +138,7 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
                                     index = response.getProgress();
                                     seekBar.setProgress(response.getProgress());
 
-                                    progress_text.setText(String.format("%d/%d", index + 1, mangaChapterImagesUrls.size()));
+                                    progress_text.setText(String.format(Locale.getDefault(), "%d/%d", index + 1, mangaChapterImagesUrls.size()));
                                     loadChapterImage();
 
                                     updateSeekBar();
@@ -183,14 +185,14 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
 
             view.findViewById(R.id.progress_counter).setVisibility(View.GONE);
 
-            ((AppCompatActivity) requireActivity()).getSupportActionBar().show();
+            Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
         } else {
             view.findViewById(R.id.progressRightToLeft).setVisibility(View.GONE);
             view.findViewById(R.id.progressLeftToRight).setVisibility(View.GONE);
 
             view.findViewById(R.id.progress_counter).setVisibility(View.VISIBLE);
 
-            ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
+            Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
         }
 
         active = !active;
@@ -237,7 +239,7 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
             chapterStart.setText(valueOf(index + 1));
             seekBar.setProgress(index);
 
-            progress_text.setText(String.format("%d/%d", index + 1, mangaChapterImagesUrls.size()));
+            progress_text.setText(String.format(Locale.getDefault(), "%d/%d", index + 1, mangaChapterImagesUrls.size()));
             loadChapterImage();
         }
 
@@ -264,7 +266,7 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
             chapterStart.setText(valueOf(index + 1));
             seekBar.setProgress(index);
 
-            progress_text.setText(String.format("%d/%d", index + 1, mangaChapterImagesUrls.size()));
+            progress_text.setText(String.format(Locale.getDefault(), "%d/%d", index + 1, mangaChapterImagesUrls.size()));
             loadChapterImage();
         }
 
@@ -300,7 +302,7 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
         seekBar.setMax(mangaChapterImagesUrls.size() - 1);
         seekBar.setProgress(px);
 
-        progress_text.setText(String.format("%d/%d", px + 1, mangaChapterImagesUrls.size()));
+        progress_text.setText(String.format(Locale.getDefault(), "%d/%d", px + 1, mangaChapterImagesUrls.size()));
 
         imageView.setOnSingleFlingListener((e1, e2, velocityX, velocityY) -> {
             float diffX = e2.getX() - e1.getX();
@@ -337,7 +339,7 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
                 if (fromUser) {
                     index = progress;
 
-                    progress_text.setText(String.format("%d/%d", index + 1, mangaChapterImagesUrls.size()));
+                    progress_text.setText(String.format(Locale.getDefault(), "%d/%d", index + 1, mangaChapterImagesUrls.size()));
                     chapterStart.setText(valueOf(index + 1));
 
                     if (!mangaChapterImagesUrls.isEmpty()) {
@@ -375,9 +377,9 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
                     if (!response.isCompleted()) {
                         if (isFinished()) {
                             // api call to mark the chapter as viewed for the current user
-                            requestManager.updateReadChapter(new OnFetchUpdateListener() {
+                            requestManager.updateReadChapter(new OnFetchUpdateListener<ApiResponse>() {
                                 @Override
-                                public void onFetchData(Object o, String message, Context context) {
+                                public void onFetchData(ApiResponse o, String message, Context context) {
 
                                 }
 
@@ -388,9 +390,9 @@ public class MangaChapterFragment extends Fragment implements View.OnClickListen
                             }, chapterModel.getReference(), mangaId, new ReadChapterModel(true, false, progress, chapterModel, mangaId));
                         } else if (progress < max) {
                             if (userIsAuthenticated()) {
-                                requestManager.updateReadChapter(new OnFetchUpdateListener() {
+                                requestManager.updateReadChapter(new OnFetchUpdateListener<ApiResponse>() {
                                     @Override
-                                    public void onFetchData(Object o, String message, Context context) {
+                                    public void onFetchData(ApiResponse o, String message, Context context) {
 
                                     }
 

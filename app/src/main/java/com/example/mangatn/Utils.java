@@ -3,7 +3,7 @@ package com.example.mangatn;
 import org.jetbrains.annotations.Contract;
 
 public class Utils {
-    public static final String API_URL = "http://192.168.31.40:8081/api";
+    public static final String API_URL = "http://192.168.0.222:8081/api";
     public static final String MANGA_URL = "/v1/manga/";
     public static final String CHAPTER_URL = "/v1/chapter/";
     public static final String USERS_URL = "/users/";

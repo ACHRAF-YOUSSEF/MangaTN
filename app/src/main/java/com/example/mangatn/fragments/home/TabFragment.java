@@ -64,6 +64,9 @@ public class TabFragment extends Fragment implements OnFetchMangaChaptersListLis
 
         if (bundle != null) {
             mangaId = bundle.getString("mangaId");
+
+            assert activity != null;
+
             tabLayout = activity.findViewById(R.id.view_tabLayout);
 
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -111,7 +114,7 @@ public class TabFragment extends Fragment implements OnFetchMangaChaptersListLis
 
     @Override
     public void onFetchData(ChaptersListApiResponse response, String message, Context context) {
-        showChapters(response.getChapters());
+        showChapters(response.getContent());
     }
 
     @Override

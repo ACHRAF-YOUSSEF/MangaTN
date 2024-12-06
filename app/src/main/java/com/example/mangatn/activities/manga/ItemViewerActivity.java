@@ -45,6 +45,8 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
 
+import java.util.Locale;
+
 public class ItemViewerActivity extends AppCompatActivity {
     private MangaModel mangaModel;
     private boolean bookmarked = false;
@@ -303,7 +305,7 @@ public class ItemViewerActivity extends AppCompatActivity {
 
                 if (to > count) to = count;
 
-                title = String.format("%d-%d", from, to);
+                title = String.format(Locale.getDefault(), "%d-%d", from, to);
 
                 Fragment fragment = new TabFragment();
                 pagerAdapter.addFragment(fragment, title);
@@ -318,7 +320,7 @@ public class ItemViewerActivity extends AppCompatActivity {
                     to = count;
                 }
 
-                title = String.format("%d-%d", from, to);
+                title = String.format(Locale.getDefault(), "%d-%d", from, to);
 
                 Fragment fragment = new TabFragment();
                 pagerAdapter.addFragment(fragment, title);

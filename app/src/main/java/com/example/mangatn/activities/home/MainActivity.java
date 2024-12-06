@@ -24,7 +24,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements OnFilterAppliedListener {
     public static List<MangaModel> mangalList;
     private static final int REQUEST_PERMISSION = 1;
-    private static final SearchFragment searchFragment = new SearchFragment();
+    private final SearchFragment searchFragment = new SearchFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

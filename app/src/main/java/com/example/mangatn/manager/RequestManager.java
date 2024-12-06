@@ -117,7 +117,7 @@ public class RequestManager {
                     } else {
                         assert response.body() != null;
 
-                        listener.onFetchData(response.body().getMangas(), response.message(), context);
+                        listener.onFetchData(response.body().getContent(), response.message(), context);
                     }
                 }
 

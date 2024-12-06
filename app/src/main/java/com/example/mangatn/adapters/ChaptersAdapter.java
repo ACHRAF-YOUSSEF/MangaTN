@@ -49,7 +49,7 @@ public class ChaptersAdapter extends RecyclerView.Adapter<ChaptersAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return chapters.size();
+        return chapters == null ? 0 : chapters.size();
     }
 
     public interface OnItemClickListener {

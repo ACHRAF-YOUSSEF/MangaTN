@@ -1,25 +1,15 @@
 package com.example.mangatn.models.chapter;
 
+import com.example.mangatn.models.pagination.ContentDto;
+
 import java.io.Serializable;
 import java.util.List;
 
-public class ChaptersListApiResponse implements Serializable {
-    private long count;
-    private List<ChapterModel> chapters;
-
-    public long getCount() {
-        return count;
+public class ChaptersListApiResponse extends ContentDto<ChapterModel> implements Serializable {
+    public ChaptersListApiResponse() {
     }
 
-    public List<ChapterModel> getChapters() {
-        return chapters;
-    }
-
-    @Override
-    public String toString() {
-        return "ChaptersListApiResponse{" +
-                "count=" + count +
-                ", chapters=" + chapters +
-                '}';
+    public ChaptersListApiResponse(long count, List<ChapterModel> content) {
+        super(count, content);
     }
 }
